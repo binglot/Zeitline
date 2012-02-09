@@ -1,4 +1,4 @@
-package org.Zeitline;
+package org.Zeitline.Event;
 /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
@@ -37,6 +37,9 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Source;
+import org.Zeitline.Zeitline;
+
 import java.sql.Timestamp;
 import java.io.Serializable;
 import javax.swing.JPanel;
@@ -45,7 +48,7 @@ import javax.swing.ImageIcon;
 /**
  * Class for the basic, discrete events that are imported from
  * various sources. In addition to the fields and methods from the
- * abstract {@link TimeEvent org.Zeitline.TimeEvent} class, there are also fields
+ * abstract {@link TimeEvent org.Zeitline.Event.TimeEvent} class, there are also fields
  * and methods for managing the source from where the event is
  * imported and a user identifier (though not currently used).
  */
@@ -100,4 +103,4 @@ public abstract class AtomicEvent
 	return getDescription();
     }
 
-} // class org.Zeitline.AtomicEvent
+} // class org.Zeitline.Event.AtomicEvent

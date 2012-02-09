@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.Event; /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -207,13 +207,13 @@ public abstract class TimeEvent
     
     /**
      * Sets the {@link #matches_query matches_query} flag. This is
-     * currently used only for the org.Zeitline.ComplexEvent's {@link
+     * currently used only for the org.Zeitline.Event.ComplexEvent's {@link
      * ComplexEvent#computeQuery computeQuery()} method.
      *
      * @param newValue the new boolean value for the flag
      * @see ComplexEvent
-     * @see EventTreeModelFilter
-     * @see Query
+     * @see org.Zeitline.EventTreeModelFilter
+     * @see org.Zeitline.Query
      */
     public void setQueryFlag(boolean newValue) {
 	matches_query = newValue;
@@ -221,17 +221,17 @@ public abstract class TimeEvent
     
     /**
      * Returns the flag whether the event matched the latest filter
-     * query.  The flag is set via the org.Zeitline.ComplexEvent's {@link
+     * query.  The flag is set via the org.Zeitline.Event.ComplexEvent's {@link
      * ComplexEvent#computeQuery computeQuery()} method and used by
-     * the {@link EventTreeModelFilter org.Zeitline.EventTreeModelFilter} class for
+     * the {@link org.Zeitline.EventTreeModelFilter org.Zeitline.EventTreeModelFilter} class for
      * the filter mappings.
      *
      * @return the flag {@link #matches_query matches_query}, which
      * indicates whether the event matched the last query.
      *
      * @see ComplexEvent
-     * @see EventTreeModelFilter
-     * @see Query
+     * @see org.Zeitline.EventTreeModelFilter
+     * @see org.Zeitline.Query
      */
     public boolean matchesQuery() {
 	return matches_query;
@@ -249,4 +249,4 @@ public abstract class TimeEvent
 
     public abstract String getQueryString();
     
-} // abstract class org.Zeitline.TimeEvent
+} // abstract class org.Zeitline.Event.TimeEvent

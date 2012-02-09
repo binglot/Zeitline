@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.Event; /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -36,6 +36,11 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.AVLTree;
+import org.Zeitline.Query;
+import org.Zeitline.Source;
+import org.Zeitline.Zeitline;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Enumeration;
@@ -59,7 +64,7 @@ public class ComplexEvent
     
     /**
      * Name of the event. The text in the name will appear in the JTree
-     * listing of the {@link EventTree org.Zeitline.EventTree}.
+     * listing of the {@link org.Zeitline.EventTree org.Zeitline.EventTree}.
      */
     protected String name;
 
@@ -73,15 +78,15 @@ public class ComplexEvent
 
     public ComplexEvent() {
         this("", "", false);
-    } // org.Zeitline.ComplexEvent()
+    } // org.Zeitline.Event.ComplexEvent()
     
     public ComplexEvent(String name) {
         this(name, "", false);
-    } // org.Zeitline.ComplexEvent(String)
+    } // org.Zeitline.Event.ComplexEvent(String)
     
     public ComplexEvent(String name, String description) {
         this(name, description, false);
-    } // org.Zeitline.ComplexEvent(String,String)
+    } // org.Zeitline.Event.ComplexEvent(String,String)
     
     public ComplexEvent(String name, String description, boolean pers) {
         this.sources = new Vector();
@@ -95,7 +100,7 @@ public class ComplexEvent
 	this.name = name;
 	this.deleteEmptyEvent = this.defaultDeleteEmpty;
 		// this.name = name + " (id: " + this.unique_id + ")";
-	} // org.Zeitline.ComplexEvent(String,String,boolean)
+	} // org.Zeitline.Event.ComplexEvent(String,String,boolean)
 
     /**
      * Returns the name of the event.
@@ -326,4 +331,4 @@ public class ComplexEvent
 	return getDescription();
     }
     
-} // class org.Zeitline.ComplexEvent
+} // class org.Zeitline.Event.ComplexEvent
