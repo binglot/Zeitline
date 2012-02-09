@@ -39,7 +39,7 @@ SOFTWARE.
 import org.Zeitline.*;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.Enumeration;
 import java.util.Vector;
 import javax.swing.ImageIcon;

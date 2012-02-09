@@ -38,7 +38,7 @@ SOFTWARE.
 
 import org.Zeitline.Event.AtomicEvent;
 
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.io.Serializable;
 
 /**

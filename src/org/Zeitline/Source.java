@@ -40,7 +40,7 @@ import org.Zeitline.Event.AtomicEvent;
 
 import java.io.Serializable;
 import java.io.File;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.Date;
 import java.util.Vector;
 

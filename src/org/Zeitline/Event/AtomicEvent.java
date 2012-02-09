@@ -40,7 +40,7 @@ SOFTWARE.
 import org.Zeitline.Source;
 import org.Zeitline.Zeitline;
 
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.io.Serializable;
 import javax.swing.JPanel;
 import javax.swing.ImageIcon;

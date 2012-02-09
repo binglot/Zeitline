@@ -39,7 +39,7 @@ SOFTWARE.
 import org.Zeitline.Event.TimeEvent;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.Vector;
 
 public class AVLTree implements Serializable{

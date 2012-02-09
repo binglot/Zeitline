@@ -46,7 +46,7 @@ import org.Zeitline.SyslogEvent;
 import java.awt.Component;
 import java.io.RandomAccessFile;
 import java.io.IOException;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.regex.Matcher;

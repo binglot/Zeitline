@@ -38,7 +38,7 @@ SOFTWARE.
 
 import org.Zeitline.Event.TimeEvent;
 
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 
 public class Query {
 

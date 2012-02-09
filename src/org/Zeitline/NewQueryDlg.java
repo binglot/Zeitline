@@ -50,7 +50,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 

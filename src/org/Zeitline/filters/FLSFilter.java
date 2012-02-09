@@ -46,7 +46,7 @@ import org.Zeitline.Source;
 import java.awt.Component;
 import java.io.RandomAccessFile;
 import java.io.IOException;
-import java.sql.Timestamp;
+import org.Zeitline.Timestamp.Timestamp;
 import java.util.LinkedList;
 import javax.swing.filechooser.FileFilter;
 
