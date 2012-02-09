@@ -115,19 +115,19 @@ public class MACTimeEvent
 	this.mode = mode;
 	this.size = size;
 	this.type = type;
-        this.unique_id = new Long(id_counter);
-	id_counter++;
+        this.uniqueId = new Long(idCounter);
+	idCounter++;
 
 	if (type == TYPE_M  || type == TYPE_MA ||
 	    type == TYPE_MC || type == TYPE_MAC)
-	    this.start_time = mtime;
+	    this.startTime = mtime;
 	else if (type == TYPE_A || type == TYPE_AC)
-	    this.start_time = atime;
+	    this.startTime = atime;
 	else
-	    this.start_time = ctime;
+	    this.startTime = ctime;
 
-	adjusted_time = start_time;
-	reported_time = start_time;
+	adjusted_time = startTime;
+	reported_time = startTime;
 	
     }
     

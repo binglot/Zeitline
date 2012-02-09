@@ -79,12 +79,12 @@ public class GeneralEvent
         Source source) {
         
         this.description = description;
-        this.start_time = start;
+        this.startTime = start;
         this.reported_time = start;
         this.adjusted_time = start;
         this.source = source;
-        this.unique_id = new Long(id_counter);
-        id_counter++;
+        this.uniqueId = new Long(idCounter);
+        idCounter++;
         this.name = name;
     } // org.Zeitline.Event.AtomicEvent(String,String,Timestamp,org.Zeitline.Source)
 

@@ -50,7 +50,7 @@ public class ComplexEvent
     
     /**
      * End time of the event. This field denotes the endpoint of the
-     * time interval formed with the start_time field, describing the
+     * time interval formed with the startTime field, describing the
      * duration of the event.
      */
     protected Timestamp end_time;
@@ -90,13 +90,13 @@ public class ComplexEvent
         //this.sources_updated = true;
 	this.children_by_time = new AVLTree();
 	this.description = description;
-	this.start_time = new Timestamp(-1);
-	this.end_time = start_time;
-	this.unique_id = new Long(id_counter);
-	id_counter++;
+	this.startTime = new Timestamp(-1);
+	this.end_time = startTime;
+	this.uniqueId = new Long(idCounter);
+	idCounter++;
 	this.name = name;
 	this.deleteEmptyEvent = this.defaultDeleteEmpty;
-		// this.name = name + " (id: " + this.unique_id + ")";
+		// this.name = name + " (id: " + this.uniqueId + ")";
 	} // org.Zeitline.Event.ComplexEvent(String,String,boolean)
 
     /**
@@ -124,7 +124,7 @@ public class ComplexEvent
     public Timestamp getMaxStartTime() {
 	Timestamp ret = children_by_time.getMaxStartTime();
 	if (ret == null)
-	    ret = start_time;
+	    ret = startTime;
 	return ret;
     } // getMaxStartTime
 
@@ -168,20 +168,20 @@ public class ComplexEvent
 	/*
 	if (children_by_time.getNodeCount() == 0) {
 	    System.out.println("Inserting into empty event (" + this +"): " + event);
-	    System.out.println(this + "'s start time: " + start_time);
+	    System.out.println(this + "'s start time: " + startTime);
 	    System.out.println(this + "'s end time: " + end_time);
-	    start_time = null;
+	    startTime = null;
 	    end_time = null;
 	}
 	*/
-//	if((this.start_time == null) ||		
+//	if((this.startTime == null) ||
 	if((children_by_time.getNodeCount() == 0) ||		
-	   (event.getStartTime().before(this.start_time))) {
+	   (event.getStartTime().before(this.startTime))) {
 	    if (parent != null) {
 		parent.resort(this, event.getStartTime());
 		ret = true;
 	    }
-	    else this.start_time = event.getStartTime();
+	    else this.startTime = event.getStartTime();
 	}
 	
 	if((this.end_time == null) ||
@@ -214,13 +214,13 @@ public class ComplexEvent
 		if ((parent != null) && deleteEmptyEvent)
 		    parent.removeTimeEvent(this);
 		else {
-		 //   start_time = new Timestamp(-1);
-		    end_time = start_time;
+		 //   startTime = new Timestamp(-1);
+		    end_time = startTime;
 		}
 		return true;
 	    }
 	    
-	    if (start_time.equals(event.getStartTime())) {
+	    if (startTime.equals(event.getStartTime())) {
 		if (parent != null) {
 		    //			System.out.println("Resorting parent");
 		    parent.resort(this, children_by_time.getMinStartTime());
@@ -229,7 +229,7 @@ public class ComplexEvent
 		    //			parent.addTimeEvent(this);
 		}
 		else
-		    start_time = children_by_time.getMinStartTime();
+		    startTime = children_by_time.getMinStartTime();
 	    }
 	    
 	    if (end_time.equals(event.getEndTime()))
@@ -269,14 +269,14 @@ public class ComplexEvent
 	    }
 	}
 	
-	return matches_query;
+	return matchesQuery;
     } // computeQuery
     
     public void print() {
 	System.out.println("Name: "
 			   + this.name
 			   + "\nStart: "
-			   + this.start_time
+			   + this.startTime
 			   + "\nEnd: "
 			   + this.end_time
 			   + "\nNumber of children: "

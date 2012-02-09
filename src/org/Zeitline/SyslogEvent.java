@@ -70,13 +70,13 @@ public class SyslogEvent
 		initPanel();
 	}
 	
-	this.start_time = start_time;
+	this.startTime = start_time;
 	this.host = host;
 	this.process = process;
 	this.pid = pid;
 	this.message = message;
-        this.unique_id = new Long(id_counter);
-	id_counter++;
+        this.uniqueId = new Long(idCounter);
+	idCounter++;
 
 	adjusted_time = start_time;
 	reported_time = start_time;

@@ -527,7 +527,7 @@ public class Zeitline implements TreeSelectionListener {
             try {
                 in_stream = new ObjectInputStream(new FileInputStream(chosen));
                 long temp_long = ((Long) in_stream.readObject()).longValue();
-                TimeEvent.initIDCounter(temp_long);
+                TimeEvent.setIdCounter(temp_long);
                 timelines.loadFromFile(in_stream, app);
                 in_stream.close();
             } catch (IOException io_excep) {
@@ -582,7 +582,7 @@ public class Zeitline implements TreeSelectionListener {
                 out_stream = new ObjectOutputStream(new FileOutputStream(chosen));
 
                 // write out the current ID counter
-                out_stream.writeObject(new Long(TimeEvent.getIDCounter()));
+                out_stream.writeObject(new Long(TimeEvent.getIdCounter()));
             } catch (IOException io_excep) {
                 JOptionPane.showMessageDialog(null,
                         "The following error occurred when trying to write file '"

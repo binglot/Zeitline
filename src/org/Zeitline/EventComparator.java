@@ -51,7 +51,7 @@ public class EventComparator {
 	if (t != 0)
 	    return t;
 
-	t = e1.getID().compareTo(e2.getID());
+	t = e1.getId().compareTo(e2.getId());
 	if (t != 0)
 	    return t;
 
