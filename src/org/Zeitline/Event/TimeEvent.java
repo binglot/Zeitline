@@ -1,14 +1,14 @@
 package org.Zeitline.Event;
 
 import java.io.Serializable;
-import org.Zeitline.Timestamp.Timestamp;
+import org.Zeitline.Timestamp.ITimestamp;
 
 public abstract class TimeEvent
         implements Serializable, ITimeEvent<javax.swing.ImageIcon> {
 
     protected static long idCounter = 0; // next free unique id among the event class
     protected Long uniqueId;
-    protected Timestamp startTime;
+    protected ITimestamp startTime;
     protected ComplexEvent parent; // null for complex events which are root
     protected boolean matchesQuery;
 
@@ -25,18 +25,18 @@ public abstract class TimeEvent
         return uniqueId;
     }
 
-    public void setStartTime(Timestamp t) {
+    public void setStartTime(ITimestamp t) {
         // TODO: test the resort parent code
         startTime = t;
         if (parent != null)
             parent.resort(this, t);
     }
 
-    public Timestamp getStartTime() {
+    public ITimestamp getStartTime() {
         return startTime;
     }
 
-    public Timestamp getEndTime() {
+    public ITimestamp getEndTime() {
         // Assuming start = end times, override for classes
         // that have an end_time field
         return getStartTime();
@@ -50,11 +50,11 @@ public abstract class TimeEvent
         return parent;
     }
 
-    public boolean startsBefore(Timestamp t) {
+    public boolean startsBefore(ITimestamp t) {
         return startTime.before(t);
     }
 
-    public boolean startsAfter(Timestamp t) {
+    public boolean startsAfter(ITimestamp t) {
         return startTime.after(t);
     }
 

@@ -38,6 +38,7 @@ SOFTWARE.
 
 import org.Zeitline.Event.AtomicEvent;
 
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 import java.io.File;
 import java.io.Serializable;
@@ -82,9 +83,9 @@ public class MACTimeEvent
     protected static JLabel lbl_filepath;
     
     protected String filename;
-    protected Timestamp mtime;
-    protected Timestamp atime;
-    protected Timestamp ctime;
+    protected ITimestamp mtime;
+    protected ITimestamp atime;
+    protected ITimestamp ctime;
     protected int user_id;
     protected int group_id;
     protected int mode;
@@ -93,9 +94,9 @@ public class MACTimeEvent
 
 
     public MACTimeEvent(String filename,
-			Timestamp mtime,
-			Timestamp atime,
-			Timestamp ctime,
+			ITimestamp mtime,
+			ITimestamp atime,
+			ITimestamp ctime,
 			int user_id,
 			int group_id,
 			int mode,

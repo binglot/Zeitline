@@ -38,6 +38,7 @@ SOFTWARE.
 **********************************************************************/
 
 import org.Zeitline.Source;
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Zeitline;
 
 import org.Zeitline.Timestamp.Timestamp;
@@ -63,8 +64,8 @@ public abstract class AtomicEvent
      */
     protected Source source;
 
-    protected Timestamp reported_time;
-    protected Timestamp adjusted_time;
+    protected ITimestamp reported_time;
+    protected ITimestamp adjusted_time;
     
     public void setSource(Source s) {
 	if (this.source != null)
@@ -81,11 +82,11 @@ public abstract class AtomicEvent
 	    adjusted_time = newVal;
     }
     
-    public Timestamp getAdjustedTime() {
+    public ITimestamp getAdjustedTime() {
 	    return adjusted_time;
     }
     
-    public Timestamp getReportedTime() {
+    public ITimestamp getReportedTime() {
 	    return reported_time;
     }
     

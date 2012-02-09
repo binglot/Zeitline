@@ -50,6 +50,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
@@ -107,8 +109,8 @@ public class NewQueryDlg extends JDialog
 
     public static Query showDialog(Component frameComp,
 				   Component locationComp,
-				   Timestamp sTime,
-				   Timestamp eTime,
+				   ITimestamp sTime,
+				   ITimestamp eTime,
 				   Query q) {
 
         Frame frame = JOptionPane.getFrameForComponent(frameComp);
@@ -125,8 +127,8 @@ public class NewQueryDlg extends JDialog
 		       String title,
 		       boolean modal,
 		       int m,
-		       Timestamp sTime,
-		       Timestamp eTime,
+		       ITimestamp sTime,
+		       ITimestamp eTime,
 		       Query preset,
 		       TimelineView tl) {
 

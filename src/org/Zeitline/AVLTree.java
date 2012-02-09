@@ -39,6 +39,8 @@ SOFTWARE.
 import org.Zeitline.Event.TimeEvent;
 
 import java.io.Serializable;
+
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 import java.util.Vector;
 
@@ -85,7 +87,7 @@ public class AVLTree implements Serializable{
        
     } // remove
 
-    public boolean resort(TimeEvent event, Timestamp new_start) {
+    public boolean resort(TimeEvent event, ITimestamp new_start) {
 
 	//	System.out.println("Entering resort: " + new_start);
 
@@ -473,11 +475,9 @@ public class AVLTree implements Serializable{
 	printSubtree(r.getLeftChild(), indent + " ");
 	System.out.println(indent + "Right child:");
 	printSubtree(r.getRightChild(), indent + " ");
-
     } // printSubtree
 
-    public Timestamp getMinStartTime() {
-
+    public ITimestamp getMinStartTime() {
 	if (root == null) return null;
 
 	AVLNode current;
@@ -486,11 +486,9 @@ public class AVLTree implements Serializable{
 	     current = current.getLeftChild());
 
 	return current.getEvent().getStartTime();
-
     } // getMinStartTime
 
-    public Timestamp getMaxStartTime() {
-
+    public ITimestamp getMaxStartTime() {
 	if (root == null) return null;
 
 	AVLNode current;
@@ -499,11 +497,9 @@ public class AVLTree implements Serializable{
 	     current = current.getRightChild());
 
 	return current.getEvent().getStartTime();
-
     } // getMaxStartTime
 
-    public Timestamp getMaxEndTime() {
-
+    public ITimestamp getMaxEndTime() {
 	if (root == null) return null;
 
 	AVLNode current;
@@ -512,7 +508,6 @@ public class AVLTree implements Serializable{
 	     current = current.getRightChild());
 
 	return current.getEvent().getEndTime();
-
     } // getMaxEndTime
 
 } // class org.Zeitline.AVLTree

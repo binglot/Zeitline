@@ -46,6 +46,8 @@ import org.Zeitline.Source;
 import java.awt.Component;
 import java.io.RandomAccessFile;
 import java.io.IOException;
+
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 import java.util.LinkedList;
 import javax.swing.filechooser.FileFilter;
@@ -114,9 +116,9 @@ public class FLSFilter extends InputFilter {
 	    // get timestamps, we have second granularity but need to
 	    // convert to ms
 
-	    Timestamp mtime = new Timestamp(Long.decode(fields[12]).intValue() * (long)1000);
-	    Timestamp atime = new Timestamp(Long.decode(fields[11]).intValue() * (long)1000);
-	    Timestamp ctime = new Timestamp(Long.decode(fields[13]).intValue() * (long)1000);
+	    ITimestamp mtime = new Timestamp(Long.decode(fields[12]).intValue() * (long)1000);
+	    ITimestamp atime = new Timestamp(Long.decode(fields[11]).intValue() * (long)1000);
+	    ITimestamp ctime = new Timestamp(Long.decode(fields[13]).intValue() * (long)1000);
 
 	    String name = fields[1];
 	    int user_id = Integer.decode(fields[7]).intValue();

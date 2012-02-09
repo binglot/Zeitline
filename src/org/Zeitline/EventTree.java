@@ -48,14 +48,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+
+import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 import java.text.NumberFormat;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Stack;
-import java.util.TreeSet;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
@@ -465,7 +462,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      *
      * @return the start time of the root event
      */
-    public Timestamp getStartTime() {
+    public ITimestamp getStartTime() {
 	return ((ComplexEvent) getModel().getRoot()).getStartTime();
     } // getStartTime
 
@@ -474,7 +471,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      *
      * @return the latest start time of an event
      */
-    public Timestamp getMaxStartTime() {
+    public ITimestamp getMaxStartTime() {
 	return ((ComplexEvent) getModel().getRoot()).getMaxStartTime();
     } // getMaxStartTime
 
@@ -608,7 +605,11 @@ public class EventTree extends JTree implements TreeSelectionListener {
 	if (display_mode == DISPLAY_HMS) {
 	    
 	    Calendar c = Calendar.getInstance();
-	    c.setTime(te.getStartTime());
+	    //
+	    // There might be a problem in the future with this casting!
+        // TODO: Add a type check.
+        //
+        c.setTime((Date)te.getStartTime());
 	    NumberFormat nf = NumberFormat.getInstance();
 	    nf.setMinimumIntegerDigits(2);
 	    

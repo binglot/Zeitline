@@ -5,8 +5,6 @@ package org.Zeitline.Timestamp;
  * ORACLE PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-import java.util.StringTokenizer;
-
 /**
  * <P>A thin wrapper around <code>java.util.Date</code> that allows
  * the JDBC API to identify this as an SQL <code>TIMESTAMP</code> value.
@@ -372,14 +370,15 @@ public class Timestamp extends java.util.Date implements ITimestamp {
      * Tests to see if this <code>Timestamp</code> object is
      * equal to the given <code>Timestamp</code> object.
      *
+     *
      * @param ts the <code>Timestamp</code> value to compare with
      * @return <code>true</code> if the given <code>Timestamp</code>
      *         object is equal to this <code>Timestamp</code> object;
      *         <code>false</code> otherwise
      */
-    public boolean equals(Timestamp ts) {
+    public boolean equals(ITimestamp ts) {
         if (super.equals(ts)) {
-            if  (nanos == ts.nanos) {
+            if  (nanos == ts.getNanos()) {
                 return true;
             } else {
                 return false;
@@ -419,11 +418,12 @@ public class Timestamp extends java.util.Date implements ITimestamp {
      * Indicates whether this <code>Timestamp</code> object is
      * earlier than the given <code>Timestamp</code> object.
      *
+     *
      * @param ts the <code>Timestamp</code> value to compare with
      * @return <code>true</code> if this <code>Timestamp</code> object is earlier;
      *        <code>false</code> otherwise
      */
-    public boolean before(Timestamp ts) {
+    public boolean before(ITimestamp ts) {
         return compareTo(ts) < 0;
     }
 
@@ -431,17 +431,19 @@ public class Timestamp extends java.util.Date implements ITimestamp {
      * Indicates whether this <code>Timestamp</code> object is
      * later than the given <code>Timestamp</code> object.
      *
+     *
      * @param ts the <code>Timestamp</code> value to compare with
      * @return <code>true</code> if this <code>Timestamp</code> object is later;
      *        <code>false</code> otherwise
      */
-    public boolean after(Timestamp ts) {
+    public boolean after(ITimestamp ts) {
         return compareTo(ts) > 0;
     }
 
     /**
      * Compares this <code>Timestamp</code> object to the given
      * <code>Timestamp</code> object.
+     *
      *
      * @param   ts   the <code>Timestamp</code> object to be compared to
      *                this <code>Timestamp</code> object
@@ -452,14 +454,14 @@ public class Timestamp extends java.util.Date implements ITimestamp {
      *          <code>Timestamp</code> object is after the given argument.
      * @since   1.4
      */
-    public int compareTo(Timestamp ts) {
+    public int compareTo(ITimestamp ts) {
         long thisTime = this.getTime();
         long anotherTime = ts.getTime();
         int i = (thisTime<anotherTime ? -1 :(thisTime==anotherTime?0 :1));
         if (i == 0) {
-            if (nanos > ts.nanos) {
+            if (nanos > ts.getNanos()) {
                 return 1;
-            } else if (nanos < ts.nanos) {
+            } else if (nanos < ts.getNanos()) {
                 return -1;
             }
         }
@@ -486,11 +488,11 @@ public class Timestamp extends java.util.Date implements ITimestamp {
             // When Timestamp instance compare it with a Timestamp
             // Hence it is basically calling this.compareTo((Timestamp))o);
             // Note typecasting is safe because o is instance of Timestamp
-            return compareTo((Timestamp)o);
+            return compareTo((ITimestamp)o);
         } else {
             // When Date doing a o.compareTo(this)
             // will give wrong results.
-            Timestamp ts = new Timestamp(o.getTime());
+            ITimestamp ts = new Timestamp(o.getTime());
             return this.compareTo(ts);
         }
     }

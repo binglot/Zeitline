@@ -10,14 +10,16 @@ public interface ITimestamp extends Serializable, Cloneable, Comparable<Date> {
     void setNanos(int n);
     int getNanos();
 
-    boolean before(Timestamp ts);
-    boolean after(Timestamp ts);
+    boolean before(ITimestamp ts);
+    boolean after(ITimestamp ts);
 
-    int compareTo(Timestamp ts);
+    @Override
     int compareTo(java.util.Date o);
+    int compareTo(ITimestamp ts);
 
-    boolean equals(Timestamp ts);
+    @Override
     boolean equals(Object ts);
+    boolean equals(ITimestamp ts);
     @Override
     int hashCode();
 
