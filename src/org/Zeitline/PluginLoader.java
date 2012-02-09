@@ -133,9 +133,6 @@ public class PluginLoader extends ClassLoader {
                 }
                 catch(ClassCastException cc) {
                     System.err.println(cc);
-                    // It's a bug. Go to context menu Run > Edit Configuration and then Application > Zeitline.
-                    System.err.println("If you're using IntelliJ IDEA, " +
-                            "make sure you turn off \"Enable Capturing Form Snapshots\"");
                     continue;
                 }
                 
@@ -206,6 +203,9 @@ public class PluginLoader extends ClassLoader {
             }
             catch(ClassCastException cc) {
                 System.err.println(cc);
+                // It's a bug. Go to context menu Run > Edit Configuration and then Application > Zeitline.
+                System.err.println("If you're using IntelliJ IDEA, " +
+                        "make sure you turn off \"Enable Capturing Form Snapshots\"");
                 continue;
             }
             
