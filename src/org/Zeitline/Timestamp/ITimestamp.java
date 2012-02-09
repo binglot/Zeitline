@@ -4,15 +4,22 @@ import java.io.Serializable;
 import java.util.Date;
 
 public interface ITimestamp extends Serializable, Cloneable, Comparable<Date> {
-void setTime(long time);
+    void setTime(long time);
     long getTime();
-    String toString ();
-    int getNanos();
+
     void setNanos(int n);
-    boolean equals(Timestamp ts);
-    boolean equals(Object ts);
+    int getNanos();
+
     boolean before(Timestamp ts);
     boolean after(Timestamp ts);
+
     int compareTo(Timestamp ts);
     int compareTo(java.util.Date o);
-    @Override int hashCode();}
+
+    boolean equals(Timestamp ts);
+    boolean equals(Object ts);
+    @Override
+    int hashCode();
+
+    String toString();
+}
