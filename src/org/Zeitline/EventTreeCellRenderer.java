@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.TimeEvent;
+
 import java.awt.Component;
 
 import javax.swing.ImageIcon;
@@ -68,7 +70,7 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
 					   hasFocus);
 
 	/*
-        if (value instanceof org.Zeitline.AtomicEvent)
+        if (value instanceof org.Zeitline.Event.AtomicEvent)
             setIcon(atomicIcon);
         else 
             setIcon(complexIcon);

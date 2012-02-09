@@ -37,7 +37,7 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.AtomicEvent;
+import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.FileInputFilter;
 import org.Zeitline.InputFilter.InputFilter;
 import org.Zeitline.MACTimeEvent;

@@ -52,8 +52,8 @@ public class TransferableEvent implements Transferable, Serializable {
 	data = v;
 
 	try {
-	    //	    flavor = new DataFlavor("application/x-java-serialized-object; class=org.Zeitline.TimeEvent");
-	    flavor = new DataFlavor("application/x-java-jvm-local-objectref; class=org.Zeitline.TimeEvent");
+	    //	    flavor = new DataFlavor("application/x-java-serialized-object; class=org.Zeitline.Event.TimeEvent");
+	    flavor = new DataFlavor("application/x-java-jvm-local-objectref; class=org.Zeitline.Event.TimeEvent");
 	}
 	catch (ClassNotFoundException c) {
 	    System.err.println(c.getCause());

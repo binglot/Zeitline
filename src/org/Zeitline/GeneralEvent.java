@@ -36,13 +36,15 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AtomicEvent;
+
 import java.sql.Timestamp;
 import java.io.Serializable;
 
 /**
  * Class for the basic, discrete events that are imported from
  * various sources. In addition to the fields and methods from the
- * abstract {@link TimeEvent org.Zeitline.TimeEvent} class, there are also fields
+ * abstract {@link org.Zeitline.Event.TimeEvent org.Zeitline.Event.TimeEvent} class, there are also fields
  * and methods for managing the source from where the event is
  * imported and a user identifier (though not currently used).
  */
@@ -63,7 +65,7 @@ public class GeneralEvent
     protected String description;
 
     /**
-     * Returns an org.Zeitline.AtomicEvent with initial name, description, start
+     * Returns an org.Zeitline.Event.AtomicEvent with initial name, description, start
      * time, and source.
      *
      * @param name the name of the event
@@ -84,10 +86,10 @@ public class GeneralEvent
         this.unique_id = new Long(id_counter);
         id_counter++;
         this.name = name;
-    } // org.Zeitline.AtomicEvent(String,String,Timestamp,org.Zeitline.Source)
+    } // org.Zeitline.Event.AtomicEvent(String,String,Timestamp,org.Zeitline.Source)
 
     /**
-     * Returns an org.Zeitline.AtomicEvent with initial name, description and start
+     * Returns an org.Zeitline.Event.AtomicEvent with initial name, description and start
      * time. The source is set to <tt> null </tt>.
      *
      * @param name the name of the event
@@ -99,7 +101,7 @@ public class GeneralEvent
 		       Timestamp start) {
         
         this(name, description, start, null);
-    } // org.Zeitline.AtomicEvent(String,String,Timestamp)
+    } // org.Zeitline.Event.AtomicEvent(String,String,Timestamp)
     
     /**
      * Returns the name of the event.
@@ -137,4 +139,4 @@ public class GeneralEvent
 	return this.name;
     } // toString
 
-} // class org.Zeitline.AtomicEvent
+} // class org.Zeitline.Event.AtomicEvent

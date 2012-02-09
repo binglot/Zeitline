@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.ComplexEvent;
+
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridBagConstraints;

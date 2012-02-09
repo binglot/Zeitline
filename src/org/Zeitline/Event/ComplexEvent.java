@@ -36,10 +36,7 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.AVLTree;
-import org.Zeitline.Query;
-import org.Zeitline.Source;
-import org.Zeitline.Zeitline;
+import org.Zeitline.*;
 
 import java.io.Serializable;
 import java.sql.Timestamp;

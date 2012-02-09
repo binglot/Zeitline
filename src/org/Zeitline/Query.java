@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.TimeEvent;
+
 import java.sql.Timestamp;
 
 public class Query {

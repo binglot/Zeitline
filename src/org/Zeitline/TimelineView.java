@@ -36,6 +36,10 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.FocusEvent;

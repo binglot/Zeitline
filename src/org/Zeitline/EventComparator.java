@@ -1,5 +1,9 @@
 package org.Zeitline;
 
+import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
+
 /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor

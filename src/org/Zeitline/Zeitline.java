@@ -37,6 +37,9 @@ package org.Zeitline;
 
  **********************************************************************/
 
+import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
 import org.Zeitline.InputFilter.InputFilter;
 
 import java.awt.BorderLayout;
@@ -1117,9 +1120,9 @@ public class Zeitline implements TreeSelectionListener {
 
            org.Zeitline.EventTreeModel currentModel = (org.Zeitline.EventTreeModel)tree.getModel();
 
-           org.Zeitline.ComplexEvent currentRoot = (org.Zeitline.ComplexEvent)currentModel.getRoot();
+           org.Zeitline.Event.ComplexEvent currentRoot = (org.Zeitline.Event.ComplexEvent)currentModel.getRoot();
 
-           org.Zeitline.TimeEvent res = currentRoot.findPrev(new org.Zeitline.Query("README"));
+           org.Zeitline.Event.TimeEvent res = currentRoot.findPrev(new org.Zeitline.Query("README"));
 
            if (res != null) {
            tree.setSelectionPath(currentModel.getTreePath(res));

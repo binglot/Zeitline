@@ -36,6 +36,9 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Container;
@@ -92,8 +95,8 @@ public class TimeEventTransferHandler extends TransferHandler
     protected Timer hoverTimer;
     protected DataFlavor timeEventFlavor;
     protected String timeEventType = 
-	"application/x-java-jvm-local-objectref; class=org.Zeitline.TimeEvent";
-    //	"application/x-java-serialized-object; class=org.Zeitline.TimeEvent";
+	"application/x-java-jvm-local-objectref; class=org.Zeitline.Event.TimeEvent";
+    //	"application/x-java-serialized-object; class=org.Zeitline.Event.TimeEvent";
 
     public TimeEventTransferHandler(EventTree t) {
 

@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.ComplexEvent;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import javax.swing.ImageIcon;

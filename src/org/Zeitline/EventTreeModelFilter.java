@@ -36,6 +36,9 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
+
 import java.util.ArrayList;
 import java.util.Hashtable;
 
@@ -203,7 +206,7 @@ public class EventTreeModelFilter extends EventTreeModel {
 	    for (int i=mappedIndex; i<mapping.size();i++)
 		mapping.set(i,new Integer(((Integer)mapping.get(i)).intValue()-1));
 
-	    // TODO: check if toRemove is org.Zeitline.ComplexEvent and delete its mappings
+	    // TODO: check if toRemove is org.Zeitline.Event.ComplexEvent and delete its mappings
 	    // and those the contained CEs (recursively).
 	    // Also check if parent is "empty" now and remove parent 
 	    // This may cascade up.

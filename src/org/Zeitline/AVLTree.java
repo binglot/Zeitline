@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.TimeEvent;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Vector;
@@ -527,11 +529,11 @@ class AVLNode implements Serializable {
         this.right_child = null;
         this.child_count = 0;
         this.depth = 0;
-    } // org.Zeitline.AVLNode(org.Zeitline.TimeEvent,org.Zeitline.AVLNode)
+    } // org.Zeitline.AVLNode(org.Zeitline.Event.TimeEvent,org.Zeitline.AVLNode)
     
     public AVLNode(TimeEvent event) {
         this(event, null);
-    } // org.Zeitline.AVLNode(org.Zeitline.TimeEvent)
+    } // org.Zeitline.AVLNode(org.Zeitline.Event.TimeEvent)
     
     public TimeEvent getEvent() {
         return event;

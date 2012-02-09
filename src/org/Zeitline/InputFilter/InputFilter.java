@@ -40,7 +40,7 @@ SOFTWARE.
 import java.awt.Component;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JComponent;
-import org.Zeitline.AtomicEvent;
+import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Source;
 
 public abstract class InputFilter {

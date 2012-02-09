@@ -36,6 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AtomicEvent;
+
 import java.sql.Timestamp;
 import java.io.Serializable;
 import java.util.Vector;

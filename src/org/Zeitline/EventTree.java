@@ -36,6 +36,9 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.TimeEvent;
+
 import java.awt.Font;
 import java.awt.Insets;
 import java.awt.Point;
@@ -343,7 +346,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * removed from the tree with the {@link EventTreeModel
      * org.Zeitline.EventTreeModel}'s {@link EventTreeModel#removeNodes
      * removeNodes()} method. They are then inserted either directly
-     * into the target <tt>org.Zeitline.ComplexEvent</tt> or through the target
+     * into the target <tt>org.Zeitline.Event.ComplexEvent</tt> or through the target
      * model's {@link EventTreeModel#insertNode insertNode()} method.
      * 
      * @param target the target event to which the selected events are moved
@@ -361,7 +364,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
 	for (int i = 0; i < paths.length; i++) {
 	    node = (TimeEvent)paths[i].getLastPathComponent();
-	    //	    parent = (org.Zeitline.ComplexEvent)paths[i].getParentPath().getLastPathComponent();
+	    //	    parent = (org.Zeitline.Event.ComplexEvent)paths[i].getParentPath().getLastPathComponent();
 	    parent = node.getParent();
 	    TreeSet nodes = (TreeSet)sortedSelections.get(parent);
 	    if (nodes == null) {
@@ -483,7 +486,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      *
      * <p> This is used in org.Zeitline.Zeitline's
      * {@link Zeitline.CreateFromAction CreateFromAction} to determine
-     * where to insert the new <tt>org.Zeitline.ComplexEvent</tt>.
+     * where to insert the new <tt>org.Zeitline.Event.ComplexEvent</tt>.
      *
      * @return the lowest common parent of the topmost selected event(s)
      */
@@ -528,12 +531,12 @@ public class EventTree extends JTree implements TreeSelectionListener {
     } // getTopSelectionParent
 
     /**
-     * Determines is a <tt>org.Zeitline.TimeEvent</tt> is a descendant of a
-     * <tt>org.Zeitline.ComplexEvent</tt>.
+     * Determines is a <tt>org.Zeitline.Event.TimeEvent</tt> is a descendant of a
+     * <tt>org.Zeitline.Event.ComplexEvent</tt>.
      * 
      * <p> Used by {@link #getTopSelectionParent getTopSelectionParent}.
      *
-     * @param node the potential descendant <tt>org.Zeitline.TimeEvent</tt>
+     * @param node the potential descendant <tt>org.Zeitline.Event.TimeEvent</tt>
      * @param ancestor the event to compare against for ancestry
      */
     protected boolean isDescendantOf(TimeEvent node, ComplexEvent ancestor) {

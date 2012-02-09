@@ -1,12 +1,8 @@
 package org.Zeitline.Timestamp;
 
-import java.io.Serializable; /**
- * Created by IntelliJ IDEA.
- * User: Bart
- * Date: 09/02/12
- * Time: 11:06
- * To change this template use File | Settings | File Templates.
- */
+import java.io.Serializable;
+import java.util.Date;
+
 public interface ITimestamp extends Serializable, Cloneable, Comparable<Date> {
 void setTime(long time);
     long getTime();
