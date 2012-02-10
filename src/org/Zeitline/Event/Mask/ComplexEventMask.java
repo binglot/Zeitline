@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.Event.Mask; /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -87,7 +87,7 @@ public class ComplexEventMask extends JPanel implements ActionListener,DocumentL
     
     private ComplexEvent currentEvent;
 
-    ComplexEventMask() {
+    public ComplexEventMask() {
 	super();
 
 	JPanel contentPanel = new JPanel(new GridBagLayout());
@@ -201,7 +201,7 @@ public class ComplexEventMask extends JPanel implements ActionListener,DocumentL
 	this.setLayout(new BorderLayout());
 	this.add(contentPanel, BorderLayout.PAGE_START);
 	this.add(buttonPanel);
-    } // org.Zeitline.ComplexEventMask
+    } // org.Zeitline.Event.Mask.ComplexEventMask
 
     public void set(ComplexEvent e, TreeModel m) {
 	this.currentModel = m;
@@ -275,4 +275,4 @@ public class ComplexEventMask extends JPanel implements ActionListener,DocumentL
 	update_button.setEnabled(true);
     }
     
-} // class org.Zeitline.ComplexEventMask
+} // class org.Zeitline.Event.Mask.ComplexEventMask

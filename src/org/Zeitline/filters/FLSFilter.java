@@ -180,35 +180,35 @@ public class FLSFilter extends InputFilter {
 	    /* old code for general events
 		
 	    if ((mtime == atime) && (mtime == ctime))
-		return new org.Zeitline.GeneralEvent("MAC " + name, description,
+		return new org.Zeitline.Event.GeneralEvent("MAC " + name, description,
 				       new Timestamp(mtime));
 
 	    if (mtime == atime) {
-		event_queue.add(new org.Zeitline.GeneralEvent("MA. " + name, description,
+		event_queue.add(new org.Zeitline.Event.GeneralEvent("MA. " + name, description,
 						new Timestamp(mtime)));
-		return new org.Zeitline.GeneralEvent("..C " + name, description,
+		return new org.Zeitline.Event.GeneralEvent("..C " + name, description,
 				       new Timestamp(ctime));
 	    }
 		    
 	    if (mtime == ctime) {
-		event_queue.add(new org.Zeitline.GeneralEvent("M.C " + name, description,
+		event_queue.add(new org.Zeitline.Event.GeneralEvent("M.C " + name, description,
 						new Timestamp(mtime)));
-		return new org.Zeitline.GeneralEvent(".A. " + name, description,
+		return new org.Zeitline.Event.GeneralEvent(".A. " + name, description,
 				       new Timestamp(atime));
 	    }
 		    
 	    if (atime == ctime) {
-		event_queue.add(new org.Zeitline.GeneralEvent(".AC " + name, description,
+		event_queue.add(new org.Zeitline.Event.GeneralEvent(".AC " + name, description,
 						new Timestamp(atime)));
-		return new org.Zeitline.GeneralEvent("M.. " + name, description,
+		return new org.Zeitline.Event.GeneralEvent("M.. " + name, description,
 				       new Timestamp(mtime));
 	    }
 	    
-	    event_queue.add(new org.Zeitline.GeneralEvent("M.. " + name, description,
+	    event_queue.add(new org.Zeitline.Event.GeneralEvent("M.. " + name, description,
 					    new Timestamp(mtime)));
-	    event_queue.add(new org.Zeitline.GeneralEvent(".A. " + name, description,
+	    event_queue.add(new org.Zeitline.Event.GeneralEvent(".A. " + name, description,
 					    new Timestamp(atime)));
-	    return new org.Zeitline.GeneralEvent("..C " + name, description,
+	    return new org.Zeitline.Event.GeneralEvent("..C " + name, description,
 				   new Timestamp(ctime));
 
 	    */ 

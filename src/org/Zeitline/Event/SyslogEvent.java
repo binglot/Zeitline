@@ -1,8 +1,8 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.Event; /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
-Written by Florian Buchholz and Courtney Falk.
+Written by Florian Buchholz.
 
 Copyright (c) 2004-2006 Florian Buchholz, Courtney Falk, Purdue
 University. All rights reserved.
@@ -38,70 +38,51 @@ SOFTWARE.
 
 import org.Zeitline.Event.AtomicEvent;
 
+import org.Zeitline.FormGenerator;
 import org.Zeitline.Timestamp.Timestamp;
 import java.io.Serializable;
+import java.util.Vector;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-/**
- * Class for the basic, discrete events that are imported from
- * various sources. In addition to the fields and methods from the
- * abstract {@link org.Zeitline.Event.TimeEvent org.Zeitline.Event.TimeEvent} class, there are also fields
- * and methods for managing the source from where the event is
- * imported and a user identifier (though not currently used).
- */
-public class GeneralEvent
+
+public class SyslogEvent
     extends AtomicEvent
     implements Serializable {
     
-    /**
-     * Name of the event. The text in the name will appear in the JTree
-     * listing of the {@link EventTree org.Zeitline.EventTree}.
-     */
-    protected String name;
+    protected static JPanel panel = null;
+    protected static JLabel lbl_host;
+    protected static JLabel lbl_process;
+    protected static JLabel lbl_pid;
+    protected static JLabel lbl_message;
+    
+    private String host;
+    private String process;
+    private Integer pid;
+    private String message;
 
-    /**
-     *  Description of the event. This field contains all the
-     *  important information that doesn't fit in the name field.
-     */
-    protected String description;
+    public SyslogEvent(Timestamp start_time,
+     		       String host,
+		       String process,
+		       Integer pid,
+		       String message) {
 
-    /**
-     * Returns an org.Zeitline.Event.AtomicEvent with initial name, description, start
-     * time, and source.
-     *
-     * @param name the name of the event
-     * @param description the description for the event
-     * @param start the start time of the event
-     * @param source the source object from where the event was imported
-     */
-    public GeneralEvent(String name,
-        String description,
-        Timestamp start,
-        Source source) {
-        
-        this.description = description;
-        this.startTime = start;
-        this.reported_time = start;
-        this.adjusted_time = start;
-        this.source = source;
+	if (panel == null) {
+		initPanel();
+	}
+	
+	this.startTime = start_time;
+	this.host = host;
+	this.process = process;
+	this.pid = pid;
+	this.message = message;
         this.uniqueId = new Long(idCounter);
-        idCounter++;
-        this.name = name;
-    } // org.Zeitline.Event.AtomicEvent(String,String,Timestamp,org.Zeitline.Source)
+	idCounter++;
 
-    /**
-     * Returns an org.Zeitline.Event.AtomicEvent with initial name, description and start
-     * time. The source is set to <tt> null </tt>.
-     *
-     * @param name the name of the event
-     * @param description the description for the event
-     * @param start the start time of the event
-     */
-    public GeneralEvent(String name,
-		       String description,
-		       Timestamp start) {
-        
-        this(name, description, start, null);
-    } // org.Zeitline.Event.AtomicEvent(String,String,Timestamp)
+	adjustedTime = start_time;
+	reportedTime = start_time;
+	
+    }
     
     /**
      * Returns the name of the event.
@@ -109,7 +90,7 @@ public class GeneralEvent
      * @return the name of the event, {@link #name name}
      */
     public String getName() {
-	return name;
+	return process + ": " + message;
     } // getName
     
     /**
@@ -118,17 +99,13 @@ public class GeneralEvent
      * @return the description of the event, {@link #description description}
      */
     public String getDescription() {
-	return description;
+
+	return "Host: " + host +
+	    "\nProcess: " + process +
+	    "\nPID: " + ((pid == null) ? "-":pid.toString()) + 
+	    "\nMessage: " + message;
     } // getDescription
     
-    public void setSource(Source s) {
-	this.source = s;
-    } // setSource
-    
-    public Source getSource() {
-	return source;
-    } // getSource
-
     /**
      * Returns a string representation of the event. This is currently the
      * {@link #name name} field.
@@ -136,7 +113,47 @@ public class GeneralEvent
      * @return a string representation of the event
      */
     public String toString() {
-	return this.name;
+	return getName();
     } // toString
 
-} // class org.Zeitline.Event.AtomicEvent
+
+//    public ImageIcon getIcon() {
+//	return icon;
+//    }
+    
+    public JPanel getPanel() {
+	if (panel == null)
+		initPanel();
+	return panel;
+    }
+	
+    public void setPanelValues() {
+	    if (panel == null)
+		    initPanel();
+	    lbl_host.setText(host);
+	    lbl_process.setText(process);
+	    if (pid == null)
+		    lbl_pid.setText("-");
+	    else
+		    lbl_pid.setText(pid.toString());
+	    lbl_message.setText(message);
+    }
+
+
+    private void initPanel() {
+	
+	    Vector items = new Vector();
+	    lbl_host = new JLabel("", JLabel.LEADING);
+	    items.add(FormGenerator.getFormItem("Host:", lbl_host));
+	    lbl_process = new JLabel("", JLabel.LEADING);
+	    items.add(FormGenerator.getFormItem("Process:", lbl_process));		
+	    lbl_pid = new JLabel("", JLabel.LEADING);
+	    items.add(FormGenerator.getFormItem("PID:", lbl_pid));
+	    lbl_message = new JLabel("", JLabel.LEADING);
+	    items.add(FormGenerator.getFormItem("Message:", lbl_message));
+
+	    panel = FormGenerator.createForm(items);
+	    
+    }
+    
+} // class org.Zeitline.Event.SyslogEvent

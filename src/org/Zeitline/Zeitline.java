@@ -39,6 +39,8 @@ package org.Zeitline;
 
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.Mask.AtomicEventMask;
+import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.Event.TimeEvent;
 import org.Zeitline.InputFilter.InputFilter;
 

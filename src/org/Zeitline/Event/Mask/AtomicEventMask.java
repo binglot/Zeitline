@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.Event.Mask; /********************************************************************
 
 This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -37,6 +37,7 @@ SOFTWARE.
 **********************************************************************/
 
 import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Source;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -172,7 +173,7 @@ public class AtomicEventMask extends JPanel {
 	this.add(topPanel, BorderLayout.PAGE_START);
 	this.add(display, BorderLayout.WEST);
 	this.add(bottomPanel, BorderLayout.PAGE_END);
-    } // org.Zeitline.AtomicEventMask
+    } // org.Zeitline.Event.Mask.AtomicEventMask
 
     public void set(AtomicEvent e) {
         Source s = e.getSource();
@@ -200,4 +201,4 @@ public class AtomicEventMask extends JPanel {
 	e.setPanelValues();
 	current = e;
     } // set
-} // class org.Zeitline.AtomicEventMask
+} // class org.Zeitline.Event.Mask.AtomicEventMask

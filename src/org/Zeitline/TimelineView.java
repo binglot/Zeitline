@@ -36,8 +36,11 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.*;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.Mask.AtomicEventMask;
+import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.Event.TimeEvent;
 
 import java.awt.BorderLayout;

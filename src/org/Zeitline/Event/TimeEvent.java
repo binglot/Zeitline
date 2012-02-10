@@ -1,7 +1,8 @@
 package org.Zeitline.Event;
 
-import java.io.Serializable;
 import org.Zeitline.Timestamp.ITimestamp;
+
+import java.io.Serializable;
 
 public abstract class TimeEvent
         implements Serializable, ITimeEvent<javax.swing.ImageIcon> {

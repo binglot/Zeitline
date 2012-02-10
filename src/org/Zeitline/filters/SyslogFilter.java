@@ -38,10 +38,10 @@ SOFTWARE.
 **********************************************************************/
 
 import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.SyslogEvent;
 import org.Zeitline.FileInputFilter;
 import org.Zeitline.InputFilter.InputFilter;
 import org.Zeitline.Source;
-import org.Zeitline.SyslogEvent;
 
 import java.awt.Component;
 import java.io.RandomAccessFile;
@@ -178,7 +178,7 @@ public class SyslogFilter extends InputFilter {
 //		System.out.println("Host: " + m.group(6) + " Generator: " + m.group(7));
 		    
 		return new SyslogEvent(new Timestamp(now.getTime().getTime()), m.group(6), m.group(7), null, m.group(8));
-//		return new org.Zeitline.GeneralEvent(m.group(8), "", new Timestamp(now.getTime().getTime()));
+//		return new org.Zeitline.Event.GeneralEvent(m.group(8), "", new Timestamp(now.getTime().getTime()));
 	}
 	
 	System.err.println("No match for line: " + line);

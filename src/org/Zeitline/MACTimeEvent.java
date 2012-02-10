@@ -39,7 +39,7 @@ SOFTWARE.
 import org.Zeitline.Event.AtomicEvent;
 
 import org.Zeitline.Timestamp.ITimestamp;
-import org.Zeitline.Timestamp.Timestamp;
+
 import java.io.File;
 import java.io.Serializable;
 import java.util.Vector;
@@ -127,8 +127,8 @@ public class MACTimeEvent
 	else
 	    this.startTime = ctime;
 
-	adjusted_time = startTime;
-	reported_time = startTime;
+	adjustedTime = startTime;
+	reportedTime = startTime;
 	
     }
     
