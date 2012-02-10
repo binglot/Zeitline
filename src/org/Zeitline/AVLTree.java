@@ -427,7 +427,7 @@ public class AVLTree implements Serializable{
     } // isLeftChild
 
 
-    public Vector getInterval(Timestamp start, Timestamp end) {
+    public Vector getInterval(ITimestamp start, ITimestamp end) {
 
 	Vector res = new Vector();
 	if (root != null)
@@ -437,7 +437,7 @@ public class AVLTree implements Serializable{
 
     } // getInterval
 
-    private void walkNodes(AVLNode current, Timestamp start, Timestamp end, Vector result) {
+    private void walkNodes(AVLNode current, ITimestamp start, ITimestamp end, Vector result) {
 
 	AVLNode left, right;
 

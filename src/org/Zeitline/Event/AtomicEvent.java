@@ -15,7 +15,8 @@ import java.io.Serializable;
  * imported and a user identifier (though not currently used).
  */
 public abstract class AtomicEvent
-        extends TimeEvent implements Serializable {
+        extends TimeEvent
+        implements Serializable {
 
     // TODO: The icon should be created by a different class.
     protected static ImageIcon icon = Zeitline.createNavigationIcon("atomic_small");

@@ -39,7 +39,7 @@ public abstract class TimeEvent
 
     public ITimestamp getEndTime() {
         // Assuming start = end times, override for classes
-        // that have an end_time field
+        // that have an endTime field
         return getStartTime();
     }
 

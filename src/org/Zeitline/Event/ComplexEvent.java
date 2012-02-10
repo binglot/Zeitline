@@ -1,150 +1,93 @@
-package org.Zeitline.Event; /********************************************************************
+package org.Zeitline.Event;
 
- This file is part of org.Zeitline.Zeitline: a forensic timeline editor
-
- Written by Florian Buchholz and Courtney Falk.
-
- Copyright (c) 2004-2006 Florian Buchholz, Courtney Falk, Purdue
- University. All rights reserved.
-
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the
- "Software"), to deal with the Software without restriction, including
- without limitation the rights to use, copy, modify, merge, publish,
- distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
-
- Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimers.
- Redistributions in binary form must reproduce the above copyright
- notice, this list of conditions and the following disclaimers in the
- documentation and/or other materials provided with the distribution.
- Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
- University, nor the names of its contributors may be used to endorse
- or promote products derived from this Software without specific prior
- written permission.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
- IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
- SOFTWARE.
-
- **********************************************************************/
-
-import org.Zeitline.*;
-
-import java.io.Serializable;
-
+import org.Zeitline.AVLTree;
+import org.Zeitline.Query;
+import org.Zeitline.Source;
 import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
+import org.Zeitline.Zeitline;
 
+import javax.swing.*;
+import java.io.Serializable;
 import java.util.Enumeration;
 import java.util.Vector;
-import javax.swing.ImageIcon;
 
 public class ComplexEvent
         extends TimeEvent
         implements Serializable {
 
-    /**
-     * End time of the event. This field denotes the endpoint of the
-     * time interval formed with the startTime field, describing the
-     * duration of the event.
-     */
-    protected ITimestamp end_time;
-    protected AVLTree children_by_time;
+    protected static ImageIcon icon = Zeitline.createNavigationIcon("complex_small");
+    protected static boolean defaultDeleteEmpty = true;
+    protected ITimestamp endTime;
+    protected AVLTree childrenByTime;
     protected Vector sources;
     protected boolean deleteEmptyEvent;
-    protected static boolean defaultDeleteEmpty = true;
-
-    /**
-     * Name of the event. The text in the name will appear in the JTree
-     * listing of the {@link org.Zeitline.EventTree org.Zeitline.EventTree}.
-     */
-    protected String name;
-
-    /**
-     * Description of the event. This field contains all the
-     * important information that doesn't fit in the name field.
-     */
+    protected String name; // Name of the event will appear in the JTree listing
     protected String description;
 
-    protected static ImageIcon icon = Zeitline.createNavigationIcon("complex_small");
 
     public ComplexEvent() {
         this("", "", false);
-    } // org.Zeitline.Event.ComplexEvent()
+    }
 
     public ComplexEvent(String name) {
         this(name, "", false);
-    } // org.Zeitline.Event.ComplexEvent(String)
+    }
 
     public ComplexEvent(String name, String description) {
         this(name, description, false);
-    } // org.Zeitline.Event.ComplexEvent(String,String)
+    }
 
     public ComplexEvent(String name, String description, boolean pers) {
         this.sources = new Vector();
         //this.sources_updated = true;
-        this.children_by_time = new AVLTree();
+        this.childrenByTime = new AVLTree();
         this.description = description;
         this.startTime = new Timestamp(-1);
-        this.end_time = startTime;
-        this.uniqueId = new Long(idCounter);
+        this.endTime = startTime;
+        this.uniqueId = idCounter;
         idCounter++;
         this.name = name;
-        this.deleteEmptyEvent = this.defaultDeleteEmpty;
+        this.deleteEmptyEvent = defaultDeleteEmpty;
         // this.name = name + " (id: " + this.uniqueId + ")";
-    } // org.Zeitline.Event.ComplexEvent(String,String,boolean)
+    }
 
-    /**
-     * Returns the name of the event.
-     *
-     * @return the name of the event, {@link #name name}
-     */
-    public String getName() {
-        return name;
-    } // getName
-
-    /**
-     * Returns the description of the event.
-     *
-     * @return the description of the event, {@link #description description}
-     */
-    public String getDescription() {
-        return description;
-    } // getDescription
-
-    public ITimestamp getEndTime() {
-        return end_time;
-    } // getEndTime
-
-    public ITimestamp getMaxStartTime() {
-        ITimestamp ret = children_by_time.getMaxStartTime();
-        if (ret == null)
-            ret = startTime;
-        return ret;
-    } // getMaxStartTime
 
     public void setName(String name) {
         this.name = name;
-    } // setName
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public void setDescription(String description) {
         this.description = description;
-    } // setDescription
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ITimestamp getEndTime() {
+        return endTime;
+    }
+
+    public ITimestamp getMaxStartTime() {
+        ITimestamp ret = childrenByTime.getMaxStartTime();
+
+        if (ret == null)
+            ret = startTime;
+
+        return ret;
+    }
 
     public int countChildren() {
-        return children_by_time.getNodeCount();
+        return childrenByTime.getNodeCount();
     } // countChildren
 
     public void resort(TimeEvent event, ITimestamp new_start) {
-        children_by_time.resort(event, new_start);
+        childrenByTime.resort(event, new_start);
     } // resort
 
     public void setDeleteEmptyEvent(boolean newVal) {
@@ -169,16 +112,16 @@ public class ComplexEvent
         boolean ret = false;
 
         /*
-      if (children_by_time.getNodeCount() == 0) {
+      if (childrenByTime.getNodeCount() == 0) {
           System.out.println("Inserting into empty event (" + this +"): " + event);
           System.out.println(this + "'s start time: " + startTime);
-          System.out.println(this + "'s end time: " + end_time);
+          System.out.println(this + "'s end time: " + endTime);
           startTime = null;
-          end_time = null;
+          endTime = null;
       }
       */
 //	if((this.startTime == null) ||
-        if ((children_by_time.getNodeCount() == 0) ||
+        if ((childrenByTime.getNodeCount() == 0) ||
                 (event.getStartTime().before(this.startTime))) {
             if (parent != null) {
                 parent.resort(this, event.getStartTime());
@@ -186,12 +129,12 @@ public class ComplexEvent
             } else this.startTime = event.getStartTime();
         }
 
-        if ((this.end_time == null) ||
-                (event.getEndTime().after(this.end_time))) {
-            this.end_time = event.getEndTime();
+        if ((this.endTime == null) ||
+                (event.getEndTime().after(this.endTime))) {
+            this.endTime = event.getEndTime();
         }
 
-        if (children_by_time.add(event))
+        if (childrenByTime.add(event))
             event.setParent(this);
 
         //sources_updated = false;
@@ -208,16 +151,16 @@ public class ComplexEvent
         //sources_updated = false;
         boolean ret = false;
 
-        if (children_by_time.remove(event)) {
+        if (childrenByTime.remove(event)) {
 
             // for now always delete empty CEs (except for roots)
             // in future we might want a flag here also
-            if ((children_by_time.getNodeCount() == 0)) {
+            if ((childrenByTime.getNodeCount() == 0)) {
                 if ((parent != null) && deleteEmptyEvent)
                     parent.removeTimeEvent(this);
                 else {
                     //   startTime = new Timestamp(-1);
-                    end_time = startTime;
+                    endTime = startTime;
                 }
                 return true;
             }
@@ -225,16 +168,16 @@ public class ComplexEvent
             if (startTime.equals(event.getStartTime())) {
                 if (parent != null) {
                     //			System.out.println("Resorting parent");
-                    parent.resort(this, children_by_time.getMinStartTime());
+                    parent.resort(this, childrenByTime.getMinStartTime());
                     ret = true;
                     //			parent.removeTimeEvent(this);
                     //			parent.addTimeEvent(this);
                 } else
-                    startTime = children_by_time.getMinStartTime();
+                    startTime = childrenByTime.getMinStartTime();
             }
 
-            if (end_time.equals(event.getEndTime()))
-                end_time = children_by_time.getMaxEndTime();
+            if (endTime.equals(event.getEndTime()))
+                endTime = childrenByTime.getMaxEndTime();
 
         }
 
@@ -242,15 +185,15 @@ public class ComplexEvent
     } // removeTimeEvent
 
     public TimeEvent getEventByIndex(int i) {
-        return (TimeEvent) children_by_time.getElement(i);
+        return (TimeEvent) childrenByTime.getElement(i);
     } // getEventByIndex
 
     public int getChildIndex(TimeEvent e) {
-        return children_by_time.getIndex(e);
+        return childrenByTime.getIndex(e);
     } // getChildIndex
 
-    public Vector getChildren(Timestamp start, Timestamp end) {
-        return children_by_time.getInterval(start, end);
+    public Vector getChildren(ITimestamp start, ITimestamp end) {
+        return childrenByTime.getInterval(start, end);
     } // getChildren
 
     public boolean computeQuery(Query q) {
@@ -278,10 +221,10 @@ public class ComplexEvent
                 + "\nStart: "
                 + this.startTime
                 + "\nEnd: "
-                + this.end_time
+                + this.endTime
                 + "\nNumber of children: "
-                //			+ children_by_time.size());
-                + children_by_time.getNodeCount());
+                //			+ childrenByTime.size());
+                + childrenByTime.getNodeCount());
     } // print
 
     public Vector getSources() {
@@ -291,8 +234,8 @@ public class ComplexEvent
         TimeEvent time_event = null;
         Source temp_source = null;
         sources.clear();
-        for (int i = 0; i < children_by_time.getNodeCount(); i++) {
-            time_event = children_by_time.getElement(i);
+        for (int i = 0; i < childrenByTime.getNodeCount(); i++) {
+            time_event = childrenByTime.getElement(i);
             if (time_event instanceof AtomicEvent) {
                 temp_source = ((AtomicEvent) time_event).getSource();
                 if (!sources.contains(temp_source)) sources.addElement(temp_source);

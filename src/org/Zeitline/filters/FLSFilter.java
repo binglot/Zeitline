@@ -38,9 +38,9 @@ SOFTWARE.
 **********************************************************************/
 
 import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.MACTimeEvent;
 import org.Zeitline.FileInputFilter;
 import org.Zeitline.InputFilter.InputFilter;
-import org.Zeitline.MACTimeEvent;
 import org.Zeitline.Source;
 
 import java.awt.Component;
@@ -168,7 +168,7 @@ public class FLSFilter extends InputFilter {
 					     user_id, group_id, mode, size,
 					     MACTimeEvent.TYPE_M));
 
-	    event_queue.add(new MACTimeEvent(name, mtime, atime, ctime, 
+	    event_queue.add(new MACTimeEvent(name, mtime, atime, ctime,
 					     user_id, group_id, mode, size,
 					     MACTimeEvent.TYPE_A));
 
