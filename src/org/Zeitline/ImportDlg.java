@@ -287,7 +287,7 @@ public class ImportDlg
 	    
 	    Vector items = new Vector();
 //	    for (int i = 0; i < labels.length; i++) {
-//		    items.add(org.Zeitline.FormGenerator.getFormItem(labels[i], parameter_objects[i]));
+//		    items.add(org.Zeitline.Event.GUI.FormGenerator.getFormItem(labels[i], parameter_objects[i]));
 //	    }
 	    label_set.removeAllElements();
             for (int i = 0; i < labels.length; i++) {
