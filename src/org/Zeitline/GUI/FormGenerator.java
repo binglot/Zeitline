@@ -1,4 +1,4 @@
-package org.Zeitline.Event.GUI;
+package org.Zeitline.GUI;
 
 import javax.swing.*;
 import java.awt.*;

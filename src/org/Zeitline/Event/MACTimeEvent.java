@@ -4,7 +4,7 @@
 
 package org.Zeitline.Event;
 
-import org.Zeitline.Event.GUI.IFormGenerator;
+import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Timestamp.ITimestamp;
 
 import javax.swing.*;

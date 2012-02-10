@@ -38,7 +38,7 @@ package org.Zeitline.filters;
  **********************************************************************/
 
 import org.Zeitline.Event.AtomicEvent;
-import org.Zeitline.Event.GUI.IFormGenerator;
+import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Event.SyslogEvent;
 import org.Zeitline.FileInputFilter;
 import org.Zeitline.InputFilter.InputFilter;

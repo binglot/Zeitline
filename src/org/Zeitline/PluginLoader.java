@@ -1,9 +1,8 @@
 package org.Zeitline;
 
-import org.Zeitline.Event.GUI.IFormGenerator;
+import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
-import org.Zeitline.Event.GUI.FormGenerator;
-import org.Zeitline.filters.FLSFilter;
+import org.Zeitline.GUI.FormGenerator;
 
 import java.io.BufferedInputStream;
 import java.io.File;

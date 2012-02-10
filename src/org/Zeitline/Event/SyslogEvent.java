@@ -1,7 +1,7 @@
 package org.Zeitline.Event;
 
-//import org.Zeitline.Event.GUI.FormGenerator;
-import org.Zeitline.Event.GUI.IFormGenerator;
+//import org.Zeitline.GUI.FormGenerator;
+import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Timestamp.Timestamp;
 
 import java.io.Serializable;
