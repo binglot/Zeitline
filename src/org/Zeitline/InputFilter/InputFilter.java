@@ -41,9 +41,16 @@ import java.awt.Component;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.JComponent;
 import org.Zeitline.Event.AtomicEvent;
+import org.Zeitline.Event.GUI.FormGenerator;
+import org.Zeitline.Event.GUI.IFormGenerator;
 import org.Zeitline.Source;
 
 public abstract class InputFilter {
+    protected IFormGenerator formGenerator;
+
+    public InputFilter(IFormGenerator formGenerator){
+        this.formGenerator = formGenerator;
+    }
     public abstract Source init(String location, Component parent);
     public abstract AtomicEvent getNextEvent();
     public abstract FileFilter getFileFilter();

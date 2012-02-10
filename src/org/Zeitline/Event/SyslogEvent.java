@@ -1,6 +1,6 @@
 package org.Zeitline.Event;
 
-import org.Zeitline.Event.GUI.FormGenerator;
+//import org.Zeitline.Event.GUI.FormGenerator;
 import org.Zeitline.Event.GUI.IFormGenerator;
 import org.Zeitline.Timestamp.Timestamp;
 
@@ -26,9 +26,9 @@ public class SyslogEvent
     private String message;
     private IFormGenerator formGenerator;
 
-    public SyslogEvent(Timestamp start_time, String host, String process, Integer pid, String message) {
-        this(start_time, host, process, pid, message, new FormGenerator());
-    }
+//    public SyslogEvent(Timestamp start_time, String host, String process, Integer pid, String message) {
+//        this(start_time, host, process, pid, message, new FormGenerator());
+//    }
 
     public SyslogEvent(Timestamp start_time, String host, String process, Integer pid, String message, IFormGenerator formGenerator) {
         this.formGenerator = formGenerator;

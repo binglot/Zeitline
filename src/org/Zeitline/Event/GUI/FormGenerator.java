@@ -7,6 +7,8 @@ import java.util.Vector;
 
 public class FormGenerator implements IFormGenerator {
 
+    public FormGenerator() {}
+
     @Override
     public JPanel createForm(Vector items) {
 

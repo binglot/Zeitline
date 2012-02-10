@@ -4,7 +4,6 @@
 
 package org.Zeitline.Event;
 
-import org.Zeitline.Event.GUI.FormGenerator;
 import org.Zeitline.Event.GUI.IFormGenerator;
 import org.Zeitline.Timestamp.ITimestamp;
 
@@ -53,14 +52,11 @@ public class MACTimeEvent
     protected int type;
     private IFormGenerator formGenerator;
 
-    public MACTimeEvent(String filename, ITimestamp mtime, ITimestamp atime, ITimestamp ctime,
-                        int user_id, int group_id, int mode, long size, int type) {
-        this(filename, mtime, atime, ctime, user_id, group_id, mode, size, type, new FormGenerator());
-    }
-
 
     public MACTimeEvent(String filename, ITimestamp mtime, ITimestamp atime, ITimestamp ctime,
                         int user_id, int group_id, int mode, long size, int type, IFormGenerator formGenerator) {
+
+        this.formGenerator = formGenerator;
 
         if (panel == null) {
             initPanel();
@@ -77,7 +73,6 @@ public class MACTimeEvent
         this.type = type;
         this.uniqueId = idCounter;
         idCounter++;
-        this.formGenerator = formGenerator;
 
         if (type == TYPE_M || type == TYPE_MA ||
                 type == TYPE_MC || type == TYPE_MAC)
