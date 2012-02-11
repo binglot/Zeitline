@@ -16,15 +16,26 @@ import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * NEEDS A MAJOR REWRITING!
+ *
+ * I'VE JUST MODIFIED HOW THE LOADED PLUGIN IS
+ * INITIALIZED BUT A LOT OF THE CODE REPEATS
+ */
+
+
+
 public class PluginLoader extends ClassLoader {
-    // used to filter out files in a directory with a ".class" extension
+    private static final String PACKAGE_NAME = "org.Zeitline.filters";
+    private static final String FILE_EXTENSION = ".class";
+    private IFormGenerator formGenerator = new FormGenerator();
+
     private FilenameFilter class_filter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
-            return name.endsWith(".class");
-        } // accept
+            return name.endsWith(FILE_EXTENSION);
+        }
     };
-    private static final String PACKAGE_NAME = "org.Zeitline.filters.";
-    public IFormGenerator formGenerator = new FormGenerator();
+
 
     public Enumeration getPluginsFromJar(String jar_location, String dir_name) {
         Vector result = new Vector();
@@ -86,7 +97,6 @@ public class PluginLoader extends ClassLoader {
 
                 // instantiate a copy of the new org.Zeitline.InputFilter.org.Zeitline.InputFilter object
                 try {
-                    //class_inst = (InputFilter) class_def.newInstance();
                     class_inst = (InputFilter) class_def.newInstance();
                 } catch (InstantiationException inst) {
                     System.err.println(inst);
@@ -143,7 +153,7 @@ public class PluginLoader extends ClassLoader {
 
             // create the Class object
             if (findLoadedClass(class_name) == null) {
-                class_def = defineClass(PACKAGE_NAME + class_name, class_data, 0, class_size);
+                class_def = defineClass(PACKAGE_NAME + "." + class_name, class_data, 0, class_size);
                 resolveClass(class_def);
             } else {
                 System.err.println("Warning -- filter of name: " + class_name +

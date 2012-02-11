@@ -86,9 +86,7 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 public class Zeitline implements TreeSelectionListener {
-    private static final String[] PLUGIN_DIRS = {"reg_filters", "filters"};
     private static final String JAR_FILTERS = "reg_filters";
-    //    private static final String DYNAMIC_FILTERS = "filters";
     private static final String DYNAMIC_FILTERS = "filters";
     private static final String PACKAGE_NAME = "org/Zeitline/";
     static Zeitline app;
@@ -1180,21 +1178,23 @@ public class Zeitline implements TreeSelectionListener {
         Vector result = new Vector();
         PluginLoader loader = new PluginLoader();
 
-        String location =
-                Zeitline.class.getProtectionDomain().getCodeSource().
-                        getLocation().getFile();
+        String location = Zeitline.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-        Enumeration plugins = null;
+        Enumeration plugins;
         InputFilter temp = null;
 
-        if (location.indexOf(".jar") >= 0) {
+        // If the application is run from a JAR file, try to find embedded plugins
+        if (Utils.ContainsCaseInsensitive(location, ".jar")) {
             plugins = loader.getPluginsFromJar(location, JAR_FILTERS);
             while (plugins.hasMoreElements()) {
                 result.add(plugins.nextElement());
             }
         }
 
-        if ((plugins = loader.getPluginsFromDir(location + PACKAGE_NAME + DYNAMIC_FILTERS)) == null)
+        // Look for the plugins in the 'filters' directory
+        // TODO: NEEDS FIXING, the 'location' can be a full file path
+        String pluginsDir = location + PACKAGE_NAME + DYNAMIC_FILTERS;
+        if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
             return result;
 
         while (plugins.hasMoreElements()) {
