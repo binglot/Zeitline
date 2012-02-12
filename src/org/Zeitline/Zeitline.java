@@ -57,9 +57,7 @@ import java.io.IOException;
 import java.io.StreamCorruptedException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ButtonGroup;
@@ -86,9 +84,9 @@ import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
 public class Zeitline implements TreeSelectionListener {
-    private static final String JAR_FILTERS = "reg_filters";
-    private static final String DYNAMIC_FILTERS = "filters";
-    private static final String PACKAGE_NAME = "org/Zeitline/";
+    private static final String JAR_FILTERS_DIR = "reg_filters";
+    private static final String DYNAMIC_FILTERS_DIR = "filters";
+    private static final String PACKAGE_DIR = "org/Zeitline/";
     static Zeitline app;
     public static final String PROJECT_FILE_EXTENSION = ".ztl";
     public static final String PROJECT_NAME = "Zeitline Project";
@@ -107,8 +105,7 @@ public class Zeitline implements TreeSelectionListener {
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
     protected final JFileChooser fileChooser;
-    //    protected Hashtable filters;
-    protected Vector filters;
+    protected List<InputFilter> filters;
 
     protected Action createFrom;
     protected Action createTimelineFrom;
@@ -1174,34 +1171,34 @@ public class Zeitline implements TreeSelectionListener {
     } // createMenuItem
 
 
-    private Vector loadPlugins() {
-        Vector result = new Vector();
+    private List<InputFilter> loadPlugins() {
+        List<InputFilter> result = new ArrayList<InputFilter>();
         PluginLoader loader = new PluginLoader();
 
         String location = Zeitline.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
-        Enumeration plugins;
+        List<InputFilter> plugins;
         InputFilter temp = null;
 
-        // If the application is run from a JAR file, try to find embedded plugins
-        if (Utils.ContainsCaseInsensitive(location, ".jar")) {
-            plugins = loader.getPluginsFromJar(location, JAR_FILTERS);
-            while (plugins.hasMoreElements()) {
-                result.add(plugins.nextElement());
-            }
-        }
+//        // If the application is run from a JAR file, try to find embedded plugins
+//        if (Utils.containsCaseInsensitive(location, ".jar")) {
+//            plugins = loader.getPluginsFromJar(location, JAR_FILTERS_DIR);
+//            while (plugins.hasMoreElements()) {
+//                result.add(plugins.nextElement());
+//            }
+//        }
 
         // Look for the plugins in the 'filters' directory
         // TODO: NEEDS FIXING, the 'location' can be a full file path
-        String pluginsDir = location + PACKAGE_NAME + DYNAMIC_FILTERS;
+        String pluginsDir = location + PACKAGE_DIR + DYNAMIC_FILTERS_DIR;
         if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
             return result;
 
-        while (plugins.hasMoreElements()) {
-            result.add(plugins.nextElement());
+        for(InputFilter filter: plugins){
+            result.add(filter);
         }
 
         return result;
-    } // loadPlugins
+    }
 
-} // class org.Zeitline.Zeitline
+}
