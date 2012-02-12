@@ -10,12 +10,12 @@ import java.io.Serializable;
 /**
  * Class for the basic, discrete events that are imported from
  * various sources. In addition to the fields and methods from the
- * abstract {@link TimeEvent} class, there are also fields
+ * abstract {@link AbstractTimeEvent} class, there are also fields
  * and methods for managing the source from where the event is
  * imported and a user identifier (though not currently used).
  */
 public abstract class AtomicEvent
-        extends TimeEvent
+        extends AbstractTimeEvent
         implements Serializable {
 
     // TODO: The icon should be created by a different class.

@@ -4,7 +4,7 @@ import org.Zeitline.Timestamp.ITimestamp;
 
 import java.io.Serializable;
 
-public abstract class TimeEvent
+public abstract class AbstractTimeEvent
         implements Serializable, ITimeEvent<javax.swing.ImageIcon> {
 
     protected static long idCounter = 0; // next free unique id among the event class

@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public class FormGenerator implements IFormGenerator {
+public final class FormGenerator implements IFormGenerator {
 
     public FormGenerator() {}
 

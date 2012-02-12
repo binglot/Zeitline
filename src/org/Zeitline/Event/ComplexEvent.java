@@ -13,7 +13,7 @@ import java.util.Enumeration;
 import java.util.Vector;
 
 public class ComplexEvent
-        extends TimeEvent
+        extends AbstractTimeEvent
         implements Serializable {
 
     protected static ImageIcon icon = Zeitline.createNavigationIcon("complex_small");
@@ -86,7 +86,7 @@ public class ComplexEvent
         return childrenByTime.getNodeCount();
     } // countChildren
 
-    public void resort(TimeEvent event, ITimestamp new_start) {
+    public void resort(AbstractTimeEvent event, ITimestamp new_start) {
         childrenByTime.resort(event, new_start);
     } // resort
 
@@ -108,7 +108,7 @@ public class ComplexEvent
        It is assumed that the insertion into the org.Zeitline.AVLTree
        will always succeed!
     */
-    public boolean addTimeEvent(TimeEvent event) {
+    public boolean addTimeEvent(AbstractTimeEvent event) {
         boolean ret = false;
 
         /*
@@ -147,7 +147,7 @@ public class ComplexEvent
        It is assumed that the deletion of the org.Zeitline.AVLTree
        will always succeed!
     */
-    public boolean removeTimeEvent(TimeEvent event) {
+    public boolean removeTimeEvent(AbstractTimeEvent event) {
         //sources_updated = false;
         boolean ret = false;
 
@@ -184,11 +184,11 @@ public class ComplexEvent
         return ret;
     } // removeTimeEvent
 
-    public TimeEvent getEventByIndex(int i) {
-        return (TimeEvent) childrenByTime.getElement(i);
+    public AbstractTimeEvent getEventByIndex(int i) {
+        return (AbstractTimeEvent) childrenByTime.getElement(i);
     } // getEventByIndex
 
-    public int getChildIndex(TimeEvent e) {
+    public int getChildIndex(AbstractTimeEvent e) {
         return childrenByTime.getIndex(e);
     } // getChildIndex
 
@@ -200,7 +200,7 @@ public class ComplexEvent
         setQueryFlag(q.matches(this));
 
         for (Enumeration e = getChildren(null, null).elements(); e.hasMoreElements(); ) {
-            TimeEvent ev = (TimeEvent) e.nextElement();
+            AbstractTimeEvent ev = (AbstractTimeEvent) e.nextElement();
             if (ev instanceof ComplexEvent) {
                 ComplexEvent ce = (ComplexEvent) ev;
                 if (ce.computeQuery(q))
@@ -231,7 +231,7 @@ public class ComplexEvent
         //if(sources_updated) return sources;
         // TODO: this is horribly inefficient. Try to replace this code with
         // an armortized bookkeeping into a Vector when inserting and removing
-        TimeEvent time_event = null;
+        AbstractTimeEvent time_event = null;
         Source temp_source = null;
         sources.clear();
         for (int i = 0; i < childrenByTime.getNodeCount(); i++) {

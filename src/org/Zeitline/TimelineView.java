@@ -36,12 +36,11 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.*;
+import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
-import org.Zeitline.Event.TimeEvent;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -401,7 +400,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 	    return;
 	}
 
-	TimeEvent event = (TimeEvent) currentSelection.getLastPathComponent();
+	AbstractTimeEvent event = (AbstractTimeEvent) currentSelection.getLastPathComponent();
 	displayEvent(event);
 
     } // valueChanged
@@ -455,7 +454,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 	
     }
     
-    private void displayEvent(TimeEvent event) {
+    private void displayEvent(AbstractTimeEvent event) {
 
 	    
 	if (event instanceof AtomicEvent) {
@@ -534,7 +533,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 		cutAction.setEnabled(true);
 		clearAction.setEnabled(true);
 	    }
-	    displayEvent((TimeEvent)currentSelection.getLastPathComponent());
+	    displayEvent((AbstractTimeEvent)currentSelection.getLastPathComponent());
 	}
 
 	if ((oldCurrent != null) && (oldCurrent != currentTree))
@@ -752,7 +751,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 	    for (int i = 1; i < tp.getPathCount(); i++) {
 
 
-		TimeEvent current = (TimeEvent)tp.getPathComponent(i);
+		AbstractTimeEvent current = (AbstractTimeEvent)tp.getPathComponent(i);
 		int position = currentFindModel.getIndexOfChild(parent, current);
 		currentFindPosition.push(new EntryItem(parent, position));
 		if (current instanceof ComplexEvent)
@@ -795,7 +794,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 		oldTree.clearSelection();
 		displayTree(currentFindTree);
 		currentFindTree.setSelectionPath(match);
-		currentFindTree.centerEvent((TimeEvent)match.getLastPathComponent());
+		currentFindTree.centerEvent((AbstractTimeEvent)match.getLastPathComponent());
 		validFindPosition = currentFindPosition.copy();
 		return true;
 	    }
@@ -859,7 +858,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 			break;
 		}
 
-		TimeEvent te = (TimeEvent)currentFindModel.getChild(parent, current);
+		AbstractTimeEvent te = (AbstractTimeEvent)currentFindModel.getChild(parent, current);
 		if ((q == null) || (q.matches(te))) {
 		    currentFindPosition.setCurrentIndex(current);
 		    TreePath parentPath = currentFindPosition.getPath();

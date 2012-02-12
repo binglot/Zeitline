@@ -36,12 +36,12 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.Event.TimeEvent;
+import org.Zeitline.Event.AbstractTimeEvent;
 
 import java.io.Serializable;
 
 import org.Zeitline.Timestamp.ITimestamp;
-import org.Zeitline.Timestamp.Timestamp;
+
 import java.util.Vector;
 
 public class AVLTree implements Serializable{
@@ -60,7 +60,7 @@ public class AVLTree implements Serializable{
         return node_count;
     } // getNodeCount
     
-    public boolean add(TimeEvent event) {
+    public boolean add(AbstractTimeEvent event) {
 	//	System.out.println("Inserting event " + event);
 	if (root == null) {
 	    root = new AVLNode(event);
@@ -76,7 +76,7 @@ public class AVLTree implements Serializable{
         return false;
     } // add
     
-    public boolean remove(TimeEvent event) {
+    public boolean remove(AbstractTimeEvent event) {
 
         if (delete(root, event)) {
 	    node_count--;
@@ -87,7 +87,7 @@ public class AVLTree implements Serializable{
        
     } // remove
 
-    public boolean resort(TimeEvent event, ITimestamp new_start) {
+    public boolean resort(AbstractTimeEvent event, ITimestamp new_start) {
 
 	//	System.out.println("Entering resort: " + new_start);
 
@@ -98,7 +98,7 @@ public class AVLTree implements Serializable{
 
     } // resort
 
-    public int getIndex(TimeEvent e) {
+    public int getIndex(AbstractTimeEvent e) {
 	int index = 0;
 	AVLNode current = root;
 
@@ -120,7 +120,7 @@ public class AVLTree implements Serializable{
 	return -1;
     } // getIndex
 
-    public TimeEvent getElement(int index) {
+    public AbstractTimeEvent getElement(int index) {
 	AVLNode current = root;
 	int offset = 0;
 
@@ -185,7 +185,7 @@ public class AVLTree implements Serializable{
 
     } // insert
 
-    private boolean delete(AVLNode root_node, TimeEvent to_delete) {
+    private boolean delete(AVLNode root_node, AbstractTimeEvent to_delete) {
 
 	//	System.out.println("Delete from: " + root_node.getEvent());
 	//	System.out.println("Deleting: " + to_delete);
@@ -513,28 +513,28 @@ public class AVLTree implements Serializable{
 } // class org.Zeitline.AVLTree
 
 class AVLNode implements Serializable {
-    private TimeEvent event;
+    private AbstractTimeEvent event;
     private AVLNode parent, left_child, right_child;
     private int child_count, depth;
     
-    public AVLNode(TimeEvent event, AVLNode parent) {
+    public AVLNode(AbstractTimeEvent event, AVLNode parent) {
         this.event = event;
         this.parent = parent;
         this.left_child = null;
         this.right_child = null;
         this.child_count = 0;
         this.depth = 0;
-    } // org.Zeitline.AVLNode(org.Zeitline.Event.TimeEvent,org.Zeitline.AVLNode)
+    } // org.Zeitline.AVLNode(org.Zeitline.Event.AbstractTimeEvent,org.Zeitline.AVLNode)
     
-    public AVLNode(TimeEvent event) {
+    public AVLNode(AbstractTimeEvent event) {
         this(event, null);
-    } // org.Zeitline.AVLNode(org.Zeitline.Event.TimeEvent)
+    } // org.Zeitline.AVLNode(org.Zeitline.Event.AbstractTimeEvent)
     
-    public TimeEvent getEvent() {
+    public AbstractTimeEvent getEvent() {
         return event;
     } // getEvent
     
-    public void setEvent(TimeEvent e) {
+    public void setEvent(AbstractTimeEvent e) {
 	event = e;
     } // setEvent
 
@@ -664,7 +664,7 @@ class AVLNode implements Serializable {
 
     } // pred
 
-    public static void delete(AVLNode delete_from, TimeEvent to_delete) {
+    public static void delete(AVLNode delete_from, AbstractTimeEvent to_delete) {
 	return;
     } // delete
 

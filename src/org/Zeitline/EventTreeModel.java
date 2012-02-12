@@ -36,9 +36,9 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.Event.TimeEvent;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -70,7 +70,7 @@ public class EventTreeModel implements TreeModel {
         }
     } // fireTreeStructureChanged
 
-    protected void fireTreeNodesChanged(TimeEvent node, int[] indices, Object[] children) {
+    protected void fireTreeNodesChanged(AbstractTimeEvent node, int[] indices, Object[] children) {
 
         int len = treeModelListeners.size();
  	TreePath path = getTreePath(node);
@@ -132,7 +132,7 @@ public class EventTreeModel implements TreeModel {
     public int getIndexOfChild(Object parent, Object child) {
 
         ComplexEvent e = (ComplexEvent)parent;
-	TimeEvent c = (TimeEvent) child;
+	AbstractTimeEvent c = (AbstractTimeEvent) child;
 
 	return e.getChildIndex(c);
 
@@ -146,7 +146,7 @@ public class EventTreeModel implements TreeModel {
     /* Returns true if node is a leaf */
     public boolean isLeaf(Object node) {
 
-        TimeEvent e = (TimeEvent)node;
+        AbstractTimeEvent e = (AbstractTimeEvent)node;
 	if (e instanceof AtomicEvent) return true;
 
 	ComplexEvent c = (ComplexEvent) e;
@@ -185,7 +185,7 @@ public class EventTreeModel implements TreeModel {
        caused our parent to be changed (resort children) and
        false if not. Success of the insert is always assumed.
     */
-    public boolean insertNode(ComplexEvent parent, TimeEvent toInsert) {
+    public boolean insertNode(ComplexEvent parent, AbstractTimeEvent toInsert) {
 
 	if (parent.addTimeEvent(toInsert)) {
 	    fireTreeStructureChanged(rootEvent);
@@ -202,7 +202,7 @@ public class EventTreeModel implements TreeModel {
        our parent to be changed (resort children) or to be deleted and
        false if not. Success of the delete is always assumed.
     */
-    public boolean removeNode(ComplexEvent parent, TimeEvent toRemove) {
+    public boolean removeNode(ComplexEvent parent, AbstractTimeEvent toRemove) {
 
 	int index = parent.getChildIndex(toRemove);
 
@@ -227,7 +227,7 @@ public class EventTreeModel implements TreeModel {
 	boolean parentDeleted = false;
 
 	for (int i = 0; i < removals.length; i++)
-	    if (parent.removeTimeEvent((TimeEvent)removals[i]))
+	    if (parent.removeTimeEvent((AbstractTimeEvent)removals[i]))
 		parentDeleted = true;
 	
 	fireTreeStructureChanged(rootEvent);	
@@ -236,7 +236,7 @@ public class EventTreeModel implements TreeModel {
 
     // TODO: write insertNodes() method for insertion of multiple items at once
 
-    public TreePath getTreePath(TimeEvent node) {
+    public TreePath getTreePath(AbstractTimeEvent node) {
 	
 	Vector elements = new Vector();
 	while (node != null) {

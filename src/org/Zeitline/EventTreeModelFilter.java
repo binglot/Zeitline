@@ -36,8 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.Event.TimeEvent;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -80,7 +80,7 @@ public class EventTreeModelFilter extends EventTreeModel {
 
     	for (int z = 0; z < delegate.getChildCount(node); z++) {
 
-	    TimeEvent t = (TimeEvent) delegate.getChild(node, z);
+	    AbstractTimeEvent t = (AbstractTimeEvent) delegate.getChild(node, z);
 	    if (t.matchesQuery()) {
 		mapping.add(new Integer(z));
 		if (t instanceof ComplexEvent)
@@ -131,7 +131,7 @@ public class EventTreeModelFilter extends EventTreeModel {
         delegate.valueForPathChanged(path, newValue);
     } // valueForPathChanged
 
-    public boolean insertNode(ComplexEvent parent, TimeEvent toInsert) {
+    public boolean insertNode(ComplexEvent parent, AbstractTimeEvent toInsert) {
 
 	int index, newIndex;
 
@@ -192,7 +192,7 @@ public class EventTreeModelFilter extends EventTreeModel {
 
     } // insertMapping
 
-    public boolean removeNode(ComplexEvent parent, TimeEvent toRemove) {
+    public boolean removeNode(ComplexEvent parent, AbstractTimeEvent toRemove) {
 
 	int index, mappedIndex;
 
@@ -243,7 +243,7 @@ public class EventTreeModelFilter extends EventTreeModel {
 
 	for (int i = 0; i < removals.length; i++) {
 	    indices[i] = delegate.getIndexOfChild(parent, removals[i]);
-	    if (delegate.removeNode(parent, (TimeEvent)removals[i]))
+	    if (delegate.removeNode(parent, (AbstractTimeEvent)removals[i]))
 		parentDeleted = true;
 	}
 

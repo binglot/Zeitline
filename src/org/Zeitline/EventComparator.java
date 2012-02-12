@@ -2,7 +2,7 @@ package org.Zeitline;
 
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.Event.TimeEvent;
+import org.Zeitline.Event.AbstractTimeEvent;
 
 /********************************************************************
 
@@ -44,8 +44,8 @@ SOFTWARE.
 
 public class EventComparator {
     public static int compare(Object o1, Object o2) {
-        TimeEvent e1 = (TimeEvent) o1,
-            e2 = (TimeEvent) o2;
+        AbstractTimeEvent e1 = (AbstractTimeEvent) o1,
+            e2 = (AbstractTimeEvent) o2;
 
 	int t = e1.getStartTime().compareTo(e2.getStartTime());
 	if (t != 0)

@@ -37,7 +37,7 @@ SOFTWARE.
 **********************************************************************/
 
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.Event.TimeEvent;
+import org.Zeitline.Event.AbstractTimeEvent;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -95,8 +95,8 @@ public class TimeEventTransferHandler extends TransferHandler
     protected Timer hoverTimer;
     protected DataFlavor timeEventFlavor;
     protected String timeEventType = 
-	"application/x-java-jvm-local-objectref; class=org.Zeitline.Event.TimeEvent";
-    //	"application/x-java-serialized-object; class=org.Zeitline.Event.TimeEvent";
+	"application/x-java-jvm-local-objectref; class=org.Zeitline.Event.AbstractTimeEvent";
+    //	"application/x-java-serialized-object; class=org.Zeitline.Event.AbstractTimeEvent";
 
     public TimeEventTransferHandler(EventTree t) {
 
@@ -135,7 +135,7 @@ public class TimeEventTransferHandler extends TransferHandler
         if (c instanceof EventTree) {
             sourceTree = (EventTree)c;
 
-	    TimeEvent node;
+	    AbstractTimeEvent node;
 
 	    Vector v = new Vector();
 	    TreePath[] selections = sourceTree.getSelectionPaths();
@@ -147,7 +147,7 @@ public class TimeEventTransferHandler extends TransferHandler
 		    if (sourceTree.isPathSelected(ancestor))
 			continue build;
 		}
-		TimeEvent te = (TimeEvent)selections[i].getLastPathComponent();
+		AbstractTimeEvent te = (AbstractTimeEvent)selections[i].getLastPathComponent();
 		v.add(te);
 		if (removeNodes) {
 		    EventTreeModel etm = (EventTreeModel)sourceTree.getModel();
@@ -403,7 +403,7 @@ public class TimeEventTransferHandler extends TransferHandler
 	    
 	for (Enumeration node_list = data.elements(); node_list.hasMoreElements();) {
 	    
-	    TimeEvent node = (TimeEvent)node_list.nextElement();
+	    AbstractTimeEvent node = (AbstractTimeEvent)node_list.nextElement();
 
             if ((removeNodes && 
 		 (EventComparator.compare(target_node, node.getParent()) == 0))) {

@@ -37,11 +37,11 @@ package org.Zeitline;
 
  **********************************************************************/
 
+import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
-import org.Zeitline.Event.TimeEvent;
 import org.Zeitline.InputFilter.InputFilter;
 
 import java.awt.BorderLayout;
@@ -448,7 +448,7 @@ public class Zeitline implements TreeSelectionListener {
         if (count != 1)
             pasteAction.setEnabled(false);
         else {
-            TimeEvent te = (TimeEvent) tree.getLastSelectedPathComponent();
+            AbstractTimeEvent te = (AbstractTimeEvent) tree.getLastSelectedPathComponent();
             pasteAction.setEnabled((te instanceof ComplexEvent) &&
                     (cutBuffer != null));
         }
@@ -527,7 +527,7 @@ public class Zeitline implements TreeSelectionListener {
             try {
                 in_stream = new ObjectInputStream(new FileInputStream(chosen));
                 long temp_long = ((Long) in_stream.readObject()).longValue();
-                TimeEvent.setIdCounter(temp_long);
+                AbstractTimeEvent.setIdCounter(temp_long);
                 timelines.loadFromFile(in_stream, app);
                 in_stream.close();
             } catch (IOException io_excep) {
@@ -582,7 +582,7 @@ public class Zeitline implements TreeSelectionListener {
                 out_stream = new ObjectOutputStream(new FileOutputStream(chosen));
 
                 // write out the current ID counter
-                out_stream.writeObject(new Long(TimeEvent.getIdCounter()));
+                out_stream.writeObject(new Long(AbstractTimeEvent.getIdCounter()));
             } catch (IOException io_excep) {
                 JOptionPane.showMessageDialog(null,
                         "The following error occurred when trying to write file '"
@@ -1122,7 +1122,7 @@ public class Zeitline implements TreeSelectionListener {
 
            org.Zeitline.Event.ComplexEvent currentRoot = (org.Zeitline.Event.ComplexEvent)currentModel.getRoot();
 
-           org.Zeitline.Event.TimeEvent res = currentRoot.findPrev(new org.Zeitline.Query("README"));
+           org.Zeitline.Event.AbstractTimeEvent res = currentRoot.findPrev(new org.Zeitline.Query("README"));
 
            if (res != null) {
            tree.setSelectionPath(currentModel.getTreePath(res));

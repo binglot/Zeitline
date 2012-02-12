@@ -36,7 +36,7 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.Event.TimeEvent;
+import org.Zeitline.Event.AbstractTimeEvent;
 
 import org.Zeitline.Timestamp.Timestamp;
 
@@ -83,7 +83,7 @@ public class Query {
 	return actualString;
     } // getStringText
 
-    public boolean matches(TimeEvent t) {
+    public boolean matches(AbstractTimeEvent t) {
 
 	if ((intervalStart != null) &&
 	    intervalStart.after(t.getStartTime()))

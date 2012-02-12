@@ -36,8 +36,8 @@ SOFTWARE.
 
 **********************************************************************/
 
+import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.Event.TimeEvent;
 
 import java.awt.Font;
 import java.awt.Insets;
@@ -50,7 +50,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 
 import org.Zeitline.Timestamp.ITimestamp;
-import org.Zeitline.Timestamp.Timestamp;
+
 import java.text.NumberFormat;
 import java.util.*;
 
@@ -354,13 +354,13 @@ public class EventTree extends JTree implements TreeSelectionListener {
     public void moveSelected(ComplexEvent target, EventTreeModel target_model) {
 
 	ComplexEvent parent;
-	TimeEvent node;
+	AbstractTimeEvent node;
 
 	Hashtable sortedSelections = new Hashtable();
 	TreePath[] paths = getSelectionPaths();
 
 	for (int i = 0; i < paths.length; i++) {
-	    node = (TimeEvent)paths[i].getLastPathComponent();
+	    node = (AbstractTimeEvent)paths[i].getLastPathComponent();
 	    //	    parent = (org.Zeitline.Event.ComplexEvent)paths[i].getParentPath().getLastPathComponent();
 	    parent = node.getParent();
 	    TreeSet nodes = (TreeSet)sortedSelections.get(parent);
@@ -382,7 +382,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 	    ((EventTreeModel)getModel()).removeNodes(parent, childrenArray);
 
 	    for (int i = 0; i < childrenArray.length; i++) {
-		node = (TimeEvent)childrenArray[i];
+		node = (AbstractTimeEvent)childrenArray[i];
 		if (target_model != null)
 		    target_model.insertNode(target, node);
 		else
@@ -498,9 +498,9 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
 	for (int i = 0; i< selections.length; i++) {
 
-	    TimeEvent node = (TimeEvent) selections[i].getLastPathComponent();
+	    AbstractTimeEvent node = (AbstractTimeEvent) selections[i].getLastPathComponent();
 
-	    if (node == (TimeEvent) getModel().getRoot())
+	    if (node == (AbstractTimeEvent) getModel().getRoot())
 		return (ComplexEvent) node;
 
 	    ComplexEvent parent = node.getParent();
@@ -513,7 +513,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 		continue;
 	    }
 	    
-	    if (isDescendantOf((TimeEvent)parent, current))
+	    if (isDescendantOf((AbstractTimeEvent)parent, current))
 		continue;
 
 	    if (current.getParent() == parent.getParent())
@@ -528,17 +528,17 @@ public class EventTree extends JTree implements TreeSelectionListener {
     } // getTopSelectionParent
 
     /**
-     * Determines is a <tt>org.Zeitline.Event.TimeEvent</tt> is a descendant of a
+     * Determines is a <tt>org.Zeitline.Event.AbstractTimeEvent</tt> is a descendant of a
      * <tt>org.Zeitline.Event.ComplexEvent</tt>.
      * 
      * <p> Used by {@link #getTopSelectionParent getTopSelectionParent}.
      *
-     * @param node the potential descendant <tt>org.Zeitline.Event.TimeEvent</tt>
+     * @param node the potential descendant <tt>org.Zeitline.Event.AbstractTimeEvent</tt>
      * @param ancestor the event to compare against for ancestry
      */
-    protected boolean isDescendantOf(TimeEvent node, ComplexEvent ancestor) {
+    protected boolean isDescendantOf(AbstractTimeEvent node, ComplexEvent ancestor) {
 
-	for (TimeEvent temp = node; temp != null; temp=temp.getParent())
+	for (AbstractTimeEvent temp = node; temp != null; temp=temp.getParent())
 	    if (temp == ancestor)
 		return true;
 
@@ -582,10 +582,10 @@ public class EventTree extends JTree implements TreeSelectionListener {
 				     boolean leaf,
 				     int row,
 				     boolean hasFocus) {
-	TimeEvent te;
+	AbstractTimeEvent te;
 
 	try {
-	    te = (TimeEvent) value;
+	    te = (AbstractTimeEvent) value;
 	}
 	catch (ClassCastException ce) {
 	    return value.toString();
@@ -636,7 +636,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 	catch(IOException io_excep) {}
     } // saveComplexEvents
 
-    public void centerEvent(TimeEvent event) {
+    public void centerEvent(AbstractTimeEvent event) {
 
 	TreePath path = origModel.getTreePath(event);
 	scrollPathToVisible(path);

@@ -36,7 +36,7 @@ SOFTWARE.
 
 **********************************************************************/
 
-import org.Zeitline.Event.TimeEvent;
+import org.Zeitline.Event.AbstractTimeEvent;
 
 import java.awt.Component;
 
@@ -76,7 +76,7 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
             setIcon(complexIcon);
 	*/
 
-	setIcon(((TimeEvent)value).getIcon());
+	setIcon(((AbstractTimeEvent)value).getIcon());
 
         return this;
 
