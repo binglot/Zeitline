@@ -2,7 +2,7 @@ package org.Zeitline.GUI;
 
 import java.awt.*;
 
-public class FormItem {
+class FormItem {
 
     private String labelText;
     private Component component;
