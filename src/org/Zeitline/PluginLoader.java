@@ -1,28 +1,24 @@
 package org.Zeitline;
 
+import org.Zeitline.GUI.FormGenerator;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
-import org.Zeitline.GUI.FormGenerator;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.Vector;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
  * NEEDS A MAJOR REWRITING!
- *
+ * <p/>
  * I'VE JUST MODIFIED HOW THE LOADED PLUGIN IS
  * INITIALIZED BUT A LOT OF THE CODE REPEATS
  */
-
 
 
 public class PluginLoader extends ClassLoader {
@@ -32,7 +28,7 @@ public class PluginLoader extends ClassLoader {
 
     private FilenameFilter class_filter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
-            return name.endsWith(FILE_EXTENSION);
+            return name.toLowerCase(Locale.ENGLISH).endsWith(FILE_EXTENSION);
         }
     };
 
@@ -162,8 +158,8 @@ public class PluginLoader extends ClassLoader {
             }
             // instantiate a copy of the new InputFilter object
             try {
-                Class[] ctorArgs = { IFormGenerator.class };
-                Object[] ctorParams = { formGenerator };
+                Class[] ctorArgs = {IFormGenerator.class};
+                Object[] ctorParams = {formGenerator};
                 Constructor ctor = class_def.getConstructor(ctorArgs);
                 class_inst = (InputFilter) ctor.newInstance(ctorParams);
                 //class_inst = (InputFilter) class_def.newInstance();
