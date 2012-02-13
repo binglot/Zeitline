@@ -29,4 +29,8 @@ public class Utils {
 
         return str.substring(0, pos);
     }
+    
+    static String getFileName(String path){
+        return new File(path).getName();
+    }
 }

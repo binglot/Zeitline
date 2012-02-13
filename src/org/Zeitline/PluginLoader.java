@@ -3,6 +3,7 @@ package org.Zeitline;
 import org.Zeitline.GUI.FormGenerator;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
+import sun.reflect.generics.tree.IntSignature;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -31,67 +32,50 @@ public class PluginLoader extends ClassLoader {
     };
 
 
-    public Enumeration getPluginsFromJar(String jarLocation, String dirName) {
+    public Enumeration getPluginsFromJar(String jarLocation, String pluginDirName) {
         Vector result = new Vector();
         String jarFileName = (new File(jarLocation)).getAbsolutePath();
 
         // create the JarFile object
-        JarFile jarFile = null;
-        try {
-            jarFile = new JarFile(jarFileName);
-        } catch (java.io.FileNotFoundException fnf) {
-            System.err.println(fnf);
-            return result.elements();
-        } catch (java.io.IOException io) {
-            System.err.println(io);
-            return result.elements();
-        }
+        JarFile jarFile = SafelyLoadJarFile(jarFileName);
 
         if (jarFile == null) {
-            System.err.println("Jar file is null");
+            System.err.println("Jar file provided as an input filter is null");
             return result.elements();
         }
 
         // look through all of the Jar file's entries for classes in the
         // provided plugin directory
-        Enumeration jar_file_entries = jarFile.entries();
-        String entry_name = "";
-        JarEntry jar_entry = null;
-        BufferedInputStream instream = null;
-        String class_name = "";
-        int class_size = -1;
-        byte[] class_data = null;
-        Class class_def = null;
-        InputFilter class_inst = null;
-        while (jar_file_entries.hasMoreElements()) {
-            entry_name = jar_file_entries.nextElement().toString();
-            if (entry_name.startsWith(dirName) && (entry_name.indexOf(".class") >= 0)) {
-                // get the actual JarEntry
-                jar_entry = jarFile.getJarEntry(entry_name);
-                class_name = jar_entry.toString();
-                class_name = class_name.substring((dirName.length() + 1),
-                        class_name.lastIndexOf(".class"));
+        Enumeration<JarEntry> jarFileEntries = jarFile.entries();
+        String entryName = "";
+        BufferedInputStream inputStream = null;
+        int classSize = -1;
+        byte[] classData = null;
+        Class classDefinition = null;
+        InputFilter classInstantiation = null;
+
+        while (jarFileEntries.hasMoreElements()) {
+            entryName = jarFileEntries.nextElement().toString();
+
+            if (entryName.startsWith(pluginDirName) && (entryName.contains(FILE_EXTENSION))) { // instead of 'contains' it should read 'endsWith' + toLowerCase(Locale.ENGLISH)
+                String fileName = Utils.getFileName(entryName);
+                String className = Utils.stripFileExtension(fileName);
 
                 // pull the data of the Class out of the JarEntry
-                class_size = new Long(jar_entry.getSize()).intValue();
-                class_data = new byte[class_size];
-                try {
-                    // open the stream to the JarEntry
-                    instream = new BufferedInputStream(jarFile.getInputStream(jar_entry));
-                    instream.read(class_data, 0, class_size);
-                    instream.close();
-                } catch (IOException io) {
-                    System.err.println(io);
+                JarEntry jarEntry = jarFile.getJarEntry(entryName);
+                classSize = new Long(jarEntry.getSize()).intValue();
+                classData = new byte[classSize];
+
+                if (!ReadClassFileFromJar(jarFile, entryName, classSize, classData))
                     continue;
-                }
 
                 // create the Class object
-                class_def = defineClass(class_name, class_data, 0, class_size);
-                resolveClass(class_def);
+                classDefinition = defineClass(className, classData, 0, classSize);
+                resolveClass(classDefinition);
 
                 // instantiate a copy of the new org.Zeitline.InputFilter.org.Zeitline.InputFilter object
                 try {
-                    class_inst = (InputFilter) class_def.newInstance();
+                    classInstantiation = (InputFilter) classDefinition.newInstance();
                 } catch (InstantiationException inst) {
                     System.err.println(inst);
                     continue;
@@ -104,7 +88,7 @@ public class PluginLoader extends ClassLoader {
                 }
 
                 // add the new org.Zeitline.InputFilter.org.Zeitline.InputFilter to the results
-                result.addElement(class_inst);
+                result.addElement(classInstantiation);
             }
         }
 
@@ -129,7 +113,7 @@ public class PluginLoader extends ClassLoader {
             int classSize = new Long(new File(fileName).length()).intValue();
             byte[] classData = new byte[classSize];
 
-            if (!ReadClassFile(fileName, classSize, classData))
+            if (!ReadClassFileDirectly(fileName, classSize, classData))
                 continue;
 
 
@@ -187,11 +171,35 @@ public class PluginLoader extends ClassLoader {
         return classDef;
     }
 
-    private boolean ReadClassFile(String fileName, int classSize, byte[] classData) {
+    private JarFile SafelyLoadJarFile(String jarFileName) {
+        JarFile jarFile = null;
+
+        try {
+            jarFile = new JarFile(jarFileName);
+        } catch (java.io.FileNotFoundException fnf) {
+            System.err.println(fnf);
+        } catch (java.io.IOException io) {
+            System.err.println(io);
+        }
+
+        return jarFile;
+    }
+
+    private boolean ReadClassFile(JarFile jarFile, String fileName, int classSize, byte[] classData, Streamer streamer) {
+        InputStream inputStream = null;
         int readSize;
 
         try {
-            FileInputStream inputStream = new FileInputStream(fileName);
+            switch (streamer) {
+                case File:
+                    inputStream = new FileInputStream(fileName);
+                    break;
+                case Buffer:
+                    JarEntry jarEntry = jarFile.getJarEntry(fileName);
+                    inputStream = new BufferedInputStream(jarFile.getInputStream(jarEntry));
+                    break;
+            }
+
             readSize = inputStream.read(classData, 0, classSize);
             inputStream.close();
         } catch (IOException io) {
@@ -200,5 +208,18 @@ public class PluginLoader extends ClassLoader {
         }
 
         return readSize == classSize;
+    }
+
+    private boolean ReadClassFileFromJar(JarFile jarFile, String fileName, int classSize, byte[] classData) {
+        return ReadClassFile(jarFile, fileName, classSize, classData, Streamer.Buffer);
+    }
+
+    private boolean ReadClassFileDirectly(String fileName, int classSize, byte[] classData) {
+        return ReadClassFile(null, fileName, classSize, classData, Streamer.File);
+    }
+
+    enum Streamer {
+        File,
+        Buffer
     }
 }
