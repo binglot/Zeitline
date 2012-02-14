@@ -42,6 +42,8 @@ import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
+import org.Zeitline.GUI.FormGenerator;
+import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
 
 import java.awt.BorderLayout;
@@ -1173,20 +1175,19 @@ public class Zeitline implements TreeSelectionListener {
 
     private List<InputFilter> loadPlugins() {
         List<InputFilter> result = new ArrayList<InputFilter>();
-        PluginLoader loader = new PluginLoader();
+        IFormGenerator formGenerator = new FormGenerator();
+        PluginLoader loader = new PluginLoader(formGenerator);
 
         String location = Zeitline.class.getProtectionDomain().getCodeSource().getLocation().getFile();
 
         List<InputFilter> plugins;
         InputFilter temp = null;
 
-//        // If the application is run from a JAR file, try to find embedded plugins
-//        if (Utils.containsCaseInsensitive(location, ".jar")) {
-//            plugins = loader.getPluginsFromJar(location, JAR_FILTERS_DIR);
-//            while (plugins.hasMoreElements()) {
-//                result.add(plugins.nextElement());
-//            }
-//        }
+        // If the application is run from a JAR file, try to find embedded plugins
+        if (Utils.containsCaseInsensitive(location, ".jar")) {
+            plugins = loader.getPluginsFromJar(location, JAR_FILTERS_DIR);
+            result.addAll(plugins);
+        }
 
         // Look for the plugins in the 'filters' directory
         // TODO: NEEDS FIXING, the 'location' can be a full file path
@@ -1194,9 +1195,7 @@ public class Zeitline implements TreeSelectionListener {
         if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
             return result;
 
-        for(InputFilter filter: plugins){
-            result.add(filter);
-        }
+        result.addAll(plugins);
 
         return result;
     }
