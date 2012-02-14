@@ -209,7 +209,7 @@ public class ImportDlg
         Collections.sort(filters, new FilterComparator());
         cbx_filter_types.removeAllItems();
 
-        for(InputFilter filter: filters){
+        for (InputFilter filter : filters) {
             cbx_filter_types.addItem(filter);
         }
         //cbx_filter_types = new JComboBox(filters_enum);

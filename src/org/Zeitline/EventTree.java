@@ -1,40 +1,40 @@
 package org.Zeitline; /********************************************************************
 
-This file is part of org.Zeitline.Zeitline: a forensic timeline editor
+ This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
-Written by Florian Buchholz and Courtney Falk.
+ Written by Florian Buchholz and Courtney Falk.
 
-Copyright (c) 2004,2005 Florian Buchholz, Courtney Falk, Purdue
-University. All rights reserved.
+ Copyright (c) 2004,2005 Florian Buchholz, Courtney Falk, Purdue
+ University. All rights reserved.
 
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-"Software"), to deal with the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
- 
-Redistributions of source code must retain the above copyright notice,
-this list of conditions and the following disclaimers.
-Redistributions in binary form must reproduce the above copyright
-notice, this list of conditions and the following disclaimers in the
-documentation and/or other materials provided with the distribution.
-Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
-University, nor the names of its contributors may be used to endorse
-or promote products derived from this Software without specific prior
-written permission.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
-IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
-SOFTWARE.
+ Permission is hereby granted, free of charge, to any person obtaining
+ a copy of this software and associated documentation files (the
+ "Software"), to deal with the Software without restriction, including
+ without limitation the rights to use, copy, modify, merge, publish,
+ distribute, sublicense, and/or sell copies of the Software, and to
+ permit persons to whom the Software is furnished to do so, subject to
+ the following conditions:
 
-**********************************************************************/
+ Redistributions of source code must retain the above copyright notice,
+ this list of conditions and the following disclaimers.
+ Redistributions in binary form must reproduce the above copyright
+ notice, this list of conditions and the following disclaimers in the
+ documentation and/or other materials provided with the distribution.
+ Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
+ University, nor the names of its contributors may be used to endorse
+ or promote products derived from this Software without specific prior
+ written permission.
+
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+ IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
+ SOFTWARE.
+
+ **********************************************************************/
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
@@ -107,7 +107,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * enters the borders and scrolling is possible. Current values
      * are 40 for top/bottom and 8 for left/right.
      */
-    protected Insets autoscrollInsets = new Insets(40, 8, 40, 8); 
+    protected Insets autoscrollInsets = new Insets(40, 8, 40, 8);
 
     /**
      * Variable to temporarily remember a mouse event. The overridden
@@ -120,7 +120,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
     /**
      * The list of MouseEventListeners that still need to process a
-     * delayed event. 
+     * delayed event.
      *
      * @see #processMouseEvent
      */
@@ -157,38 +157,38 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     public EventTree(ComplexEvent root) {
 
-	super(new EventTreeModel(root));
+        super(new EventTreeModel(root));
 
-	queryStack = new Stack();
+        queryStack = new Stack();
 
-	origModel = (EventTreeModel)treeModel;
+        origModel = (EventTreeModel) treeModel;
 
-	setLargeModel(true);
+        setLargeModel(true);
 
-	getSelectionModel().setSelectionMode
-	    (TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        getSelectionModel().setSelectionMode
+                (TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
-	/* old drag and drop enabling
-        setTransferHandler(new EventTransferHandler());
-        setDragEnabled(true);
-	*/
+        /* old drag and drop enabling
+          setTransferHandler(new EventTransferHandler());
+          setDragEnabled(true);
+      */
 
-	setTransferHandler(new TimeEventTransferHandler(this));
+        setTransferHandler(new TimeEventTransferHandler(this));
 
-	setFont(new Font("Monospaced", Font.PLAIN, 12));
-	setCellRenderer(new EventTreeCellRenderer());
+        setFont(new Font("Monospaced", Font.PLAIN, 12));
+        setCellRenderer(new EventTreeCellRenderer());
 
-	/* this needs to be commented until drag & drop for
-	   JTabs is implemented.
-	*/
-	//	setRootVisible(false);
+        /* this needs to be commented until drag & drop for
+         JTabs is implemented.
+      */
+        //	setRootVisible(false);
 
-	/* if we uncomment this, then the selection performance
-	   goes down the drain.
-	   TODO: try to find solution to enforce our selection
-	         policy
-	*/
-	//	addTreeSelectionListener(this);
+        /* if we uncomment this, then the selection performance
+         goes down the drain.
+         TODO: try to find solution to enforce our selection
+               policy
+      */
+        //	addTreeSelectionListener(this);
 
     } // org.Zeitline.EventTree
 
@@ -216,35 +216,32 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     protected void processMouseEvent(MouseEvent e) {
 
-	if ((e.getID() == MouseEvent.MOUSE_PRESSED) &&
-	    (e.getModifiers() == MouseEvent.BUTTON1_MASK)) {
+        if ((e.getID() == MouseEvent.MOUSE_PRESSED) &&
+                (e.getModifiers() == MouseEvent.BUTTON1_MASK)) {
 
-	    TreePath clickedPath = getPathForLocation(e.getX(), e.getY());
+            TreePath clickedPath = getPathForLocation(e.getX(), e.getY());
 
-	    if ((clickedPath != null) && isPathSelected(clickedPath)) {
-		MouseListener[] listeners = getMouseListeners();
-		delayedEvent = e;
-		delayedListeners.clear();		
-		for (int i = 0; i < listeners.length; i++) {
-		    if (listeners[i] instanceof DragGestureRecognizer) {
-			listeners[i].mousePressed(e);
-		    }
-		    else
-			delayedListeners.add(listeners[i]);
-		}
-		return;
-	    }
-	}
-	
-	else if ((e.getID() == MouseEvent.MOUSE_RELEASED) && 
-		 (delayedEvent != null)) {
-	    for (Enumeration listeners = delayedListeners.elements();
-		 listeners.hasMoreElements();)
-		((MouseListener)listeners.nextElement()).mousePressed(e);
-	    delayedEvent = null;
-	}
+            if ((clickedPath != null) && isPathSelected(clickedPath)) {
+                MouseListener[] listeners = getMouseListeners();
+                delayedEvent = e;
+                delayedListeners.clear();
+                for (int i = 0; i < listeners.length; i++) {
+                    if (listeners[i] instanceof DragGestureRecognizer) {
+                        listeners[i].mousePressed(e);
+                    } else
+                        delayedListeners.add(listeners[i]);
+                }
+                return;
+            }
+        } else if ((e.getID() == MouseEvent.MOUSE_RELEASED) &&
+                (delayedEvent != null)) {
+            for (Enumeration listeners = delayedListeners.elements();
+                 listeners.hasMoreElements(); )
+                ((MouseListener) listeners.nextElement()).mousePressed(e);
+            delayedEvent = null;
+        }
 
-	super.processMouseEvent(e);
+        super.processMouseEvent(e);
 
     } // processMouseEvent
 
@@ -261,19 +258,19 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     public void addFilter(Query q) {
 
-	EventTreeModelFilter f = new EventTreeModelFilter((EventTreeModel)treeModel, q);
-	f.initQuery();
+        EventTreeModelFilter f = new EventTreeModelFilter((EventTreeModel) treeModel, q);
+        f.initQuery();
 
-	Enumeration descendants = getExpandedDescendants(new TreePath(getModel().getRoot()));
+        Enumeration descendants = getExpandedDescendants(new TreePath(getModel().getRoot()));
 
-	setModel(f);
+        setModel(f);
 
-	while (descendants.hasMoreElements()) {
-	    TreePath tp = (TreePath) descendants.nextElement();
-	    expandPath(tp);
-	}
+        while (descendants.hasMoreElements()) {
+            TreePath tp = (TreePath) descendants.nextElement();
+            expandPath(tp);
+        }
 
-	queryStack.push(q);
+        queryStack.push(q);
 
     } // addFilter
 
@@ -290,17 +287,17 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     public void removeCurrentFilter() {
 
-	TreeModel m = getModel();
-	if (m instanceof EventTreeModelFilter) {
-	    EventTreeModelFilter fm = (EventTreeModelFilter)m;
-	    Enumeration descendants = getExpandedDescendants(new TreePath(getModel().getRoot()));
-	    setModel(fm.getDelegate());
-	    queryStack.pop();
-	    while (descendants.hasMoreElements()) {
-		TreePath tp = (TreePath) descendants.nextElement();
-		expandPath(tp);
-	    }
-	}
+        TreeModel m = getModel();
+        if (m instanceof EventTreeModelFilter) {
+            EventTreeModelFilter fm = (EventTreeModelFilter) m;
+            Enumeration descendants = getExpandedDescendants(new TreePath(getModel().getRoot()));
+            setModel(fm.getDelegate());
+            queryStack.pop();
+            while (descendants.hasMoreElements()) {
+                TreePath tp = (TreePath) descendants.nextElement();
+                expandPath(tp);
+            }
+        }
 
     } // removeCurrentFilter
 
@@ -309,28 +306,28 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * Returns the active filter org.Zeitline.Query object.
      *
      * @return the active filter org.Zeitline.Query object, or <tt> null </tt> if no
-     * filter is active.
+     *         filter is active.
      */
     public Query getActiveQuery() {
-	return (Query)queryStack.peek();
+        return (Query) queryStack.peek();
     } // getActiveQuery
 
     /**
      * Clears all filters and reverts to the original TreeModel.
      */
     public void clearFilters() {
-	setModel(origModel);
-	queryStack.clear();
+        setModel(origModel);
+        queryStack.clear();
     } // clearFilter
 
     /**
      * Determines if the tree contains no events.
      *
      * @return <tt>true</tt> if the tree contains no events;
-     * <tt>false</tt> otherwise
+     *         <tt>false</tt> otherwise
      */
     public boolean isEmpty() {
-	return (((ComplexEvent)(getModel().getRoot())).countChildren() == 0);
+        return (((ComplexEvent) (getModel().getRoot())).countChildren() == 0);
     } // isEmpty
 
     /**
@@ -345,50 +342,50 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * removeNodes()} method. They are then inserted either directly
      * into the target <tt>org.Zeitline.Event.ComplexEvent</tt> or through the target
      * model's {@link EventTreeModel#insertNode insertNode()} method.
-     * 
-     * @param target the target event to which the selected events are moved
+     *
+     * @param target       the target event to which the selected events are moved
      * @param target_model the <tt> org.Zeitline.EventTreeModel</tt> of the target event.
-     * If this is <tt>null</tt>, the events are inserted directly into
-     * <tt>target</tt>, otherwise they are inserted through the model.
+     *                     If this is <tt>null</tt>, the events are inserted directly into
+     *                     <tt>target</tt>, otherwise they are inserted through the model.
      */
     public void moveSelected(ComplexEvent target, EventTreeModel target_model) {
 
-	ComplexEvent parent;
-	AbstractTimeEvent node;
+        ComplexEvent parent;
+        AbstractTimeEvent node;
 
-	Hashtable sortedSelections = new Hashtable();
-	TreePath[] paths = getSelectionPaths();
+        Hashtable sortedSelections = new Hashtable();
+        TreePath[] paths = getSelectionPaths();
 
-	for (int i = 0; i < paths.length; i++) {
-	    node = (AbstractTimeEvent)paths[i].getLastPathComponent();
-	    //	    parent = (org.Zeitline.Event.ComplexEvent)paths[i].getParentPath().getLastPathComponent();
-	    parent = node.getParent();
-	    TreeSet nodes = (TreeSet)sortedSelections.get(parent);
-	    if (nodes == null) {
-		nodes = new TreeSet(new TimeEventComparator());
-		sortedSelections.put(parent, nodes);
-	    }
-	    nodes.add(node);
-	}
+        for (int i = 0; i < paths.length; i++) {
+            node = (AbstractTimeEvent) paths[i].getLastPathComponent();
+            //	    parent = (org.Zeitline.Event.ComplexEvent)paths[i].getParentPath().getLastPathComponent();
+            parent = node.getParent();
+            TreeSet nodes = (TreeSet) sortedSelections.get(parent);
+            if (nodes == null) {
+                nodes = new TreeSet(new TimeEventComparator());
+                sortedSelections.put(parent, nodes);
+            }
+            nodes.add(node);
+        }
 
-	for (Enumeration keylist = sortedSelections.keys(); 
-	     keylist.hasMoreElements();) {
-	    		
-	    parent = (ComplexEvent)keylist.nextElement();
-	    TreeSet children = (TreeSet) sortedSelections.get(parent);
+        for (Enumeration keylist = sortedSelections.keys();
+             keylist.hasMoreElements(); ) {
 
-	    Object[] childrenArray = children.toArray();
-		
-	    ((EventTreeModel)getModel()).removeNodes(parent, childrenArray);
+            parent = (ComplexEvent) keylist.nextElement();
+            TreeSet children = (TreeSet) sortedSelections.get(parent);
 
-	    for (int i = 0; i < childrenArray.length; i++) {
-		node = (AbstractTimeEvent)childrenArray[i];
-		if (target_model != null)
-		    target_model.insertNode(target, node);
-		else
-		    target.addTimeEvent(node);
-	    }
-	}
+            Object[] childrenArray = children.toArray();
+
+            ((EventTreeModel) getModel()).removeNodes(parent, childrenArray);
+
+            for (int i = 0; i < childrenArray.length; i++) {
+                node = (AbstractTimeEvent) childrenArray[i];
+                if (target_model != null)
+                    target_model.insertNode(target, node);
+                else
+                    target.addTimeEvent(node);
+            }
+        }
     } // moveSelected
 
     /**
@@ -398,7 +395,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * @return the String representation of the root node
      */
     public String toString() {
-	return getModel().getRoot().toString();
+        return getModel().getRoot().toString();
     } // toString
 
     /**
@@ -407,28 +404,28 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * #autoscrollInsets autoscrollInsets}, then the tree is scrolled
      * to the rectangle that has the cursor location as its center and
      * the dimensions of the autoscroll insets.
-     *
+     * <p/>
      * <p> This method is called by the {@link
      * TimeEventTransferHandler org.Zeitline.TimeEventTransferHandler} class for
      * auto scrolling during drag and drop operations.
      *
      * @param cursorLocation the coordinates of the current cursor location
      */
-    public void autoscroll(Point cursorLocation)  {
-	//	Insets insets = getAutoscrollInsets();
-	Insets insets = autoscrollInsets;
-	Rectangle outer = getVisibleRect();
-	Rectangle inner = new Rectangle(outer.x+insets.left, 
-					outer.y+insets.top, 
-					outer.width-(insets.left+insets.right),
-					outer.height-(insets.top+insets.bottom));
-	if (!inner.contains(cursorLocation))  {
-	    Rectangle scrollRect = new Rectangle(cursorLocation.x-insets.left,
-						 cursorLocation.y-insets.top,
-						 insets.left+insets.right, 
-						 insets.top+insets.bottom);
-	    scrollRectToVisible(scrollRect);
-	}
+    public void autoscroll(Point cursorLocation) {
+        //	Insets insets = getAutoscrollInsets();
+        Insets insets = autoscrollInsets;
+        Rectangle outer = getVisibleRect();
+        Rectangle inner = new Rectangle(outer.x + insets.left,
+                outer.y + insets.top,
+                outer.width - (insets.left + insets.right),
+                outer.height - (insets.top + insets.bottom));
+        if (!inner.contains(cursorLocation)) {
+            Rectangle scrollRect = new Rectangle(cursorLocation.x - insets.left,
+                    cursorLocation.y - insets.top,
+                    insets.left + insets.right,
+                    insets.top + insets.bottom);
+            scrollRectToVisible(scrollRect);
+        }
     } // autoscroll
 
     /*    
@@ -444,7 +441,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * @see TreeDisplay
      */
     public void setDisplay(TreeDisplay td) {
-	display = td;
+        display = td;
     } // setDisplay
 
     /**
@@ -454,7 +451,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * @see TreeDisplay
      */
     public TreeDisplay getDisplay() {
-	return display;
+        return display;
     } // getDisplay
 
     /**
@@ -463,7 +460,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * @return the start time of the root event
      */
     public ITimestamp getStartTime() {
-	return ((ComplexEvent) getModel().getRoot()).getStartTime();
+        return ((ComplexEvent) getModel().getRoot()).getStartTime();
     } // getStartTime
 
     /**
@@ -472,7 +469,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * @return the latest start time of an event
      */
     public ITimestamp getMaxStartTime() {
-	return ((ComplexEvent) getModel().getRoot()).getMaxStartTime();
+        return ((ComplexEvent) getModel().getRoot()).getMaxStartTime();
     } // getMaxStartTime
 
     /**
@@ -480,7 +477,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * event(s) in the hierarchy. If more than one selected event is
      * at the same level in the selection hierarchy, then their lowest
      * common ancestor is returned.
-     *
+     * <p/>
      * <p> This is used in org.Zeitline.Zeitline's
      * {@link Zeitline.CreateFromAction CreateFromAction} to determine
      * where to insert the new <tt>org.Zeitline.Event.ComplexEvent</tt>.
@@ -489,60 +486,60 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     public ComplexEvent getTopSelectionParent() {
 
-	if (getSelectionCount() == 0)
-	    return null;
+        if (getSelectionCount() == 0)
+            return null;
 
-	ComplexEvent current = null;
+        ComplexEvent current = null;
 
-	TreePath[] selections = getSelectionPaths();
+        TreePath[] selections = getSelectionPaths();
 
-	for (int i = 0; i< selections.length; i++) {
+        for (int i = 0; i < selections.length; i++) {
 
-	    AbstractTimeEvent node = (AbstractTimeEvent) selections[i].getLastPathComponent();
+            AbstractTimeEvent node = (AbstractTimeEvent) selections[i].getLastPathComponent();
 
-	    if (node == (AbstractTimeEvent) getModel().getRoot())
-		return (ComplexEvent) node;
+            if (node == (AbstractTimeEvent) getModel().getRoot())
+                return (ComplexEvent) node;
 
-	    ComplexEvent parent = node.getParent();
+            ComplexEvent parent = node.getParent();
 
-	    if (parent == (ComplexEvent) getModel().getRoot())
-		return parent;
-	    
-	    if (current == null) {
-		current = parent;
-		continue;
-	    }
-	    
-	    if (isDescendantOf((AbstractTimeEvent)parent, current))
-		continue;
+            if (parent == (ComplexEvent) getModel().getRoot())
+                return parent;
 
-	    if (current.getParent() == parent.getParent())
-		current = current.getParent();
-	    else
-		current = parent;
+            if (current == null) {
+                current = parent;
+                continue;
+            }
 
-	}
+            if (isDescendantOf((AbstractTimeEvent) parent, current))
+                continue;
 
-	return current;
+            if (current.getParent() == parent.getParent())
+                current = current.getParent();
+            else
+                current = parent;
+
+        }
+
+        return current;
 
     } // getTopSelectionParent
 
     /**
      * Determines is a <tt>org.Zeitline.Event.AbstractTimeEvent</tt> is a descendant of a
      * <tt>org.Zeitline.Event.ComplexEvent</tt>.
-     * 
+     * <p/>
      * <p> Used by {@link #getTopSelectionParent getTopSelectionParent}.
      *
-     * @param node the potential descendant <tt>org.Zeitline.Event.AbstractTimeEvent</tt>
+     * @param node     the potential descendant <tt>org.Zeitline.Event.AbstractTimeEvent</tt>
      * @param ancestor the event to compare against for ancestry
      */
     protected boolean isDescendantOf(AbstractTimeEvent node, ComplexEvent ancestor) {
 
-	for (AbstractTimeEvent temp = node; temp != null; temp=temp.getParent())
-	    if (temp == ancestor)
-		return true;
+        for (AbstractTimeEvent temp = node; temp != null; temp = temp.getParent())
+            if (temp == ancestor)
+                return true;
 
-	return false;
+        return false;
     } // isDescendantOf
 
     /**
@@ -550,125 +547,124 @@ public class EventTree extends JTree implements TreeSelectionListener {
      */
     public void valueChanged(TreeSelectionEvent e) {
 
-	//System.out.println("Tree selection changed");
+        //System.out.println("Tree selection changed");
 
-	TreePath[] paths = e.getPaths();
+        TreePath[] paths = e.getPaths();
 
-	//	System.out.println("Got paths");
+        //	System.out.println("Got paths");
 
-	TreePath lastParentPath = null;
-	TreePath parentPath;
+        TreePath lastParentPath = null;
+        TreePath parentPath;
 
-	for (int i = 0; i < paths.length; i++) {	    
-	    if (e.isAddedPath(paths[i])) {
-		if (paths[i].getLastPathComponent() instanceof ComplexEvent)
-		    removeDescendantSelectedPaths(paths[i], false);
-		parentPath = paths[i].getParentPath();
-		if (parentPath.equals(lastParentPath))
-		    continue;
-		for (TreePath temp = parentPath; temp != null; 
-		     temp = temp.getParentPath())
-		    if (isPathSelected(temp)) {
-			removeSelectionPath(paths[i]);
-			return;
-		    }
-	    }
-	}
+        for (int i = 0; i < paths.length; i++) {
+            if (e.isAddedPath(paths[i])) {
+                if (paths[i].getLastPathComponent() instanceof ComplexEvent)
+                    removeDescendantSelectedPaths(paths[i], false);
+                parentPath = paths[i].getParentPath();
+                if (parentPath.equals(lastParentPath))
+                    continue;
+                for (TreePath temp = parentPath; temp != null;
+                     temp = temp.getParentPath())
+                    if (isPathSelected(temp)) {
+                        removeSelectionPath(paths[i]);
+                        return;
+                    }
+            }
+        }
     } // valueChanged
 
     public String convertValueToText(Object value,
-				     boolean selected,
-				     boolean expanded,
-				     boolean leaf,
-				     int row,
-				     boolean hasFocus) {
-	AbstractTimeEvent te;
+                                     boolean selected,
+                                     boolean expanded,
+                                     boolean leaf,
+                                     int row,
+                                     boolean hasFocus) {
+        AbstractTimeEvent te;
 
-	try {
-	    te = (AbstractTimeEvent) value;
-	}
-	catch (ClassCastException ce) {
-	    return value.toString();
-	}
+        try {
+            te = (AbstractTimeEvent) value;
+        } catch (ClassCastException ce) {
+            return value.toString();
+        }
 
-	String name = te.getName();
+        String name = te.getName();
 
-	if (te.getParent() == null)
-	    return name;
-	
-	if (display_mode == DISPLAY_ALL)
-	    return te.getStartTime().toString() + " " + name;
-	
-	if (display_mode == DISPLAY_TIME)
-	    return te.getStartTime().toString() + " " + name;
-	
-	if (display_mode == DISPLAY_HMS) {
-	    
-	    Calendar c = Calendar.getInstance();
-	    //
-	    // There might be a problem in the future with this casting!
-        // TODO: Add a type check.
-        //
-        c.setTime((Date)te.getStartTime());
-	    NumberFormat nf = NumberFormat.getInstance();
-	    nf.setMinimumIntegerDigits(2);
-	    
-	    return nf.format(c.get(Calendar.HOUR_OF_DAY)) + ":" +
-		nf.format(c.get(Calendar.MINUTE)) + ":" +
-		nf.format(c.get(Calendar.SECOND)) + " " + name;
-	}
+        if (te.getParent() == null)
+            return name;
 
-	return name;
+        if (display_mode == DISPLAY_ALL)
+            return te.getStartTime().toString() + " " + name;
+
+        if (display_mode == DISPLAY_TIME)
+            return te.getStartTime().toString() + " " + name;
+
+        if (display_mode == DISPLAY_HMS) {
+
+            Calendar c = Calendar.getInstance();
+            //
+            // There might be a problem in the future with this casting!
+            // TODO: Add a type check.
+            //
+            c.setTime((Date) te.getStartTime());
+            NumberFormat nf = NumberFormat.getInstance();
+            nf.setMinimumIntegerDigits(2);
+
+            return nf.format(c.get(Calendar.HOUR_OF_DAY)) + ":" +
+                    nf.format(c.get(Calendar.MINUTE)) + ":" +
+                    nf.format(c.get(Calendar.SECOND)) + " " + name;
+        }
+
+        return name;
     } // convertValueToText
 
     public static void setDisplayMode(int mode) {
-	display_mode = mode;
+        display_mode = mode;
     } // setDisplayMode
 
     public void saveComplexEvents(ObjectOutputStream out_stream) {
-	// make sure that the ObjectOutputStream is instantiated
-	if(out_stream == null) return;
-	
-	try {
-	    // write the root of the model to the ObjectOutputStream
-	    out_stream.writeObject(origModel.getRoot());
-	}
-	catch(IOException io_excep) {}
+        // make sure that the ObjectOutputStream is instantiated
+        if (out_stream == null) return;
+
+        try {
+            // write the root of the model to the ObjectOutputStream
+            out_stream.writeObject(origModel.getRoot());
+        } catch (IOException io_excep) {
+        }
     } // saveComplexEvents
 
     public void centerEvent(AbstractTimeEvent event) {
 
-	TreePath path = origModel.getTreePath(event);
-	scrollPathToVisible(path);
-	centerPath(path);
+        TreePath path = origModel.getTreePath(event);
+        scrollPathToVisible(path);
+        centerPath(path);
 
     } // centerEvent
 
     protected void centerPath(TreePath path) {
 
-	Rectangle r = getPathBounds(path);
+        Rectangle r = getPathBounds(path);
 
-	int from = r.y;
-	int to = r.y + r.height;
+        int from = r.y;
+        int to = r.y + r.height;
 
         Rectangle bounds = getBounds();
-	Insets i = new Insets(0, 0, 0, 0);
+        Insets i = new Insets(0, 0, 0, 0);
 
         bounds.x = i.left;
         bounds.y = i.top;
         bounds.width -= i.left + i.right;
         bounds.height -= i.top + i.bottom;
-        
+
         Rectangle visible = getVisibleRect();
-        
+
         visible.y = from - (visible.height + from - to) / 2;
-        
+
         if (visible.y < bounds.y)
             visible.y = bounds.y;
-        
+
         if (visible.y + visible.height > bounds.y + bounds.height)
             visible.y = bounds.y + bounds.height - visible.height;
-        
+
         scrollRectToVisible(visible);
     } // centerPath
 } // org.Zeitline.EventTree

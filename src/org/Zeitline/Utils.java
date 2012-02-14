@@ -7,7 +7,8 @@ import java.util.regex.Pattern;
 // Non-instantiable utility class
 public class Utils {
     // Suppress default constructor
-    private Utils() {}
+    private Utils() {
+    }
 
     static boolean containsCaseInsensitive(String target, String pattern) {
         // taken from http://stackoverflow.com/questions/86780/is-the-contains-method-in-java-lang-string-case-sensitive
@@ -18,7 +19,7 @@ public class Utils {
         // taken from http://stackoverflow.com/questions/86780/is-the-contains-method-in-java-lang-string-case-sensitive
         return target.toLowerCase(Locale.ENGLISH).endsWith(pattern.toLowerCase());
     }
-    
+
     static String pathJoin(String path1, String path2) {
         // taken from http://stackoverflow.com/questions/711993/does-java-have-a-path-joining-method
         return new File(path1, path2).toString();
@@ -35,8 +36,8 @@ public class Utils {
 
         return str.substring(0, pos);
     }
-    
-    static String getFileName(String path){
+
+    static String getFileName(String path) {
         return new File(path).getName();
     }
 
