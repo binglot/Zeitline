@@ -9,7 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Locale;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -196,8 +195,8 @@ public class PluginLoader extends ClassLoader {
     }
 
     private InputFilter InstantiateClassViaConstructorWithArgs(Class classDef) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        Class[] constructorArgs = {IFormGenerator.class};
-        Object[] constructorParams = {formGenerator};
+        Class[] constructorArgs = { IFormGenerator.class };
+        Object[] constructorParams = { formGenerator };
         Constructor constructor = classDef.getConstructor(constructorArgs);
 
         return (InputFilter) constructor.newInstance(constructorParams);
