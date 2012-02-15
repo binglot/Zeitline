@@ -9,12 +9,12 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractPluginLoader extends ClassLoader {
+public abstract class AbstractPluginLoader<T> extends ClassLoader {
 
     protected final String FILE_EXTENSION = ".class";
     protected final String folderName;
     protected final IFormGenerator formGenerator;
-    protected final List<InputFilter> inputFilters;
+    protected final List<T> inputFilters;
     protected final String runningLocation;
     protected final String packageName;
 
@@ -29,14 +29,14 @@ public abstract class AbstractPluginLoader extends ClassLoader {
         this.folderName = folderName;
         this.formGenerator = formGenerator;
 
-        inputFilters = new ArrayList<InputFilter>();
+        inputFilters = new ArrayList<T>();
         runningLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
         packageName = getClass().getPackage().getName();
     }
 
 
-    public List<InputFilter> getPlugins() {
-        List<InputFilter> plugins;
+    public List<T> getPlugins() {
+        List<T> plugins;
 
         // If the application is run from a JAR file, try to find embedded plugins
         if (Utils.containsCaseInsensitive(runningLocation, ".jar")) {
@@ -73,9 +73,9 @@ public abstract class AbstractPluginLoader extends ClassLoader {
     }
 
 
-    abstract List<InputFilter> getPluginsFromDir(String pluginsDir);
+    abstract List<T> getPluginsFromDir(String pluginsDir);
 
-    abstract List<InputFilter> getPluginsFromJar(String runningLocation, String folderName);
+    abstract List<T> getPluginsFromJar(String runningLocation, String folderName);
 
 
 }

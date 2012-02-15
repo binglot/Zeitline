@@ -14,7 +14,7 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 
-public class PluginLoader extends AbstractPluginLoader {
+public class PluginLoader extends AbstractPluginLoader<InputFilter> {
 
     public PluginLoader(String folderName, IFormGenerator formGenerator) {
         super(folderName, formGenerator);
