@@ -1,6 +1,7 @@
 package org.Zeitline;
 
-import org.Zeitline.GUI.FormGenerator;
+import org.Zeitline.Plugin.Input.InputFilter;
+import org.Zeitline.Plugin.Input.InputPluginLoader;
 import org.Zeitline.Plugin.PluginLoader;
 
 import static javax.swing.SwingUtilities.*;
@@ -11,9 +12,7 @@ public final class Start {
         // creating and showing this application's GUI.
         invokeLater(new Runnable() {
             public void run() {
-                FormGenerator formGenerator = new FormGenerator();
-                PluginLoader pluginLoader = new PluginLoader("filters", formGenerator);
-
+                PluginLoader<InputFilter> pluginLoader = new InputPluginLoader("filters");
                 Zeitline zeitline = new Zeitline(pluginLoader.getPlugins());
 
                 zeitline.createAndShowGUI();

@@ -1,7 +1,6 @@
 package org.Zeitline.Plugin;
 
-import org.Zeitline.GUI.IFormGenerator;
-import org.Zeitline.Plugin.Input.InputFilter;
+import org.Zeitline.Start;
 import org.Zeitline.Utils;
 
 import java.io.File;
@@ -9,29 +8,29 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractPluginLoader<T> extends ClassLoader {
+abstract class AbstractPluginLoader<T> extends ClassLoader {
 
-    protected final String FILE_EXTENSION = ".class";
+    protected final String PLUGIN_FILE_EXTENSION = ".class";
     protected final String folderName;
-    protected final IFormGenerator formGenerator;
+    //protected final IFormGenerator formGenerator;
     protected final List<T> inputFilters;
     protected final String runningLocation;
-    protected final String packageName;
+    protected final String rootPackageName;
 
     FilenameFilter filter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
-            return Utils.endsWithCaseInsensitive(name, FILE_EXTENSION);
+            return Utils.endsWithCaseInsensitive(name, PLUGIN_FILE_EXTENSION);
         }
     };
 
 
-    public AbstractPluginLoader(String folderName, IFormGenerator formGenerator) {
+    public AbstractPluginLoader(String folderName) {
         this.folderName = folderName;
-        this.formGenerator = formGenerator;
 
         inputFilters = new ArrayList<T>();
         runningLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-        packageName = getClass().getPackage().getName();
+        //noinspection InstantiatingObjectToGetClassObject
+        rootPackageName = new Start().getClass().getPackage().getName();
     }
 
 
@@ -54,7 +53,7 @@ public abstract class AbstractPluginLoader<T> extends ClassLoader {
 
     private String getPluginsDir() {
         char fileSeparator = System.getProperty("file.separator").toCharArray()[0];
-        String packageDir = packageName.replace('.', fileSeparator);
+        String packageDir = rootPackageName.replace('.', fileSeparator);
 
         if (new File(runningLocation).isFile()) {
             String workingDir = new File(runningLocation).getParent();
@@ -65,7 +64,7 @@ public abstract class AbstractPluginLoader<T> extends ClassLoader {
     }
 
     protected Class DefineClassFromReadBytes(String className, int classSize, byte[] classData) {
-        String fullClassName = packageName + "." + folderName + "." + className;
+        String fullClassName = rootPackageName + "." + folderName + "." + className;
         Class classDef = defineClass(fullClassName, classData, 0, classSize);
         resolveClass(classDef);
 
