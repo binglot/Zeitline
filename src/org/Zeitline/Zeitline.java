@@ -5,7 +5,8 @@ import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
-import org.Zeitline.GUI.IFormGenerator;
+import org.Zeitline.GUI.Graphics.IIconRepository;
+import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
@@ -22,9 +23,6 @@ import java.util.List;
 public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_NAME = "Zeitline";
     public static final String APPLICATION_VERSION = "v0.3";
-    private static final String JAR_FILTERS_DIR = "reg_filters";
-    private static final String DYNAMIC_FILTERS_DIR = "inputFilters";
-    private static final String PACKAGE_DIR = "org/Zeitline/";
     private static final String PROJECT_FILE_EXTENSION = ".ztl";
     private static final String PROJECT_NAME = "Zeitline Project";
 
@@ -43,6 +41,7 @@ public class Zeitline implements TreeSelectionListener {
 
     public final JFileChooser fileChooser;
     public List<InputFilter> inputFilters;
+    private final IIconRepository<ImageIcon> icons;
 
     protected Action createFrom;
     protected Action createTimelineFrom;
@@ -68,23 +67,42 @@ public class Zeitline implements TreeSelectionListener {
     protected Action loadAction;
 
     public Transferable cutBuffer = null;
-    private IFormGenerator formGenerator;
 
-    public Zeitline(List<InputFilter> inputFilters) {
+    public Zeitline(List<InputFilter> inputFilters, IIconRepository<ImageIcon> icons) {
         this.inputFilters = inputFilters;
+        this.icons = icons;
 
         File currentWorkingDirectory = new File(System.getProperty("user.dir"));
         fileChooser = new JFileChooser(currentWorkingDirectory);
         fileChooser.addChoosableFileFilter(new FileInputFilter(PROJECT_FILE_EXTENSION, PROJECT_NAME));
+    }
 
+    public void createAndShowGUI() {
+        CreateMenuActions();
+
+        frame = new JFrame(APPLICATION_NAME);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        frame.setJMenuBar(createMenuBar());
+
+        Component contents = createComponents();
+        frame.getContentPane().add(contents, BorderLayout.CENTER);
+
+        frame.pack();
+        frame.setSize(800, 600);
+        frame.setVisible(true);
+
+    }
+
+    private void CreateMenuActions() {
         /* 'File' menu actions */
 
         loadAction = new LoadAction(this, "Load",
-                createNavigationIcon("fileopen"),
+                icons.getIcon("fileopen"),
                 KeyEvent.VK_L);
 
         saveAction = new SaveAction(this, "Save",
-                createNavigationIcon("filesave"),
+                icons.getIcon("filesave"),
                 KeyEvent.VK_S);
         saveAction.setEnabled(false);
 
@@ -93,12 +111,12 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Edit' menu actions */
 
         cutAction = new CutAction(this, "Cut",
-                createNavigationIcon("editcut"),
+                icons.getIcon("editcut"),
                 KeyEvent.VK_T);
         cutAction.setEnabled(false);
 
         pasteAction = new PasteAction(this, "Paste",
-                createNavigationIcon("editpaste"),
+                icons.getIcon("editpaste"),
                 KeyEvent.VK_P);
         pasteAction.setEnabled(false);
 
@@ -107,48 +125,48 @@ public class Zeitline implements TreeSelectionListener {
 
         clearAllAction = new ClearAllAction(this, "Clear All Selections", KeyEvent.VK_A);
 
-        findAction = new FindAction(this, "Find ...", createNavigationIcon("find"), KeyEvent.VK_D);
+        findAction = new FindAction(this, "Find ...", icons.getIcon("find"), KeyEvent.VK_D);
         findAction.setEnabled(false);
 
         /* 'Event' menu actions */
 
         createFrom = new CreateFromAction(this, "Create from ...",
-                createNavigationIcon("create_event"),
+                icons.getIcon("create_event"),
                 KeyEvent.VK_C);
         createFrom.setEnabled(false);
 
         removeEvents = new RemoveEventsAction(this, "Remove",
-                createNavigationIcon("delete_event"),
+                icons.getIcon("delete_event"),
                 KeyEvent.VK_R);
         removeEvents.setEnabled(false);
 
         importAction = new ImportAction(this, "Import ...",
-                createNavigationIcon("import"),
+                icons.getIcon("import"),
                 KeyEvent.VK_I);
 
         /* 'Timeline' menu actions */
 
         emptyTimeline = new EmptyTimelineAction(this, "Create empty ...",
-                createNavigationIcon("new_timeline"),
+                icons.getIcon("new_timeline"),
                 KeyEvent.VK_E);
         createTimelineFrom = new CreateTimelineFromAction(this, "Create from ...",
-                createNavigationIcon("create_timeline"),
+                icons.getIcon("create_timeline"),
                 KeyEvent.VK_C);
         createTimelineFrom.setEnabled(false);
 
         deleteTimeline = new DeleteTimelineAction(this, "Delete",
-                createNavigationIcon("delete_timeline"),
+                icons.getIcon("delete_timeline"),
                 KeyEvent.VK_D);
         deleteTimeline.setEnabled(false);
 
         moveLeft = new MoveLeftAction(this, "Move Left",
-                createNavigationIcon("moveleft"),
+                icons.getIcon("moveleft"),
                 KeyEvent.VK_L);
         moveRight = new MoveRightAction(this, "Move Right",
-                createNavigationIcon("moveright"),
+                icons.getIcon("moveright"),
                 KeyEvent.VK_R);
         filterQueryAction = new FilterQueryAction(this, "Filter ...",
-                createNavigationIcon("filter"),
+                icons.getIcon("filter"),
                 KeyEvent.VK_F);
         filterQueryAction.setEnabled(false);
 
@@ -165,7 +183,6 @@ public class Zeitline implements TreeSelectionListener {
 
 
         displayMode = EventTree.DISPLAY_ALL;
-
     }
 
     public JMenuBar createMenuBar() {
@@ -280,7 +297,7 @@ public class Zeitline implements TreeSelectionListener {
 
     }
 
-    public JToolBar createToolBar() {
+    private JToolBar createToolBar() {
 
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
@@ -310,7 +327,7 @@ public class Zeitline implements TreeSelectionListener {
         return toolBar;
     }
 
-    public Component createComponents() {
+    private Component createComponents() {
 
         long ts;
 
@@ -354,22 +371,6 @@ public class Zeitline implements TreeSelectionListener {
 
     } // createComponents
 
-    void createAndShowGUI() {
-
-        frame = new JFrame(APPLICATION_NAME);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setJMenuBar(createMenuBar());
-
-        Component contents = createComponents();
-        frame.getContentPane().add(contents, BorderLayout.CENTER);
-
-        frame.pack();
-        frame.setSize(800, 600);
-        frame.setVisible(true);
-
-    }
-
     public void valueChanged(TreeSelectionEvent e) {
         EventTree tree = (EventTree) e.getSource();
 
@@ -399,20 +400,20 @@ public class Zeitline implements TreeSelectionListener {
 
     } // valueChanged
 
-    public static ImageIcon createNavigationIcon(String imageName) {
-        String imgLocation = "icons/"
-                + imageName
-                + ".png";
-        java.net.URL imageURL = Zeitline.class.getResource(imgLocation);
-
-        if (imageURL == null) {
-            System.err.println("Resource not found: "
-                    + imgLocation);
-            return null;
-        } else {
-            return new ImageIcon(imageURL);
-        }
-    } // createNavigationIcon
+//    public static ImageIcon icons.getIcon(String imageName) {
+//        String imgLocation = "icons/"
+//                + imageName
+//                + ".png";
+//        java.net.URL imageURL = Zeitline.class.getResource(imgLocation);
+//
+//        if (imageURL == null) {
+//            System.err.println("Resource not found: "
+//                    + imgLocation);
+//            return null;
+//        } else {
+//            return new ImageIcon(imageURL);
+//        }
+//    } // icons.getIcon
 
     public JButton createButton(Action a) {
         JButton b = new JButton(a);
@@ -435,8 +436,6 @@ public class Zeitline implements TreeSelectionListener {
         return m;
 
     } // createMenuItem
-
-
 
 
 }

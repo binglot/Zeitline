@@ -28,7 +28,7 @@ public class MACTimeEvent
        files need to be in PNG format (e.g. cancel.png) and the
        image should be 16x16 pixels
 
-    protected static ImageIcon icon = org.Zeitline.Zeitline.createNavigationIcon("cancel");
+    protected static ImageIcon icon = org.Zeitline.Zeitline.getIcon("cancel");
     */
     protected static JPanel panel = null;
     protected static JLabel lbl_mtime;

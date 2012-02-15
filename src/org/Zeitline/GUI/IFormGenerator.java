@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Vector;
 
-public interface IFormGenerator {
+public interface IFormGenerator<T> {
     JPanel createForm(Vector items);
-    FormItem getFormItem(String label, Component component);
+    T getFormItem(String label, Component component);
 }
