@@ -47,7 +47,7 @@
 //        parameter_names = new String[1];
 //        parameter_names[0] = new String("Start year: ");
 //
-//    } // org.Zeitline.filters.SyslogFilter
+//    } // org.Zeitline.inputFilters.SyslogFilter
 //
 //    public Source init(String filename, Component parent) {
 //        try {
@@ -218,4 +218,4 @@
 //
 //    }
 //
-//} // org.Zeitline.filters.SyslogFilter
+//} // org.Zeitline.inputFilters.SyslogFilter

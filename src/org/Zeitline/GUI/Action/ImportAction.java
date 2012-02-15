@@ -38,7 +38,7 @@ public class ImportAction
     } // ImportAction
 
     public void actionPerformed(ActionEvent e) {
-        if (ImportDlg.showDialog(Zeitline.frame, zeitline.filters) == ImportDlg.CANCEL_OPTION) return;
+        if (ImportDlg.showDialog(Zeitline.frame, zeitline.inputFilters) == ImportDlg.CANCEL_OPTION) return;
         input_filter = ImportDlg.getFilter();
         if (input_filter == null) return;
         s = input_filter.init(ImportDlg.getFileName(), Zeitline.frame);

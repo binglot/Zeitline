@@ -14,20 +14,17 @@ import java.util.jar.JarFile;
 
 
 public class PluginLoader extends ClassLoader {
-    private static final String PACKAGE_NAME = "org.Zeitline.filters";
     private static final String FILE_EXTENSION = ".class";
+    private final String folderName;
     private final IFormGenerator formGenerator;
+    private final List<InputFilter> inputFilters;
+    private final String runningLocation;
+    private final String packageName;
 
     private enum Streamer {
         File,
         Buffer
     }
-
-
-    public PluginLoader(IFormGenerator formGenerator) {
-        this.formGenerator = formGenerator;
-    }
-
 
     private FilenameFilter filter = new FilenameFilter() {
         public boolean accept(File dir, String name) {
@@ -35,7 +32,33 @@ public class PluginLoader extends ClassLoader {
         }
     };
 
-    public List<InputFilter> getPluginsFromDir(String dirName) {
+    public PluginLoader(String folderName, IFormGenerator formGenerator) {
+        this.folderName = folderName;
+        this.formGenerator = formGenerator;
+
+        inputFilters = new ArrayList<InputFilter>();
+        runningLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
+        packageName = getClass().getPackage().getName();
+    }
+
+    public List<InputFilter> getPlugins() {
+        List<InputFilter> plugins;
+
+        // If the application is run from a JAR file, try to find embedded plugins
+        if (Utils.containsCaseInsensitive(runningLocation, ".jar")) {
+            if ((plugins = getPluginsFromJar(runningLocation, folderName)) != null)
+                inputFilters.addAll(plugins);
+        }
+
+        // Look for the plugins in the 'filters' directory
+        String pluginsDir =  getPluginsDir();
+        if ((plugins = getPluginsFromDir(pluginsDir)) != null)
+            inputFilters.addAll(plugins);
+
+        return inputFilters;
+    }
+
+    private List<InputFilter> getPluginsFromDir(String dirName) {
         List<InputFilter> result = new ArrayList<InputFilter>();
         Class classDefinition;
 
@@ -72,13 +95,13 @@ public class PluginLoader extends ClassLoader {
         return result;
     }
 
-    public List<InputFilter> getPluginsFromJar(String jarLocation, String pluginDirName) {
+    private List<InputFilter> getPluginsFromJar(String jarLocation, String pluginDirName) {
         List<InputFilter> result = new ArrayList<InputFilter>();
         String jarFilePath = (new File(jarLocation)).getAbsolutePath();
 
         JarFile jarFile = SafelyLoadJarFile(jarFilePath);
         if (jarFile == null) {
-            System.err.println("Could not load the jar file provided as a source for input filters");
+            System.err.println("Could not load the jar file provided as a source for input inputFilters");
             return result;
         }
 
@@ -131,6 +154,18 @@ public class PluginLoader extends ClassLoader {
         return jarFile;
     }
 
+    private String getPluginsDir(){    
+        char fileSeparator = System.getProperty("file.separator").toCharArray()[0];
+        String packageDir = packageName.replace('.', fileSeparator);
+        
+        if (new File(runningLocation).isFile()){
+            String workingDir = new File(runningLocation).getParent();
+            return Utils.pathJoin(workingDir, packageDir, folderName);
+        }
+
+        return Utils.pathJoin(runningLocation, packageDir, folderName);
+    }
+
     private boolean ReadClassFileFromJar(JarFile jarFile, String fileName, int classSize, byte[] classData) {
         return ReadClassFile(jarFile, fileName, classSize, classData, Streamer.Buffer);
     }
@@ -165,7 +200,8 @@ public class PluginLoader extends ClassLoader {
     }
 
     private Class DefineClassFromReadBytes(String className, int classSize, byte[] classData) {
-        Class classDef = defineClass(PACKAGE_NAME + "." + className, classData, 0, classSize);
+        String fullClassName = packageName + "." + folderName + "." + className;
+        Class classDef = defineClass(fullClassName, classData, 0, classSize);
         resolveClass(classDef);
 
         return classDef;

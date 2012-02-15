@@ -24,6 +24,10 @@ public class Utils {
         // taken from http://stackoverflow.com/questions/711993/does-java-have-a-path-joining-method
         return new File(path1, path2).toString();
     }
+    
+    static String pathJoin (String path1, String path2, String path3){
+        return pathJoin(pathJoin(path1, path2), path3);
+    }
 
     static String stripFileExtension(String str) {
         // taken from http://stackoverflow.com/questions/924394/how-to-get-file-name-without-the-extension

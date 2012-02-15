@@ -5,7 +5,6 @@ import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
-import org.Zeitline.GUI.FormGenerator;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
 
@@ -17,7 +16,6 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +23,7 @@ public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_NAME = "Zeitline";
     public static final String APPLICATION_VERSION = "v0.3";
     private static final String JAR_FILTERS_DIR = "reg_filters";
-    private static final String DYNAMIC_FILTERS_DIR = "filters";
+    private static final String DYNAMIC_FILTERS_DIR = "inputFilters";
     private static final String PACKAGE_DIR = "org/Zeitline/";
     private static final String PROJECT_FILE_EXTENSION = ".ztl";
     private static final String PROJECT_NAME = "Zeitline Project";
@@ -44,7 +42,7 @@ public class Zeitline implements TreeSelectionListener {
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
     public final JFileChooser fileChooser;
-    public List<InputFilter> filters;
+    public List<InputFilter> inputFilters;
 
     protected Action createFrom;
     protected Action createTimelineFrom;
@@ -70,13 +68,14 @@ public class Zeitline implements TreeSelectionListener {
     protected Action loadAction;
 
     public Transferable cutBuffer = null;
+    private IFormGenerator formGenerator;
 
-    public Zeitline() {
+    public Zeitline(List<InputFilter> inputFilters) {
+        this.inputFilters = inputFilters;
+
         File currentWorkingDirectory = new File(System.getProperty("user.dir"));
         fileChooser = new JFileChooser(currentWorkingDirectory);
         fileChooser.addChoosableFileFilter(new FileInputFilter(PROJECT_FILE_EXTENSION, PROJECT_NAME));
-
-        filters = loadPlugins();
 
         /* 'File' menu actions */
 
@@ -438,33 +437,6 @@ public class Zeitline implements TreeSelectionListener {
     } // createMenuItem
 
 
-    private List<InputFilter> loadPlugins() {
-        List<InputFilter> result = new ArrayList<InputFilter>();
-        IFormGenerator formGenerator = new FormGenerator();
-        PluginLoader loader = new PluginLoader(formGenerator);
 
-        String location = Zeitline.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-        List<InputFilter> plugins;
-
-        // If the application is run from a JAR file, try to find embedded plugins
-        if (Utils.containsCaseInsensitive(location, ".jar")) {
-            plugins = loader.getPluginsFromJar(location, JAR_FILTERS_DIR);
-            result.addAll(plugins);
-
-            // Get the jar's directory
-            location = new File(location).getParent();
-        }
-        
-        // Look for the plugins in the 'filters' directory
-        if (new File(location).isDirectory()) {
-            String pluginsDir = location + PACKAGE_DIR + DYNAMIC_FILTERS_DIR;
-            if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
-                return result;
-
-            result.addAll(plugins);
-        }
-
-        return result;
-    }
 
 }

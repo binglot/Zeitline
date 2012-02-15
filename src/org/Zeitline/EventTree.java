@@ -97,7 +97,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
     /**
      * A stack containing all the {@link Query org.Zeitline.Query} objects that
-     * are active filters for the tree.
+     * are active inputFilters for the tree.
      */
     protected Stack queryStack;
 
@@ -247,7 +247,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
     /**
      * Adds a new view filter on top of the original model or any
-     * existing filters. A new {@link EventTreeModelFilter
+     * existing inputFilters. A new {@link EventTreeModelFilter
      * org.Zeitline.EventTreeModelFilter} class is created with the org.Zeitline.Query and set
      * as the new TreeModel for the tree. Because expanded paths
      * are not remembered when a TreeModel is changed, we remember
@@ -313,7 +313,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
     } // getActiveQuery
 
     /**
-     * Clears all filters and reverts to the original TreeModel.
+     * Clears all inputFilters and reverts to the original TreeModel.
      */
     public void clearFilters() {
         setModel(origModel);

@@ -104,7 +104,7 @@ public class ImportDlg
         } else {
             /*
            if(instance.getOwner() == frameComp)
-               instance = new org.Zeitline.ImportDlg(frameComp, filters);
+               instance = new org.Zeitline.ImportDlg(frameComp, inputFilters);
            else */
             instance.setFilters(filters);
             txt_file_name.setText("");
