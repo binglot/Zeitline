@@ -41,6 +41,7 @@ import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
+import org.Zeitline.GUI.Action.PasteAction;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -465,7 +466,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             ComplexEvent ce = (ComplexEvent) event;
             complexMask.set(ce, currentTree.getModel());
             complexMask.setVisible(true);
-            pasteAction.setEnabled(((Zeitline.PasteAction) pasteAction).pastePossible());
+            pasteAction.setEnabled(((PasteAction) pasteAction).pastePossible());
         }
 
     } // displayEvent

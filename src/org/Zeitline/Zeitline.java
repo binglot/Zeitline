@@ -1,117 +1,54 @@
 package org.Zeitline;
-/********************************************************************
-
- This file is part of org.Zeitline.Zeitline: a forensic timeline editor
-
- Written by Florian Buchholz and Courtney Falk.
-
- Copyright (c) 2004-2006 Florian Buchholz, Courtney Falk, Purdue
- University. All rights reserved.
-
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the
- "Software"), to deal with the Software without restriction, including
- without limitation the rights to use, copy, modify, merge, publish,
- distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
-
- Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimers.
- Redistributions in binary form must reproduce the above copyright
- notice, this list of conditions and the following disclaimers in the
- documentation and/or other materials provided with the distribution.
- Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
- University, nor the names of its contributors may be used to endorse
- or promote products derived from this Software without specific prior
- written permission.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
- IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
- SOFTWARE.
-
- **********************************************************************/
 
 import org.Zeitline.Event.AbstractTimeEvent;
-import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
+import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.FormGenerator;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.InputFilter.InputFilter;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.StreamCorruptedException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.*;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ButtonGroup;
-import javax.swing.ImageIcon;
-import javax.swing.InputMap;
-import javax.swing.JButton;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JRadioButtonMenuItem;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JToolBar;
-import javax.swing.KeyStroke;
-import javax.swing.OverlayLayout;
+import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
+import java.awt.*;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.KeyEvent;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Zeitline implements TreeSelectionListener {
+    public static final String APPLICATION_NAME = "Zeitline";
+    public static final String APPLICATION_VERSION = "v0.3";
     private static final String JAR_FILTERS_DIR = "reg_filters";
     private static final String DYNAMIC_FILTERS_DIR = "filters";
     private static final String PACKAGE_DIR = "org/Zeitline/";
-    static Zeitline app;
-    public static final String PROJECT_FILE_EXTENSION = ".ztl";
-    public static final String PROJECT_NAME = "Zeitline Project";
+    private static final String PROJECT_FILE_EXTENSION = ".ztl";
+    private static final String PROJECT_NAME = "Zeitline Project";
 
     protected EventTree tree;
-    protected ComplexEventMask cem;
+    public ComplexEventMask cem;
     protected AtomicEventMask aem;
-    protected JSplitPane mainPane;
-    protected TimelineView timelines;
+    public JSplitPane mainPane;
+    public TimelineView timelines;
     protected JToolBar toolBar;
 
     protected int displayMode;
 
-    static JFrame frame;
+    public static JFrame frame;
 
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
-    protected final JFileChooser fileChooser;
-    protected List<InputFilter> filters;
+    public final JFileChooser fileChooser;
+    public List<InputFilter> filters;
 
     protected Action createFrom;
     protected Action createTimelineFrom;
-    protected Action importAction;
+    public Action importAction;
     protected Action moveLeft;
     protected Action moveRight;
     protected Action exitAction;
@@ -121,7 +58,7 @@ public class Zeitline implements TreeSelectionListener {
     protected Action clearAllAction;
     protected Action filterQueryAction;
     protected Action cutAction;
-    protected Action pasteAction;
+    public Action pasteAction;
     protected Action findAction;
     protected Action emptyTimeline;
     protected Action deleteTimeline;
@@ -129,10 +66,10 @@ public class Zeitline implements TreeSelectionListener {
 
     protected Action testAction;
     protected Action testAction2;
-    protected Action saveAction;
+    public Action saveAction;
     protected Action loadAction;
 
-    protected Transferable cutBuffer = null;
+    public Transferable cutBuffer = null;
 
     public Zeitline() {
         File currentWorkingDirectory = new File(System.getProperty("user.dir"));
@@ -143,80 +80,80 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'File' menu actions */
 
-        loadAction = new LoadAction("Load",
+        loadAction = new LoadAction(this, "Load",
                 createNavigationIcon("fileopen"),
                 KeyEvent.VK_L);
 
-        saveAction = new SaveAction("Save",
+        saveAction = new SaveAction(this, "Save",
                 createNavigationIcon("filesave"),
                 KeyEvent.VK_S);
         saveAction.setEnabled(false);
 
-        exitAction = new ExitAction("Exit", KeyEvent.VK_X);
+        exitAction = new ExitAction(this, "Exit", KeyEvent.VK_X);
 
         /* 'Edit' menu actions */
 
-        cutAction = new CutAction("Cut",
+        cutAction = new CutAction(this, "Cut",
                 createNavigationIcon("editcut"),
                 KeyEvent.VK_T);
         cutAction.setEnabled(false);
 
-        pasteAction = new PasteAction("Paste",
+        pasteAction = new PasteAction(this, "Paste",
                 createNavigationIcon("editpaste"),
                 KeyEvent.VK_P);
         pasteAction.setEnabled(false);
 
-        clearAction = new ClearAction("Clear Selection", KeyEvent.VK_C);
+        clearAction = new ClearAction(this, "Clear Selection", KeyEvent.VK_C);
         clearAction.setEnabled(false);
 
-        clearAllAction = new ClearAllAction("Clear All Selections", KeyEvent.VK_A);
+        clearAllAction = new ClearAllAction(this, "Clear All Selections", KeyEvent.VK_A);
 
-        findAction = new FindAction("Find ...", createNavigationIcon("find"), KeyEvent.VK_D);
+        findAction = new FindAction(this, "Find ...", createNavigationIcon("find"), KeyEvent.VK_D);
         findAction.setEnabled(false);
 
         /* 'Event' menu actions */
 
-        createFrom = new CreateFromAction("Create from ...",
+        createFrom = new CreateFromAction(this, "Create from ...",
                 createNavigationIcon("create_event"),
                 KeyEvent.VK_C);
         createFrom.setEnabled(false);
 
-        removeEvents = new RemoveEventsAction("Remove",
+        removeEvents = new RemoveEventsAction(this, "Remove",
                 createNavigationIcon("delete_event"),
                 KeyEvent.VK_R);
         removeEvents.setEnabled(false);
 
-        importAction = new ImportAction("Import ...",
+        importAction = new ImportAction(this, "Import ...",
                 createNavigationIcon("import"),
                 KeyEvent.VK_I);
 
         /* 'Timeline' menu actions */
 
-        emptyTimeline = new EmptyTimelineAction("Create empty ...",
+        emptyTimeline = new EmptyTimelineAction(this, "Create empty ...",
                 createNavigationIcon("new_timeline"),
                 KeyEvent.VK_E);
-        createTimelineFrom = new CreateTimelineFromAction("Create from ...",
+        createTimelineFrom = new CreateTimelineFromAction(this, "Create from ...",
                 createNavigationIcon("create_timeline"),
                 KeyEvent.VK_C);
         createTimelineFrom.setEnabled(false);
 
-        deleteTimeline = new DeleteTimelineAction("Delete",
+        deleteTimeline = new DeleteTimelineAction(this, "Delete",
                 createNavigationIcon("delete_timeline"),
                 KeyEvent.VK_D);
         deleteTimeline.setEnabled(false);
 
-        moveLeft = new MoveLeftAction("Move Left",
+        moveLeft = new MoveLeftAction(this, "Move Left",
                 createNavigationIcon("moveleft"),
                 KeyEvent.VK_L);
-        moveRight = new MoveRightAction("Move Right",
+        moveRight = new MoveRightAction(this, "Move Right",
                 createNavigationIcon("moveright"),
                 KeyEvent.VK_R);
-        filterQueryAction = new FilterQueryAction("Filter ...",
+        filterQueryAction = new FilterQueryAction(this, "Filter ...",
                 createNavigationIcon("filter"),
                 KeyEvent.VK_F);
         filterQueryAction.setEnabled(false);
 
-        toggleOrphan = new ToggleOrphanAction("Show Orphans", null, KeyEvent.VK_O);
+        toggleOrphan = new ToggleOrphanAction(this, "Show Orphans", null, KeyEvent.VK_O);
 
         /* 'Help' menu actions */
 
@@ -224,13 +161,13 @@ public class Zeitline implements TreeSelectionListener {
 
         /* actions for testing new code */
 
-        testAction = new TestAction("TEST", KeyEvent.VK_T);
-        testAction2 = new TestAction2("TEST2", KeyEvent.VK_2);
+        testAction = new TestAction(this, "TEST", KeyEvent.VK_T);
+        testAction2 = new TestAction2(this, "TEST2", KeyEvent.VK_2);
 
 
         displayMode = EventTree.DISPLAY_ALL;
 
-    } // org.Zeitline.Zeitline
+    }
 
     public JMenuBar createMenuBar() {
 
@@ -321,12 +258,12 @@ public class Zeitline implements TreeSelectionListener {
 
         ButtonGroup group = new ButtonGroup();
 
-        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction("yyyy-mm-dd hh:mm:ss.d", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
+        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "yyyy-mm-dd hh:mm:ss.d", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
         rbMenuItem.setSelected(true);
         group.add(rbMenuItem);
         submenu.add(rbMenuItem);
 
-        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction("hh:mm:ss", KeyEvent.VK_H, EventTree.DISPLAY_HMS));
+        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "hh:mm:ss", KeyEvent.VK_H, EventTree.DISPLAY_HMS));
         group.add(rbMenuItem);
         submenu.add(rbMenuItem);
 
@@ -342,7 +279,7 @@ public class Zeitline implements TreeSelectionListener {
 
         return menuBar;
 
-    } // createMenuBar
+    }
 
     public JToolBar createToolBar() {
 
@@ -368,14 +305,11 @@ public class Zeitline implements TreeSelectionListener {
         toolBar.add(createButton(createTimelineFrom));
         toolBar.add(createButton(deleteTimeline));
 
-
-//	toolBar.add(testAction);
+        //	toolBar.add(testAction);
         //	toolBar.add(testAction2);
 
-
         return toolBar;
-
-    } // createToolBar
+    }
 
     public Component createComponents() {
 
@@ -396,7 +330,7 @@ public class Zeitline implements TreeSelectionListener {
         cem.setVisible(false);
         aem.setVisible(false);
 
-        timelines = new TimelineView(app, moveLeft, moveRight,
+        timelines = new TimelineView(this, moveLeft, moveRight,
                 filterQueryAction, deleteTimeline,
                 saveAction, pasteAction,
                 cutAction, clearAction, findAction,
@@ -421,23 +355,21 @@ public class Zeitline implements TreeSelectionListener {
 
     } // createComponents
 
-    static void createAndShowGUI() {
+    void createAndShowGUI() {
 
-        //Create and set up the window.
-        frame = new JFrame("org.Zeitline.Zeitline");
+        frame = new JFrame(APPLICATION_NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        app = new Zeitline();
-        frame.setJMenuBar(app.createMenuBar());
+        frame.setJMenuBar(createMenuBar());
 
-        Component contents = app.createComponents();
+        Component contents = createComponents();
         frame.getContentPane().add(contents, BorderLayout.CENTER);
 
         frame.pack();
         frame.setSize(800, 600);
         frame.setVisible(true);
 
-    } // createAndShowGUI
+    }
 
     public void valueChanged(TreeSelectionEvent e) {
         EventTree tree = (EventTree) e.getSource();
@@ -467,673 +399,6 @@ public class Zeitline implements TreeSelectionListener {
         }
 
     } // valueChanged
-
-    /***************************************************************/
-    /*
-     * GUI Action definitions
-     */
-
-    /**
-     * ***********************************************************
-     */
-
-    /* 'File' menu actions */
-
-    public class LoadAction extends AbstractAction {
-
-        private ComplexEvent complex_event;
-
-        public LoadAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Load project");
-        } // LoadAction
-
-        public void setComplexEvent(ComplexEvent complex_event) {
-            this.complex_event = complex_event;
-        } // setComplexEvent
-
-        public void actionPerformed(ActionEvent e) {
-            if (saveAction.isEnabled()) {
-                // prompt to save current project before loading
-                int save_confirm = JOptionPane.showConfirmDialog(null,
-                        "Would you like to save the current project before loading a different one?");
-                switch (save_confirm) {
-                    case JOptionPane.CANCEL_OPTION:
-                        // user doesn't want to continue, end loading process
-                        return;
-                    case JOptionPane.NO_OPTION:
-                        // do not save first, therefore do nothing
-                        break;
-                    case JOptionPane.YES_OPTION:
-                        // save the project first before loading another one
-                        saveAction.actionPerformed(e);
-                        break;
-                    default:
-                        System.err.println("JOptionPane.showConfirmDialog() returned "
-                                + "the unknown value of "
-                                + save_confirm);
-                }
-            }
-
-            ObjectInputStream in_stream = null;
-            complex_event = null;
-
-            // use JFileChooser to get a file name from which to load the ComplexEvents
-            if (fileChooser.showOpenDialog(frame) != JFileChooser.APPROVE_OPTION) return;
-            File chosen = fileChooser.getSelectedFile();
-            try {
-                in_stream = new ObjectInputStream(new FileInputStream(chosen));
-                long temp_long = ((Long) in_stream.readObject()).longValue();
-                AbstractTimeEvent.setIdCounter(temp_long);
-                timelines.loadFromFile(in_stream, app);
-                in_stream.close();
-            } catch (IOException io_excep) {
-                if (io_excep instanceof StreamCorruptedException) {
-                    // TODO: this is not really a check whether the file is in the proper format.
-                    // All we do right now is to make sure a proper Java Stream is openend.
-                    JOptionPane.showMessageDialog(null,
-                            "The file you specified is not in the proper org.Zeitline.Zeitline project format.\n If you want to add events, choose the 'Import' function.",
-                            "Invalid format",
-                            JOptionPane.ERROR_MESSAGE);
-                } else {
-                    JOptionPane.showMessageDialog(null,
-                            "The following error occurred when trying to access file '"
-                                    + chosen + "': " + io_excep,
-                            "I/O error",
-                            JOptionPane.ERROR_MESSAGE);
-                }
-            } catch (ClassNotFoundException cnf_excep) {
-                System.err.println("ERROR: ClassNotFoundException while writing ID counter");
-            }
-
-            saveAction.setEnabled(false);
-        } // actionPerformed
-
-    } // class LoadAction
-
-    public class SaveAction extends AbstractAction {
-
-        public SaveAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Save project");
-        } // SaveAction
-
-        public void actionPerformed(ActionEvent e) {
-
-            ObjectOutputStream out_stream = null;
-
-            // use a JFileChooser to get a file name to save the ComplexEvents as
-            fileChooser.setDialogTitle("Save Project");
-            fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-            if (fileChooser.showSaveDialog(frame) != JFileChooser.APPROVE_OPTION) return;
-            File chosen = fileChooser.getSelectedFile();
-            String name = chosen.getName();
-
-            if (!name.contains("."))
-                chosen = new File(chosen.getParent() + File.separator + name + ".ztl");
-
-            // open the ObjectOutputStream
-            try {
-                out_stream = new ObjectOutputStream(new FileOutputStream(chosen));
-
-                // write out the current ID counter
-                out_stream.writeObject(new Long(AbstractTimeEvent.getIdCounter()));
-            } catch (IOException io_excep) {
-                JOptionPane.showMessageDialog(null,
-                        "The following error occurred when trying to write file '"
-                                + chosen + "': " + io_excep,
-                        "I/O error",
-                        JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // dump cut buffer to the orphan timeline
-            if (cutBuffer != null) {
-                EventTree orphan = timelines.getOrphanTree();
-                TimeEventTransferHandler transfer = (TimeEventTransferHandler) orphan.getTransferHandler();
-                ComplexEvent orphan_root = (ComplexEvent) orphan.getModel().getRoot();
-                transfer.performPaste(cutBuffer, orphan_root);
-            }
-
-            // save all the org.Zeitline.TimelineView
-            timelines.saveEventTrees(out_stream);
-
-            // close the ObjectOutputStream
-            try {
-                out_stream.close();
-            } catch (IOException io_excep) {
-            }
-
-            saveAction.setEnabled(false);
-
-        } // actionPerformed
-
-    } // class SaveAction
-
-    public class ExitAction extends AbstractAction {
-
-        public ExitAction(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F4, ActionEvent.ALT_MASK));
-        } // ExitAction
-
-        public void actionPerformed(ActionEvent e) {
-            System.exit(0);
-        } // actionPerformed
-
-    } // class ExitAction
-
-    /* 'Edit' menu actions */
-
-    public class CutAction extends AbstractAction {
-
-        public CutAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.SHIFT_MASK));
-            putValue(SHORT_DESCRIPTION, "Cut");
-        } // CutAction
-
-        public void actionPerformed(ActionEvent e) {
-
-            if (cem.isVisible() && cem.isModified() && (cem.checkUpdate() == JOptionPane.CANCEL_OPTION))
-                return;
-
-            Transferable t = ((TimeEventTransferHandler) timelines.getCurrentTree().getTransferHandler()).performCut();
-            if (t == null)
-                return;
-
-            if (cutBuffer != null) {
-                EventTree orphan = timelines.getOrphanTree();
-                TimeEventTransferHandler transfer = (TimeEventTransferHandler) orphan.getTransferHandler();
-                ComplexEvent orphan_root = (ComplexEvent) orphan.getModel().getRoot();
-                transfer.performPaste(t, orphan_root);
-            }
-
-            cutBuffer = t;
-            saveAction.setEnabled(true);
-
-        } // actionPerformed
-
-    } // class CutAction
-
-    public class PasteAction extends AbstractAction {
-
-        public PasteAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK));
-            putValue(SHORT_DESCRIPTION, "Paste");
-        } // PasteAction
-
-        public void actionPerformed(ActionEvent e) {
-
-            if (cutBuffer == null)
-                return;
-
-            EventTree currentTree = timelines.getCurrentTree();
-            if (currentTree.getSelectionCount() != 1)
-                return;
-
-            ComplexEvent targetNode;
-            try {
-                targetNode = (ComplexEvent) currentTree.getSelectionPath().getLastPathComponent();
-            } catch (ClassCastException ce) {
-                return;
-            }
-
-            ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(cutBuffer, targetNode);
-
-            cutBuffer = null;
-
-            saveAction.setEnabled(true);
-            pasteAction.setEnabled(false);
-
-        } // actionPerformed
-
-        public boolean pastePossible() {
-            return (cutBuffer != null);
-        } // pastePossible
-
-    } // class PasteAction
-
-    public class ClearAction extends AbstractAction {
-
-        public ClearAction(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.CTRL_MASK));
-        } // ClearAction
-
-        public void actionPerformed(ActionEvent e) {
-            EventTree current = timelines.getCurrentTree();
-            if (current != null)
-                current.clearSelection();
-        } // actionPerformed
-
-    } // class ClearAction
-
-    public class ClearAllAction extends AbstractAction {
-
-        public ClearAllAction(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-        } // ClearAllAction
-
-        public void actionPerformed(ActionEvent e) {
-            timelines.clearSelections();
-        } // actionPerformed
-
-    } // class ClearAllAction
-
-    public class FindAction extends AbstractAction {
-
-        public FindAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-        } // FindAction
-
-
-        public void actionPerformed(ActionEvent e) {
-
-            EventTree currentTree = timelines.getCurrentTree();
-
-            NewQueryDlg dialog = new NewQueryDlg(frame,
-                    mainPane.getRightComponent(),
-                    "Find Events",
-                    false,
-                    NewQueryDlg.MODE_SEARCH,
-                    currentTree.getStartTime(),
-                    currentTree.getMaxStartTime(),
-                    null, timelines);
-
-            dialog.setVisible(true);
-
-        } // actionPerformed
-
-    } // class FindAction
-
-    /* 'Event' menu actions */
-
-    public class CreateFromAction extends AbstractAction {
-
-        public CreateFromAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Create new event from selection");
-        } // CreateFromAction
-
-        public void actionPerformed(ActionEvent e) {
-            EventTree currentTree = timelines.getCurrentTree();
-
-            ComplexEvent event = NewComplexEventDlg.showDialog(frame, currentTree.getDisplay(), "Create new event");
-
-            if (event == null) return;
-
-            ComplexEvent target = currentTree.getTopSelectionParent();
-
-            boolean saveDeleteValue = target.getDeleteEmptyEvent();
-            target.setDeleteEmptyEvent(false);
-
-            currentTree.moveSelected(event, null);
-            EventTreeModel model = (EventTreeModel) currentTree.getModel();
-
-            model.insertNode(target, event);
-
-            target.setDeleteEmptyEvent(saveDeleteValue);
-
-            TreePath path = model.getTreePath(event);
-            currentTree.expandPath(path);
-            currentTree.centerEvent(event);
-
-            saveAction.setEnabled(true);
-
-        } // actionPerformed
-
-    } // class CreateFromAction
-
-    public class RemoveEventsAction extends AbstractAction {
-
-        public RemoveEventsAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
-            putValue(SHORT_DESCRIPTION, "Delete selected events");
-        } // RemoveEventsAction
-
-        public void actionPerformed(ActionEvent e) {
-            timelines.removeSelected(timelines.getCurrentTree());
-            saveAction.setEnabled(true);
-        } // actionPerformed
-
-    } // class RemoveEventsAction
-
-    public class ImportAction
-            extends AbstractAction
-            implements StoppableRunnable {
-
-        private boolean running;
-        private JProgressBar progress_bar;
-        private ProgressDlg pd;
-        private InputFilter input_filter;
-        private Source s;
-
-        public ImportAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Import new events");
-            this.running = false;
-            this.progress_bar = null;
-        } // ImportAction
-
-        public void actionPerformed(ActionEvent e) {
-            if (ImportDlg.showDialog(frame, filters) == ImportDlg.CANCEL_OPTION) return;
-            input_filter = ImportDlg.getFilter();
-            if (input_filter == null) return;
-            s = input_filter.init(ImportDlg.getFileName(), frame);
-            if (s == null) return;
-
-            pd = new ProgressDlg(frame,
-                    "Importing Events",
-                    (StoppableRunnable) importAction);
-            pd.setVisible(true);
-        } // actionPerformed
-
-        public void stop() {
-            // override the deprecated stop() method to provide
-            // an alternative method in halting thread execution
-            running = false;
-        } // stop
-
-        public void run() {
-            progress_bar = pd.getProgressBar();
-            // enable thread execution
-            running = true;
-
-            String filter_name = input_filter.getName();
-            int percent_done = 0;
-            double total_size = 0;
-
-            if (progress_bar != null) {
-                progress_bar.setString(filter_name
-                        + " ("
-                        + percent_done
-                        + "%)");
-                progress_bar.setMaximum(new Long(input_filter.getTotalCount()).intValue());
-                progress_bar.setValue(0);
-                total_size = new Long(input_filter.getTotalCount()).doubleValue();
-            }
-
-            pd.setStatus("Parsing import file");
-            ComplexEvent ev = new ComplexEvent("Import from " + s, "");
-            AtomicEvent t = null;
-            int value = 0;
-            while (running && ((t = input_filter.getNextEvent()) != null)) {
-                t.setSource(s);
-                ev.addTimeEvent(t);
-
-                // update the progress bar
-                if (progress_bar != null) {
-                    value = new Long(input_filter.getProcessedCount()).intValue();
-                    progress_bar.setValue(value);
-
-                    percent_done = new Double(new Long(input_filter.getProcessedCount()).doubleValue() / total_size * 100.0).intValue();
-                    progress_bar.setString(filter_name
-                            + " ("
-                            + percent_done
-                            + "%)");
-                }
-            }
-
-            // make sure the import wasn't canceled
-            if (running) {
-                // change progress bar to undetermined time
-                pd.setStatus("Adding events to the timeline");
-                progress_bar.setIndeterminate(true);
-                // add the newly imported tree to the timeline
-                EventTree tree = new EventTree(ev);
-                timelines.addTree(tree, app);
-                // project has changed, enable the ability to save
-                saveAction.setEnabled(true);
-            }
-
-            // close the progress dialog
-            pd.setVisible(false);
-        } // run
-    } // class ImportAction
-
-    /* 'Timeline' menu actions */
-
-    public class EmptyTimelineAction extends AbstractAction {
-
-        public EmptyTimelineAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Create empty timeline");
-        } // EmptyTimelineAction
-
-        public void actionPerformed(ActionEvent e) {
-            ComplexEvent event = NewComplexEventDlg.showDialog(frame, timelines, "Create empty timeline");
-
-            if (event == null) return;
-
-            EventTree t = new EventTree(event);
-            timelines.addTree(t, app);
-            saveAction.setEnabled(true);
-        } // actionPerformed
-
-    } // class EmptyTimelineAction
-
-    public class CreateTimelineFromAction extends AbstractAction {
-
-        public CreateTimelineFromAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Create new timeline from selection");
-        } // CreateTimelineFromAction
-
-        public void actionPerformed(ActionEvent e) {
-            ComplexEvent event = NewComplexEventDlg.showDialog(frame, timelines, "Create new timeline");
-
-            if (event == null) return;
-
-            timelines.getCurrentTree().moveSelected(event, null);
-            EventTree t = new EventTree(event);
-            timelines.addTree(t, app);
-            saveAction.setEnabled(true);
-
-        } // actionPerformed
-
-    } // class CreateTimelineFromAction
-
-    public class DeleteTimelineAction extends AbstractAction {
-
-        public DeleteTimelineAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Delete timeline");
-        } // DeleteTimelineAction
-
-        public void actionPerformed(ActionEvent e) {
-            EventTree currentTree = timelines.getCurrentTree();
-
-            if ((((ComplexEvent) currentTree.getModel().getRoot()).countChildren() != 0)
-                    || timelines.isOrphan(currentTree))
-                return;
-
-            timelines.deleteTree(currentTree);
-            saveAction.setEnabled(true);
-        } // actionPerformed
-
-    } // class DeleteTimelineAction
-
-    public class MoveLeftAction extends AbstractAction {
-
-        public MoveLeftAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Move current timeline to left");
-        } // MoveLeftAction
-
-        public void actionPerformed(ActionEvent e) {
-            timelines.moveLeft();
-            saveAction.setEnabled(true);
-        } // actionPerformed
-
-    } // class MoveLeftAction
-
-    public class MoveRightAction extends AbstractAction {
-
-        public MoveRightAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Move current timeline to right");
-        } // MoveRightAction
-
-        public void actionPerformed(ActionEvent e) {
-            timelines.moveRight();
-            saveAction.setEnabled(true);
-        } // actionPerformed
-
-    } // class MoveRightAction
-
-    public class FilterQueryAction extends AbstractAction {
-
-        public FilterQueryAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-            putValue(SHORT_DESCRIPTION, "Filter event view");
-        } // FilterQueryAction
-
-        public void actionPerformed(ActionEvent e) {
-            EventTree currentTree = timelines.getCurrentTree();
-
-            Query q = NewQueryDlg.showDialog(frame, currentTree.getDisplay(),
-                    currentTree.getStartTime(),
-                    currentTree.getMaxStartTime(),
-                    null);
-
-            if (q == null)
-                return;
-
-            timelines.getCurrentTree().getDisplay().addQuery(q);
-        } // actionPerformed
-
-    } // class FilterQueryAction
-
-    public class ToggleOrphanAction extends AbstractAction {
-
-        public ToggleOrphanAction(String text, ImageIcon icon, int mnemonic) {
-            super(text, icon);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-        } // ToggleOrphanAction
-
-        public void actionPerformed(ActionEvent e) {
-            timelines.toggleOrphanVisible();
-        } // actionPerformed
-
-    } // class ToggleOrphanAction
-
-    /* 'View' menu actions */
-
-    public class SetDisplayModeAction extends AbstractAction {
-
-        protected int mode;
-
-        public SetDisplayModeAction(String text, int mnemonic, int mode) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            this.mode = mode;
-        } // SetDisplayModeAction
-
-        public void actionPerformed(ActionEvent e) {
-            EventTree.setDisplayMode(mode);
-            timelines.redraw();
-        } // actionPerformed
-
-    } // class SetDisplayModeAction
-
-    /* 'Help' menu actions */
-
-    public class AboutAction extends AbstractAction {
-
-        public AboutAction(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-            putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
-        } // ClearAllAction
-
-        public void actionPerformed(ActionEvent e) {
-            JOptionPane.showMessageDialog(frame,
-                    "org.Zeitline.Zeitline v0.2 (beta status)\n\n" +
-                            "Written by Florian Buchholz and Courtney Falk\n" +
-                            "\n" +
-                            "Copyright the authors, Purdue University 2004-2006", "org.Zeitline.Zeitline", JOptionPane.PLAIN_MESSAGE);
-        } // actionPerformed
-
-    } // class AboutAction
-
-    // action used to test certain functionality at the push of a button
-    public class TestAction extends AbstractAction {
-
-        public TestAction(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        }
-
-        public void actionPerformed(ActionEvent e) {
-
-//	    System.out.println(HostDlg.showDialog(frame));
-
-        }
-    }
-
-    // action used to test certain functionality at the push of a button
-    public class TestAction2 extends AbstractAction {
-
-        public TestAction2(String text, int mnemonic) {
-            super(text);
-            putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        }
-
-        public void actionPerformed(ActionEvent e) {
-
-            /*
-           org.Zeitline.EventTree tree = timelines.getCurrentTree();
-
-           org.Zeitline.EventTreeModel currentModel = (org.Zeitline.EventTreeModel)tree.getModel();
-
-           org.Zeitline.Event.ComplexEvent currentRoot = (org.Zeitline.Event.ComplexEvent)currentModel.getRoot();
-
-           org.Zeitline.Event.AbstractTimeEvent res = currentRoot.findPrev(new org.Zeitline.Query("README"));
-
-           if (res != null) {
-           tree.setSelectionPath(currentModel.getTreePath(res));
-           tree.centerEvent(res);
-           }
-           else
-           System.out.println("No match found");
-           */
-
-            timelines.findNextEvent(new Query("readme"), false);
-        }
-    }
 
     public static ImageIcon createNavigationIcon(String imageName) {
         String imgLocation = "icons/"
@@ -1179,23 +444,25 @@ public class Zeitline implements TreeSelectionListener {
         PluginLoader loader = new PluginLoader(formGenerator);
 
         String location = Zeitline.class.getProtectionDomain().getCodeSource().getLocation().getFile();
-
         List<InputFilter> plugins;
-        InputFilter temp = null;
 
         // If the application is run from a JAR file, try to find embedded plugins
         if (Utils.containsCaseInsensitive(location, ".jar")) {
             plugins = loader.getPluginsFromJar(location, JAR_FILTERS_DIR);
             result.addAll(plugins);
+
+            // Get the jar's directory
+            location = new File(location).getParent();
         }
-
+        
         // Look for the plugins in the 'filters' directory
-        // TODO: NEEDS FIXING, the 'location' can be a full file path
-        String pluginsDir = location + PACKAGE_DIR + DYNAMIC_FILTERS_DIR;
-        if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
-            return result;
+        if (new File(location).isDirectory()) {
+            String pluginsDir = location + PACKAGE_DIR + DYNAMIC_FILTERS_DIR;
+            if ((plugins = loader.getPluginsFromDir(pluginsDir)) == null)
+                return result;
 
-        result.addAll(plugins);
+            result.addAll(plugins);
+        }
 
         return result;
     }

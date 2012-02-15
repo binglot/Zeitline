@@ -479,7 +479,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * common ancestor is returned.
      * <p/>
      * <p> This is used in org.Zeitline.Zeitline's
-     * {@link Zeitline.CreateFromAction CreateFromAction} to determine
+     * {@link org.Zeitline.GUI.Action.CreateFromAction CreateFromAction} to determine
      * where to insert the new <tt>org.Zeitline.Event.ComplexEvent</tt>.
      *
      * @return the lowest common parent of the topmost selected event(s)

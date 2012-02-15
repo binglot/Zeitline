@@ -8,7 +8,8 @@ public final class Start {
         // creating and showing this application's GUI.
         invokeLater(new Runnable() {
             public void run() {
-                Zeitline.createAndShowGUI();
+                Zeitline zeitline = new Zeitline();
+                zeitline.createAndShowGUI();
             }
         });
     }
