@@ -36,7 +36,7 @@ package org.Zeitline; /*********************************************************
 
  **********************************************************************/
 
-import org.Zeitline.InputFilter.InputFilter;
+import org.Zeitline.Plugin.Input.InputFilter;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -50,7 +50,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 import javax.swing.BorderFactory;

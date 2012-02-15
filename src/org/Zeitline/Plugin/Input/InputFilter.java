@@ -1,4 +1,4 @@
-package org.Zeitline.InputFilter;
+package org.Zeitline.Plugin.Input;
 
 import java.awt.Component;
 import javax.swing.filechooser.FileFilter;

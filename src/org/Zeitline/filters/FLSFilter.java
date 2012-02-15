@@ -4,7 +4,7 @@ import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Event.MACTimeEvent;
 import org.Zeitline.FileInputFilter;
-import org.Zeitline.InputFilter.InputFilter;
+import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Source;
 
 import java.awt.Component;

@@ -4,7 +4,7 @@
 //import org.Zeitline.Event.SyslogEvent;
 //import org.Zeitline.FileInputFilter;
 //import org.Zeitline.GUI.IFormGenerator;
-//import org.Zeitline.InputFilter.InputFilter;
+//import org.Zeitline.Plugin.Input.InputFilter;
 //import org.Zeitline.Source;
 //import org.Zeitline.Timestamp.Timestamp;
 //

@@ -1,7 +1,8 @@
-package org.Zeitline;
+package org.Zeitline.Plugin;
 
 import org.Zeitline.GUI.IFormGenerator;
-import org.Zeitline.InputFilter.InputFilter;
+import org.Zeitline.Plugin.Input.InputFilter;
+import org.Zeitline.Utils;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -13,52 +14,18 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 
-public class PluginLoader extends ClassLoader {
-    private static final String FILE_EXTENSION = ".class";
-    private final String folderName;
-    private final IFormGenerator formGenerator;
-    private final List<InputFilter> inputFilters;
-    private final String runningLocation;
-    private final String packageName;
+public class PluginLoader extends AbstractPluginLoader {
+
+    public PluginLoader(String folderName, IFormGenerator formGenerator) {
+        super(folderName, formGenerator);
+    }
 
     private enum Streamer {
         File,
         Buffer
     }
 
-    private FilenameFilter filter = new FilenameFilter() {
-        public boolean accept(File dir, String name) {
-            return Utils.endsWithCaseInsensitive(name, FILE_EXTENSION);
-        }
-    };
-
-    public PluginLoader(String folderName, IFormGenerator formGenerator) {
-        this.folderName = folderName;
-        this.formGenerator = formGenerator;
-
-        inputFilters = new ArrayList<InputFilter>();
-        runningLocation = getClass().getProtectionDomain().getCodeSource().getLocation().getFile();
-        packageName = getClass().getPackage().getName();
-    }
-
-    public List<InputFilter> getPlugins() {
-        List<InputFilter> plugins;
-
-        // If the application is run from a JAR file, try to find embedded plugins
-        if (Utils.containsCaseInsensitive(runningLocation, ".jar")) {
-            if ((plugins = getPluginsFromJar(runningLocation, folderName)) != null)
-                inputFilters.addAll(plugins);
-        }
-
-        // Look for the plugins in the 'filters' directory
-        String pluginsDir =  getPluginsDir();
-        if ((plugins = getPluginsFromDir(pluginsDir)) != null)
-            inputFilters.addAll(plugins);
-
-        return inputFilters;
-    }
-
-    private List<InputFilter> getPluginsFromDir(String dirName) {
+    final protected List<InputFilter> getPluginsFromDir(String dirName) {
         List<InputFilter> result = new ArrayList<InputFilter>();
         Class classDefinition;
 
@@ -95,7 +62,7 @@ public class PluginLoader extends ClassLoader {
         return result;
     }
 
-    private List<InputFilter> getPluginsFromJar(String jarLocation, String pluginDirName) {
+    final protected  List<InputFilter> getPluginsFromJar(String jarLocation, String pluginDirName) {
         List<InputFilter> result = new ArrayList<InputFilter>();
         String jarFilePath = (new File(jarLocation)).getAbsolutePath();
 
@@ -154,18 +121,6 @@ public class PluginLoader extends ClassLoader {
         return jarFile;
     }
 
-    private String getPluginsDir(){    
-        char fileSeparator = System.getProperty("file.separator").toCharArray()[0];
-        String packageDir = packageName.replace('.', fileSeparator);
-        
-        if (new File(runningLocation).isFile()){
-            String workingDir = new File(runningLocation).getParent();
-            return Utils.pathJoin(workingDir, packageDir, folderName);
-        }
-
-        return Utils.pathJoin(runningLocation, packageDir, folderName);
-    }
-
     private boolean ReadClassFileFromJar(JarFile jarFile, String fileName, int classSize, byte[] classData) {
         return ReadClassFile(jarFile, fileName, classSize, classData, Streamer.Buffer);
     }
@@ -197,14 +152,6 @@ public class PluginLoader extends ClassLoader {
         }
 
         return readSize == classSize;
-    }
-
-    private Class DefineClassFromReadBytes(String className, int classSize, byte[] classData) {
-        String fullClassName = packageName + "." + folderName + "." + className;
-        Class classDef = defineClass(fullClassName, classData, 0, classSize);
-        resolveClass(classDef);
-
-        return classDef;
     }
 
     private InputFilter InstantiateDefinedClass(Class classDef) {

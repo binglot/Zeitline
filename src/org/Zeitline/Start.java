@@ -1,6 +1,7 @@
 package org.Zeitline;
 
 import org.Zeitline.GUI.FormGenerator;
+import org.Zeitline.Plugin.PluginLoader;
 
 import static javax.swing.SwingUtilities.*;
 

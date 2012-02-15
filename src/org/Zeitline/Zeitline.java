@@ -6,7 +6,7 @@ import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.IFormGenerator;
-import org.Zeitline.InputFilter.InputFilter;
+import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
