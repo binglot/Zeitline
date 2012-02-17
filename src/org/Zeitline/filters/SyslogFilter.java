@@ -2,7 +2,7 @@
 //
 //import org.Zeitline.Event.AtomicEvent;
 //import org.Zeitline.Event.SyslogEvent;
-//import org.Zeitline.FileInputFilter;
+//import org.Zeitline.OpenFileFilters.ZeitlineProject;
 //import org.Zeitline.GUI.IFormGenerator;
 //import org.Zeitline.Plugin.Input.InputFilter;
 //import org.Zeitline.Source;
@@ -20,7 +20,7 @@
 //import java.util.regex.Pattern;
 //
 //public class SyslogFilter extends InputFilter {
-//    protected RandomAccessFile file_input;
+//    protected RandomAccessFile fileInput;
 //    private static FileFilter filter;
 //    protected int current_year;
 //    protected int last_month;
@@ -37,7 +37,7 @@
 //
 //    public SyslogFilter(IFormGenerator formGenerator) {
 //        super(formGenerator);
-//        if (filter == null) filter = new FileInputFilter(null, null);
+//        if (filter == null) filter = new ZeitlineProject(null, null);
 //        parameter_fields = new JComponent[1];
 //        NumberFormat nf = NumberFormat.getIntegerInstance();
 //        nf.setGroupingUsed(false);
@@ -51,7 +51,7 @@
 //
 //    public Source init(String filename, Component parent) {
 //        try {
-//            file_input = new RandomAccessFile(filename, "r");
+//            fileInput = new RandomAccessFile(filename, "r");
 //        } catch (IOException ioe) {
 //            return null;
 //        }
@@ -93,7 +93,7 @@
 //        String[] fields;
 //
 //        try {
-//            line = file_input.readLine();
+//            line = fileInput.readLine();
 //        } catch (IOException ioe) {
 //            return null;
 //        }
@@ -165,7 +165,7 @@
 //
 //    public long getTotalCount() {
 //        try {
-//            return file_input.length();
+//            return fileInput.length();
 //        } catch (IOException ie) {
 //            return 0;
 //        }
@@ -173,7 +173,7 @@
 //
 //    public long getProcessedCount() {
 //        try {
-//            return file_input.getFilePointer();
+//            return fileInput.getFilePointer();
 //        } catch (IOException ie) {
 //            return 0;
 //        }
