@@ -21,7 +21,7 @@ public final class Start {
 //        });
 
         FiltersProvider openFileFilters = new FiltersProvider();
-        PluginLoader<InputFilter> pluginLoader = new InputPluginLoader("filters");
+        PluginLoader<InputFilter> pluginLoader = new InputPluginLoader("InputFilters");
         IconRepository iconRepository = new IconRepository();
         Zeitline zeitline = new Zeitline(openFileFilters.getFilters(),  pluginLoader.getPlugins(), iconRepository);
 

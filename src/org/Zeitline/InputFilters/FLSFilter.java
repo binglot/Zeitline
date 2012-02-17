@@ -1,4 +1,4 @@
-package org.Zeitline.filters;
+package org.Zeitline.InputFilters;
 
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.GUI.IFormGenerator;
