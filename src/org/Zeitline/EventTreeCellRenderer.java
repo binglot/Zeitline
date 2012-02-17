@@ -12,6 +12,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
 
+    // TODO: Change how it takes the icon.
     protected static ImageIcon atomicIcon, complexIcon;
     IIconRepository<ImageIcon> icons;
 
@@ -21,7 +22,7 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
         atomicIcon = icons.getIcon("atomic_small");
         complexIcon = icons.getIcon("complex_small");
 
-    } // org.Zeitline.EventTreeCellRenderer
+    }
 
     public Component getTreeCellRendererComponent(JTree tree,
                                                   Object value,

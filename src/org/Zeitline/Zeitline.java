@@ -6,12 +6,12 @@ import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.Graphics.IIconRepository;
-import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
@@ -23,8 +23,6 @@ import java.util.List;
 public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_NAME = "Zeitline";
     public static final String APPLICATION_VERSION = "v0.3";
-    private static final String PROJECT_FILE_EXTENSION = ".ztl";
-    private static final String PROJECT_NAME = "Zeitline Project";
 
     protected EventTree tree;
     public ComplexEventMask cem;
@@ -40,6 +38,7 @@ public class Zeitline implements TreeSelectionListener {
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
     public final JFileChooser fileChooser;
+    private final List<FileFilter> openFileFilters;
     public List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> icons;
 
@@ -68,17 +67,24 @@ public class Zeitline implements TreeSelectionListener {
 
     public Transferable cutBuffer = null;
 
-    public Zeitline(List<InputFilter> inputFilters, IIconRepository<ImageIcon> icons) {
+    public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> icons) {
+        this.openFileFilters = openFileFilters;
         this.inputFilters = inputFilters;
         this.icons = icons;
 
-        File currentWorkingDirectory = new File(System.getProperty("user.dir"));
-        fileChooser = new JFileChooser(currentWorkingDirectory);
-        fileChooser.addChoosableFileFilter(new FileInputFilter(PROJECT_FILE_EXTENSION, PROJECT_NAME));
+        File currentWorkingDir = new File(System.getProperty("user.dir"));
+        fileChooser = new JFileChooser(currentWorkingDir);
+    }
+
+    private void addChoosableFileFilters() {
+        for(FileFilter filter: openFileFilters){
+            fileChooser.addChoosableFileFilter(filter);
+        }
     }
 
     public void createAndShowGUI() {
-        CreateMenuActions();
+        addChoosableFileFilters();
+        createMenuActions();
 
         frame = new JFrame(APPLICATION_NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -94,7 +100,7 @@ public class Zeitline implements TreeSelectionListener {
 
     }
 
-    private void CreateMenuActions() {
+    private void createMenuActions() {
         /* 'File' menu actions */
 
         loadAction = new LoadAction(this, "Load",
@@ -369,7 +375,7 @@ public class Zeitline implements TreeSelectionListener {
 
         return mainCanvas;
 
-    } // createComponents
+    }
 
     public void valueChanged(TreeSelectionEvent e) {
         EventTree tree = (EventTree) e.getSource();
@@ -398,22 +404,7 @@ public class Zeitline implements TreeSelectionListener {
             removeEvents.setEnabled(true);
         }
 
-    } // valueChanged
-
-//    public static ImageIcon icons.getIcon(String imageName) {
-//        String imgLocation = "icons/"
-//                + imageName
-//                + ".png";
-//        java.net.URL imageURL = Zeitline.class.getResource(imgLocation);
-//
-//        if (imageURL == null) {
-//            System.err.println("Resource not found: "
-//                    + imgLocation);
-//            return null;
-//        } else {
-//            return new ImageIcon(imageURL);
-//        }
-//    } // icons.getIcon
+    }
 
     public JButton createButton(Action a) {
         JButton b = new JButton(a);
@@ -426,7 +417,7 @@ public class Zeitline implements TreeSelectionListener {
         imap.put(ks, name);
 
         return b;
-    } // createButton
+    }
 
     public JMenuItem createMenuItem(Action a) {
 
@@ -435,7 +426,7 @@ public class Zeitline implements TreeSelectionListener {
 
         return m;
 
-    } // createMenuItem
+    }
 
 
 }

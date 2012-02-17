@@ -14,6 +14,7 @@ public class QueryDisplay extends JPanel {
 
     protected JButton change, remove;
     protected JTextField text;
+    // TODO: Change how it takes the icon.
     private IIconRepository<ImageIcon> icons = new IconRepository();
 
     public QueryDisplay(Query q, ActionListener al) {

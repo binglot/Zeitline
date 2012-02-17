@@ -1,11 +1,10 @@
 package org.Zeitline;
 
 import org.Zeitline.GUI.Graphics.IconRepository;
+import org.Zeitline.OpenFileFilters.FiltersProvider;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Plugin.Input.InputPluginLoader;
 import org.Zeitline.Plugin.PluginLoader;
-
-import static javax.swing.SwingUtilities.*;
 
 public final class Start {
     public static void main(String[] args) {
@@ -21,9 +20,10 @@ public final class Start {
 //            }
 //        });
 
+        FiltersProvider openFileFilters = new FiltersProvider();
         PluginLoader<InputFilter> pluginLoader = new InputPluginLoader("filters");
         IconRepository iconRepository = new IconRepository();
-        Zeitline zeitline = new Zeitline(pluginLoader.getPlugins(), iconRepository);
+        Zeitline zeitline = new Zeitline(openFileFilters.getFilters(),  pluginLoader.getPlugins(), iconRepository);
 
         zeitline.createAndShowGUI();
     }

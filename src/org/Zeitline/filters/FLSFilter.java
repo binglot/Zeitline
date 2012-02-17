@@ -3,7 +3,6 @@ package org.Zeitline.filters;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Event.MACTimeEvent;
-import org.Zeitline.FileInputFilter;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Source;
 
@@ -18,8 +17,13 @@ import java.util.LinkedList;
 import javax.swing.filechooser.FileFilter;
 
 public class FLSFilter extends InputFilter {
+    private static final String NAME = "FLS Filter";
+    private static final String DESCRIPTION = "Reads in MAC times as output by Brian Carrier's FLS tool.";
+    private static final String INPUT_FILE_EXTENSION = ".fls";
+
+
     protected LinkedList event_queue;
-    protected RandomAccessFile file_input;
+    protected RandomAccessFile fileInput;
     private static FileFilter filter;
 
     protected String filename;
@@ -34,21 +38,20 @@ public class FLSFilter extends InputFilter {
     protected int type;
 
     public FLSFilter(IFormGenerator formGenerator) {
-        super(formGenerator);
+        super(formGenerator, NAME, INPUT_FILE_EXTENSION, DESCRIPTION);
         event_queue = new LinkedList();
-        if (filter == null) filter = new FileInputFilter(".fls", "*.fls");
     }
 
     public Source init(String filename, Component parent) {
 
         try {
-            //	    file_input = new BufferedReader(new FileReader(filename));
-            file_input = new RandomAccessFile(filename, "r");
+            //	    fileInput = new BufferedReader(new FileReader(filename));
+            fileInput = new RandomAccessFile(filename, "r");
         } catch (IOException ioe) {
             return null;
         }
 
-        return new Source("FLS filter", filename, Source.GRANULARITY_SEC);
+        return new Source(NAME, filename, Source.GRANULARITY_SEC);
     } // init
 
     public AtomicEvent getNextEvent() {
@@ -60,7 +63,7 @@ public class FLSFilter extends InputFilter {
             while (true) {
 
                 try {
-                    line = file_input.readLine();
+                    line = fileInput.readLine();
                 } catch (IOException ioe) {
                     return null;
                 }
@@ -180,36 +183,23 @@ public class FLSFilter extends InputFilter {
 
     } // getNextEvent
 
-    public FileFilter getFileFilter() {
-        return filter;
-    } // getFileFilter
 
-    public String getName() {
-        return "FLS Filter";
-    } // getName
-
-    public String getDescription() {
-        return "Reads in MAC times as output by Brian Carrier's FLS tool.";
-    } // getDescription
-
-    public long getExactCount() {
-        return 0;
-    } // getExactCount
+    public long getExactCount() { return 0; }
 
     public long getTotalCount() {
         try {
-            return file_input.length();
+            return fileInput.length();
         } catch (IOException ie) {
             return 0;
         }
-    } // getTotalCount
+    }
 
     public long getProcessedCount() {
         try {
-            return file_input.getFilePointer();
+            return fileInput.getFilePointer();
         } catch (IOException ie) {
             return 0;
         }
-    } // getProcessedCount
+    }
 
-} // org.Zeitline.inputFilters.FLSFilter
+}
