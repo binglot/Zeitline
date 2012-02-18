@@ -79,6 +79,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     private static boolean complexMaskChangeCancelled = false;
 
+    private final TreeSelectionListener app;
     protected ComplexEventMask complexMask;
     protected AtomicEventMask atomicMask;
     protected JSplitPane treePane;
@@ -105,6 +106,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
                         Action paste, Action cut, Action clear,
                         Action find,
                         ComplexEventMask cem, AtomicEventMask aem) {
+        this.app = app;
         complexMask = cem;
         atomicMask = aem;
 
@@ -602,7 +604,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     } // saveEventTrees
 
-    public void loadFromFile(ObjectInputStream in_stream, TreeSelectionListener app) {
+    public void loadFromFile(ObjectInputStream in_stream) {
 
         try {
             orphanTree = new EventTree((ComplexEvent) in_stream.readObject());
@@ -621,14 +623,14 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
                 addTreeToTab(rightTrees, new EventTree((ComplexEvent) in_stream.readObject()), app);
             }
         } catch (IOException io_excep) {
-            System.err.println("ERROR: IOException while loading org.Zeitline.TimelineView from ObjectInputStream\n\t"
+            System.err.println("ERROR: IOException while loading TimelineView from ObjectInputStream\n\t"
                     + io_excep.toString());
         } catch (ClassNotFoundException cnf_excep) {
-            System.err.println("ERROR: ClassNotFoundException while loading org.Zeitline.TimelineView from ObjectInputStream\n\t"
+            System.err.println("ERROR: ClassNotFoundException while loading TimelineView from ObjectInputStream\n\t"
                     + cnf_excep.toString());
         }
 
-    } // loadFromFile
+    }
 
     // TreeModelListener interface //
 

@@ -8,14 +8,8 @@ import org.Zeitline.Plugin.Input.InputFilter;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.List;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:24
-* To change this template use File | Settings | File Templates.
-*/
 public class ImportAction
         extends AbstractAction
         implements StoppableRunnable {
@@ -26,10 +20,12 @@ public class ImportAction
     private InputFilter input_filter;
     private Source s;
     private Zeitline zeitline;
+    private final List<InputFilter> inputFilters;
 
-    public ImportAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
+    public ImportAction(Zeitline zeitline, List<InputFilter> inputFilters, String text, ImageIcon icon, int mnemonic) {
         super(text, icon);
         this.zeitline = zeitline;
+        this.inputFilters = inputFilters;
         putValue(MNEMONIC_KEY, new Integer(mnemonic));
         putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
         putValue(SHORT_DESCRIPTION, "Import new events");
@@ -38,7 +34,7 @@ public class ImportAction
     } // ImportAction
 
     public void actionPerformed(ActionEvent e) {
-        if (ImportDlg.showDialog(Zeitline.frame, zeitline.inputFilters) == ImportDlg.CANCEL_OPTION) return;
+        if (ImportDlg.showDialog(Zeitline.frame, inputFilters) == ImportDlg.CANCEL_OPTION) return;
         input_filter = ImportDlg.getFilter();
         if (input_filter == null) return;
         s = input_filter.init(ImportDlg.getFileName(), Zeitline.frame);

@@ -39,7 +39,7 @@ public class Zeitline implements TreeSelectionListener {
 
     public final JFileChooser fileChooser;
     private final List<FileFilter> openFileFilters;
-    public List<InputFilter> inputFilters;
+    private final List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> icons;
 
     protected Action createFrom;
@@ -87,7 +87,6 @@ public class Zeitline implements TreeSelectionListener {
         createMenuActions();
 
         frame = new JFrame(APPLICATION_NAME);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         frame.setJMenuBar(createMenuBar());
 
@@ -103,9 +102,7 @@ public class Zeitline implements TreeSelectionListener {
     private void createMenuActions() {
         /* 'File' menu actions */
 
-        loadAction = new LoadAction(this, "Load",
-                icons.getIcon("fileopen"),
-                KeyEvent.VK_L);
+        loadAction = new LoadAction(icons.getIcon("fileopen"), KeyEvent.VK_L, timelines, saveAction, fileChooser);
 
         saveAction = new SaveAction(this, "Save",
                 icons.getIcon("filesave"),
@@ -146,7 +143,8 @@ public class Zeitline implements TreeSelectionListener {
                 KeyEvent.VK_R);
         removeEvents.setEnabled(false);
 
-        importAction = new ImportAction(this, "Import ...",
+        importAction = new ImportAction(this, inputFilters,
+                "Import ...",
                 icons.getIcon("import"),
                 KeyEvent.VK_I);
 
