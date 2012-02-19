@@ -29,7 +29,7 @@ public class EmptyTimelineAction extends AbstractAction {
     } // EmptyTimelineAction
 
     public void actionPerformed(ActionEvent e) {
-        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.getTimelines(), "Create empty timeline");
+        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), zeitline.getTimelines(), "Create empty timeline");
 
         if (event == null) return;
 

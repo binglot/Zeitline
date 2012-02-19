@@ -2,7 +2,6 @@ package org.Zeitline.GUI.Action;
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.TimelineView;
 import org.Zeitline.Zeitline;
 
 import javax.swing.*;
@@ -45,7 +44,7 @@ public class LoadAction extends AbstractAction {
         ObjectInputStream inputStream = null;
         complexEvent = null;
 
-        if (fileChooser.showOpenDialog(Zeitline.frame) != JFileChooser.APPROVE_OPTION)
+        if (fileChooser.showOpenDialog(app.getFrame()) != JFileChooser.APPROVE_OPTION)
             return;
 
         File selectedFile = fileChooser.getSelectedFile();

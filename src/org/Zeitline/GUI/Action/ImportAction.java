@@ -34,13 +34,13 @@ public class ImportAction
     } // ImportAction
 
     public void actionPerformed(ActionEvent e) {
-        if (ImportDlg.showDialog(Zeitline.frame, inputFilters) == ImportDlg.CANCEL_OPTION) return;
+        if (ImportDlg.showDialog(zeitline.getFrame(), inputFilters) == ImportDlg.CANCEL_OPTION) return;
         input_filter = ImportDlg.getFilter();
         if (input_filter == null) return;
-        s = input_filter.init(ImportDlg.getFileName(), Zeitline.frame);
+        s = input_filter.init(ImportDlg.getFileName(), zeitline.getFrame());
         if (s == null) return;
 
-        pd = new ProgressDlg(Zeitline.frame,
+        pd = new ProgressDlg(zeitline.getFrame(),
                 "Importing Events",
                 (StoppableRunnable) zeitline.importAction);
         pd.setVisible(true);

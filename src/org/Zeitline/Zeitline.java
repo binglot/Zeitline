@@ -33,7 +33,7 @@ public class Zeitline implements TreeSelectionListener {
 
     protected int displayMode;
 
-    public static JFrame frame;
+    private JFrame frame;
 
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
@@ -76,6 +76,10 @@ public class Zeitline implements TreeSelectionListener {
         fileChooser = new JFileChooser(currentWorkingDir);
     }
 
+    public JFrame getFrame() {
+        return frame;
+    }
+
     private void addChoosableFileFilters() {
         for(FileFilter filter: openFileFilters){
             getFileChooser().addChoosableFileFilter(filter);
@@ -88,14 +92,14 @@ public class Zeitline implements TreeSelectionListener {
 
         frame = new JFrame(APPLICATION_NAME);
 
-        frame.setJMenuBar(createMenuBar());
+        getFrame().setJMenuBar(createMenuBar());
 
         Component contents = createComponents();
-        frame.getContentPane().add(contents, BorderLayout.CENTER);
+        getFrame().getContentPane().add(contents, BorderLayout.CENTER);
 
-        frame.pack();
-        frame.setSize(800, 600);
-        frame.setVisible(true);
+        getFrame().pack();
+        getFrame().setSize(800, 600);
+        getFrame().setVisible(true);
 
     }
 
@@ -110,20 +114,10 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'Edit' menu actions */
         cutAction = new CutAction(this, icons.getIcon("editcut"), KeyEvent.VK_T);
-        cutAction.setEnabled(false);
-
-        pasteAction = new PasteAction(this, "Paste",
-                icons.getIcon("editpaste"),
-                KeyEvent.VK_P);
-        pasteAction.setEnabled(false);
-
-        clearAction = new ClearAction(this, "Clear Selection", KeyEvent.VK_C);
-        clearAction.setEnabled(false);
-
-        clearAllAction = new ClearAllAction(this, "Clear All Selections", KeyEvent.VK_A);
-
-        findAction = new FindAction(this, "Find ...", icons.getIcon("find"), KeyEvent.VK_D);
-        findAction.setEnabled(false);
+        pasteAction = new PasteAction(this, icons.getIcon("editpaste"), KeyEvent.VK_P);
+        clearAction = new ClearAction(this, KeyEvent.VK_C);
+        clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
+        findAction = new FindAction(this, icons.getIcon("find"), KeyEvent.VK_D);
 
         /* 'Event' menu actions */
 
@@ -172,7 +166,7 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'Help' menu actions */
 
-        aboutAction = new AboutAction("About", KeyEvent.VK_A);
+        aboutAction = new AboutAction(this, "About", KeyEvent.VK_A);
 
         /* actions for testing new code */
 

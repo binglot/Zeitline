@@ -8,40 +8,36 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:31
-* To change this template use File | Settings | File Templates.
-*/
 public class FindAction extends AbstractAction {
+    private static final String NAME = "Find ...";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK);
 
-    private Zeitline zeitline;
+    private Zeitline app;
 
-    public FindAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
-        this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_1, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
-    } // FindAction
+    public FindAction(Zeitline app, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
+        this.app = app;
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+
+        setEnabled(false);
+    }
 
 
     public void actionPerformed(ActionEvent e) {
+        EventTree currentTree = app.getTimelines().getCurrentTree();
+        final String dialogTitle = "Find Events";
 
-        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
-
-        NewQueryDlg dialog = new NewQueryDlg(Zeitline.frame,
-                zeitline.getMainPane().getRightComponent(),
-                "Find Events",
+        NewQueryDlg dialog = new NewQueryDlg(app.getFrame(),
+                app.getMainPane().getRightComponent(),
+                dialogTitle,
                 false,
                 NewQueryDlg.MODE_SEARCH,
                 currentTree.getStartTime(),
                 currentTree.getMaxStartTime(),
-                null, zeitline.getTimelines());
+                null, app.getTimelines());
 
         dialog.setVisible(true);
+    }
 
-    } // actionPerformed
-
-} // class FindAction
+}

@@ -33,7 +33,7 @@ public class CreateFromAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         EventTree currentTree = zeitline.getTimelines().getCurrentTree();
 
-        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, currentTree.getDisplay(), "Create new event");
+        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), currentTree.getDisplay(), "Create new event");
 
         if (event == null) return;
 

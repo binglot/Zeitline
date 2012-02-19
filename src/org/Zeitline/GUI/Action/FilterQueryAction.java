@@ -31,7 +31,7 @@ public class FilterQueryAction extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         EventTree currentTree = zeitline.getTimelines().getCurrentTree();
 
-        Query q = NewQueryDlg.showDialog(Zeitline.frame, currentTree.getDisplay(),
+        Query q = NewQueryDlg.showDialog(zeitline.getFrame(), currentTree.getDisplay(),
                 currentTree.getStartTime(),
                 currentTree.getMaxStartTime(),
                 null);

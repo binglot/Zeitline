@@ -9,31 +9,30 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:30
-* To change this template use File | Settings | File Templates.
-*/
 public class PasteAction extends AbstractAction {
+    private static final String NAME = "Paste";
+    private static final String DESCRIPTION = "Paste";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK);
 
-    private Zeitline zeitline;
+    private Zeitline app;
 
-    public PasteAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
-        this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, ActionEvent.SHIFT_MASK));
-        putValue(SHORT_DESCRIPTION, "Paste");
-    } // PasteAction
+    public PasteAction(Zeitline app, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
+        this.app = app;
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        setEnabled(false);
+    }
 
     public void actionPerformed(ActionEvent e) {
 
-        if (zeitline.getCutBuffer() == null)
+        if (app.getCutBuffer() == null)
             return;
 
-        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
+        EventTree currentTree = app.getTimelines().getCurrentTree();
         if (currentTree.getSelectionCount() != 1)
             return;
 
@@ -44,17 +43,17 @@ public class PasteAction extends AbstractAction {
             return;
         }
 
-        ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(zeitline.getCutBuffer(), targetNode);
+        ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(app.getCutBuffer(), targetNode);
 
-        zeitline.setCutBuffer(null);
+        app.setCutBuffer(null);
 
-        zeitline.getSaveAction().setEnabled(true);
-        zeitline.pasteAction.setEnabled(false);
+        app.getSaveAction().setEnabled(true);
+        app.pasteAction.setEnabled(false);
 
-    } // actionPerformed
+    }
 
     public boolean pastePossible() {
-        return (zeitline.getCutBuffer() != null);
-    } // pastePossible
+        return (app.getCutBuffer() != null);
+    }
 
-} // class PasteAction
+}

@@ -29,7 +29,7 @@ public class CreateTimelineFromAction extends AbstractAction {
     } // CreateTimelineFromAction
 
     public void actionPerformed(ActionEvent e) {
-        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.getTimelines(), "Create new timeline");
+        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), zeitline.getTimelines(), "Create new timeline");
 
         if (event == null) return;
 

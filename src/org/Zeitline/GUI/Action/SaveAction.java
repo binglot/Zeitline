@@ -40,7 +40,7 @@ public class SaveAction extends AbstractAction {
 
         app.getFileChooser().setDialogTitle(dialogTitle);
         app.getFileChooser().setDialogType(JFileChooser.SAVE_DIALOG);
-        if (app.getFileChooser().showSaveDialog(Zeitline.frame) != JFileChooser.APPROVE_OPTION)
+        if (app.getFileChooser().showSaveDialog(app.getFrame()) != JFileChooser.APPROVE_OPTION)
             return;
 
         File selectedFile = app.getFileChooser().getSelectedFile();
