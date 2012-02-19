@@ -26,7 +26,7 @@ public class ClearAction extends AbstractAction {
     } // ClearAction
 
     public void actionPerformed(ActionEvent e) {
-        EventTree current = zeitline.timelines.getCurrentTree();
+        EventTree current = zeitline.getTimelines().getCurrentTree();
         if (current != null)
             current.clearSelection();
     } // actionPerformed

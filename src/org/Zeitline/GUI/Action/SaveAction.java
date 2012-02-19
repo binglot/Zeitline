@@ -14,71 +14,77 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
-/***************************************************************/
-/*
- * GUI Action definitions
- */
+/* 'Save File' action */
 
 public class SaveAction extends AbstractAction {
+    private static final String NAME = "Save";
+    private static final String DESCRIPTION = "Saved project";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK);
 
-    private Zeitline zeitline;
+    private final Zeitline app;
 
-    public SaveAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
-        this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Save project");
-    } // SaveAction
+    public SaveAction(Zeitline app, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
+        this.app = app;
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        this.enabled = false;
+    }
 
     public void actionPerformed(ActionEvent e) {
+        final String dialogTitle = "Save Project";
+        ObjectOutputStream outputStream = null;
 
-        ObjectOutputStream out_stream = null;
+        app.getFileChooser().setDialogTitle(dialogTitle);
+        app.getFileChooser().setDialogType(JFileChooser.SAVE_DIALOG);
+        if (app.getFileChooser().showSaveDialog(Zeitline.frame) != JFileChooser.APPROVE_OPTION)
+            return;
 
-        // use a JFileChooser to get a file name to save the ComplexEvents as
-        zeitline.fileChooser.setDialogTitle("Save Project");
-        zeitline.fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-        if (zeitline.fileChooser.showSaveDialog(Zeitline.frame) != JFileChooser.APPROVE_OPTION) return;
-        File chosen = zeitline.fileChooser.getSelectedFile();
-        String name = chosen.getName();
+        File selectedFile = app.getFileChooser().getSelectedFile();
+        String name = selectedFile.getName();
 
+        // If the user types in a filename without a file extension, this makes sure it's there.
         if (!name.contains("."))
-            chosen = new File(chosen.getParent() + File.separator + name + ".ztl");
+            selectedFile = new File(selectedFile.getParent() + File.separator + name + ".ztl");
 
-        // open the ObjectOutputStream
         try {
-            out_stream = new ObjectOutputStream(new FileOutputStream(chosen));
+            outputStream = new ObjectOutputStream(new FileOutputStream(selectedFile));
 
             // write out the current ID counter
-            out_stream.writeObject(new Long(AbstractTimeEvent.getIdCounter()));
-        } catch (IOException io_excep) {
+            outputStream.writeObject(new Long(AbstractTimeEvent.getIdCounter()));
+        } catch (IOException io) {
             JOptionPane.showMessageDialog(null,
-                    "The following error occurred when trying to write file '"
-                            + chosen + "': " + io_excep,
+                    "The following error occurred when trying to write to the file '" + selectedFile + "': " + io,
                     "I/O error",
                     JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+
         // dump cut buffer to the orphan timeline
-        if (zeitline.cutBuffer != null) {
-            EventTree orphan = zeitline.timelines.getOrphanTree();
+        if (app.getCutBuffer() != null) {
+            EventTree orphan = app.getTimelines().getOrphanTree();
             TimeEventTransferHandler transfer = (TimeEventTransferHandler) orphan.getTransferHandler();
             ComplexEvent orphan_root = (ComplexEvent) orphan.getModel().getRoot();
-            transfer.performPaste(zeitline.cutBuffer, orphan_root);
+            transfer.performPaste(app.getCutBuffer(), orphan_root);
         }
 
-        // save all the org.Zeitline.TimelineView
-        zeitline.timelines.saveEventTrees(out_stream);
+        // save all the TimelineView
+        app.getTimelines().saveEventTrees(outputStream);
 
-        // close the ObjectOutputStream
         try {
-            out_stream.close();
-        } catch (IOException io_excep) {
+            outputStream.close();
+        } catch (IOException io) {
+            JOptionPane.showMessageDialog(null,
+                    "The following error occurred when trying to close the file '" + selectedFile + "': " + io,
+                    "I/O error",
+                    JOptionPane.ERROR_MESSAGE);
         }
 
-        zeitline.saveAction.setEnabled(false);
+        this.setEnabled(false);
+    }
 
-    } // actionPerformed
-
-} // class SaveAction
+}

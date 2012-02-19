@@ -29,14 +29,14 @@ public class CreateTimelineFromAction extends AbstractAction {
     } // CreateTimelineFromAction
 
     public void actionPerformed(ActionEvent e) {
-        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.timelines, "Create new timeline");
+        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.getTimelines(), "Create new timeline");
 
         if (event == null) return;
 
-        zeitline.timelines.getCurrentTree().moveSelected(event, null);
+        zeitline.getTimelines().getCurrentTree().moveSelected(event, null);
         EventTree t = new EventTree(event);
-        zeitline.timelines.addTree(t, zeitline);
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getTimelines().addTree(t, zeitline);
+        zeitline.getSaveAction().setEnabled(true);
 
     } // actionPerformed
 

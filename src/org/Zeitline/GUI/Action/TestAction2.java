@@ -42,6 +42,6 @@ public class TestAction2 extends AbstractAction {
        System.out.println("No match found");
        */
 
-        zeitline.timelines.findNextEvent(new Query("readme"), false);
+        zeitline.getTimelines().findNextEvent(new Query("readme"), false);
     }
 }

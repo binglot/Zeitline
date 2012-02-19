@@ -18,16 +18,14 @@ public class LoadAction extends AbstractAction {
     private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK);
 
     private ComplexEvent complexEvent;
-    private final TimelineView timelines;
-    private final Action saveAction;
+    private final Zeitline app;
     private final JFileChooser fileChooser;
 
 
-    public LoadAction(ImageIcon icon, int mnemonic, TimelineView timelines, Action saveAction, JFileChooser fileChooser) {
+    public LoadAction(Zeitline app, ImageIcon icon, int mnemonic) {
         super(NAME, icon);
-        this.fileChooser = fileChooser;
-        this.timelines = timelines;
-        this.saveAction = saveAction;
+        this.app = app;
+        this.fileChooser = app.getFileChooser();
 
         putValue(MNEMONIC_KEY, mnemonic);
         putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
@@ -39,7 +37,7 @@ public class LoadAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        if (saveAction.isEnabled()) {
+        if (app.getSaveAction().isEnabled()) {
             if (promptToSaveCurrentProject(e) == JOptionPane.CANCEL_OPTION)
                 return;
         }
@@ -50,13 +48,13 @@ public class LoadAction extends AbstractAction {
         if (fileChooser.showOpenDialog(Zeitline.frame) != JFileChooser.APPROVE_OPTION)
             return;
 
-        File chosen = fileChooser.getSelectedFile();
+        File selectedFile = fileChooser.getSelectedFile();
         try {
-            inputStream = new ObjectInputStream(new FileInputStream(chosen));
+            inputStream = new ObjectInputStream(new FileInputStream(selectedFile));
             long eventId = (Long) inputStream.readObject();
 
             AbstractTimeEvent.setIdCounter(eventId);
-            timelines.loadFromFile(inputStream);
+            app.getTimelines().loadFromFile(inputStream);
             inputStream.close();
         } catch (IOException io) {
             if (io instanceof StreamCorruptedException) {
@@ -68,7 +66,7 @@ public class LoadAction extends AbstractAction {
                         JOptionPane.ERROR_MESSAGE);
             } else {
                 JOptionPane.showMessageDialog(null,
-                        "The following error occurred when trying to access file '" + chosen + "': " + io,
+                        "The following error occurred when trying to access file '" + selectedFile + "': " + io,
                         "I/O error",
                         JOptionPane.ERROR_MESSAGE);
             }
@@ -76,7 +74,7 @@ public class LoadAction extends AbstractAction {
             System.err.println("ERROR: ClassNotFoundException while writing ID counter");
         }
 
-        saveAction.setEnabled(false);
+        app.getSaveAction().setEnabled(false);
     }
 
     private int promptToSaveCurrentProject(ActionEvent event) {
@@ -89,7 +87,7 @@ public class LoadAction extends AbstractAction {
             case JOptionPane.NO_OPTION:
                 break;
             case JOptionPane.YES_OPTION:
-                saveAction.actionPerformed(event);
+                app.getSaveAction().actionPerformed(event);
                 break;
             default:
                 System.err.println("JOptionPane.showConfirmDialog() returned the unknown value of "

@@ -28,14 +28,14 @@ public class DeleteTimelineAction extends AbstractAction {
     } // DeleteTimelineAction
 
     public void actionPerformed(ActionEvent e) {
-        EventTree currentTree = zeitline.timelines.getCurrentTree();
+        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
 
         if ((((ComplexEvent) currentTree.getModel().getRoot()).countChildren() != 0)
-                || zeitline.timelines.isOrphan(currentTree))
+                || zeitline.getTimelines().isOrphan(currentTree))
             return;
 
-        zeitline.timelines.deleteTree(currentTree);
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getTimelines().deleteTree(currentTree);
+        zeitline.getSaveAction().setEnabled(true);
     } // actionPerformed
 
 } // class DeleteTimelineAction

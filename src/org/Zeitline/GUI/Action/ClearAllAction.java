@@ -25,7 +25,7 @@ public class ClearAllAction extends AbstractAction {
     } // ClearAllAction
 
     public void actionPerformed(ActionEvent e) {
-        zeitline.timelines.clearSelections();
+        zeitline.getTimelines().clearSelections();
     } // actionPerformed
 
 } // class ClearAllAction

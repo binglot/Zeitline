@@ -26,7 +26,7 @@ public class RemoveEventsAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        zeitline.timelines.removeSelected(zeitline.timelines.getCurrentTree());
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getTimelines().removeSelected(zeitline.getTimelines().getCurrentTree());
+        zeitline.getSaveAction().setEnabled(true);
     }
 }

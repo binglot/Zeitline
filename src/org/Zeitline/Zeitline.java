@@ -25,10 +25,10 @@ public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_VERSION = "v0.3";
 
     protected EventTree tree;
-    public ComplexEventMask cem;
+    private ComplexEventMask cem;
     protected AtomicEventMask aem;
-    public JSplitPane mainPane;
-    public TimelineView timelines;
+    private JSplitPane mainPane;
+    private TimelineView timelines;
     protected JToolBar toolBar;
 
     protected int displayMode;
@@ -37,7 +37,7 @@ public class Zeitline implements TreeSelectionListener {
 
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
-    public final JFileChooser fileChooser;
+    private final JFileChooser fileChooser;
     private final List<FileFilter> openFileFilters;
     private final List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> icons;
@@ -62,10 +62,10 @@ public class Zeitline implements TreeSelectionListener {
 
     protected Action testAction;
     protected Action testAction2;
-    public Action saveAction;
+    private Action saveAction;
     protected Action loadAction;
 
-    public Transferable cutBuffer = null;
+    private Transferable cutBuffer = null;
 
     public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> icons) {
         this.openFileFilters = openFileFilters;
@@ -78,7 +78,7 @@ public class Zeitline implements TreeSelectionListener {
 
     private void addChoosableFileFilters() {
         for(FileFilter filter: openFileFilters){
-            fileChooser.addChoosableFileFilter(filter);
+            getFileChooser().addChoosableFileFilter(filter);
         }
     }
 
@@ -99,23 +99,17 @@ public class Zeitline implements TreeSelectionListener {
 
     }
 
+    // TODO: Change icons.getIcon(string) to iconsRepository.NAME
     private void createMenuActions() {
         /* 'File' menu actions */
 
-        loadAction = new LoadAction(icons.getIcon("fileopen"), KeyEvent.VK_L, timelines, saveAction, fileChooser);
-
-        saveAction = new SaveAction(this, "Save",
-                icons.getIcon("filesave"),
-                KeyEvent.VK_S);
-        saveAction.setEnabled(false);
-
-        exitAction = new ExitAction(this, "Exit", KeyEvent.VK_X);
+        saveAction = new SaveAction(this, icons.getIcon("filesave"), KeyEvent.VK_S);
+        // The saveAction parameter needs to be initialised beforehand, poor coding!
+        loadAction = new LoadAction(this, icons.getIcon("fileopen"), KeyEvent.VK_L);
+        exitAction = new ExitAction(KeyEvent.VK_X);
 
         /* 'Edit' menu actions */
-
-        cutAction = new CutAction(this, "Cut",
-                icons.getIcon("editcut"),
-                KeyEvent.VK_T);
+        cutAction = new CutAction(this, icons.getIcon("editcut"), KeyEvent.VK_T);
         cutAction.setEnabled(false);
 
         pasteAction = new PasteAction(this, "Paste",
@@ -203,7 +197,7 @@ public class Zeitline implements TreeSelectionListener {
         menu.setMnemonic(KeyEvent.VK_F);
         menuBar.add(menu);
 
-        menuItem = createMenuItem(saveAction);
+        menuItem = createMenuItem(getSaveAction());
         menu.add(menuItem);
 
         menuItem = createMenuItem(loadAction);
@@ -308,7 +302,7 @@ public class Zeitline implements TreeSelectionListener {
         toolBar.setRollover(true);
 
         toolBar.add(createButton(loadAction));
-        toolBar.add(createButton(saveAction));
+        toolBar.add(createButton(getSaveAction()));
         toolBar.addSeparator(new Dimension(16, 32));
         toolBar.add(createButton(cutAction));
         toolBar.add(createButton(pasteAction));
@@ -344,29 +338,29 @@ public class Zeitline implements TreeSelectionListener {
         maskOverlay.setLayout(new OverlayLayout(maskOverlay));
         cem = new ComplexEventMask();
         aem = new AtomicEventMask();
-        maskOverlay.add(cem);
+        maskOverlay.add(getCem());
         maskOverlay.add(aem);
-        maskOverlay.setMinimumSize(cem.getPreferredSize());
-        cem.setVisible(false);
+        maskOverlay.setMinimumSize(getCem().getPreferredSize());
+        getCem().setVisible(false);
         aem.setVisible(false);
 
         timelines = new TimelineView(this, moveLeft, moveRight,
                 filterQueryAction, deleteTimeline,
-                saveAction, pasteAction,
+                getSaveAction(), pasteAction,
                 cutAction, clearAction, findAction,
-                cem, aem);
+                getCem(), aem);
 
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
-                timelines, new JScrollPane(maskOverlay));
+                getTimelines(), new JScrollPane(maskOverlay));
 
 
-        mainPane.setOneTouchExpandable(true);
-        mainPane.setResizeWeight(1.0);
+        getMainPane().setOneTouchExpandable(true);
+        getMainPane().setResizeWeight(1.0);
 
         JPanel mainCanvas = new JPanel(new BorderLayout());
 
         mainCanvas.add(toolBar, BorderLayout.PAGE_START);
-        mainCanvas.add(mainPane, BorderLayout.CENTER);
+        mainCanvas.add(getMainPane(), BorderLayout.CENTER);
 
         Date after = new Date();
         //	System.out.println("Drawing GUI: " + (after.getTime() - afterInsert.getTime()));
@@ -385,7 +379,7 @@ public class Zeitline implements TreeSelectionListener {
         else {
             AbstractTimeEvent te = (AbstractTimeEvent) tree.getLastSelectedPathComponent();
             pasteAction.setEnabled((te instanceof ComplexEvent) &&
-                    (cutBuffer != null));
+                    (getCutBuffer() != null));
         }
 
         // TODO: once drag and drop for tabs works, we can remove
@@ -427,4 +421,31 @@ public class Zeitline implements TreeSelectionListener {
     }
 
 
+    public ComplexEventMask getCem() {
+        return cem;
+    }
+
+    public JSplitPane getMainPane() {
+        return mainPane;
+    }
+
+    public TimelineView getTimelines() {
+        return timelines;
+    }
+
+    public Action getSaveAction() {
+        return saveAction;
+    }
+
+    public Transferable getCutBuffer() {
+        return cutBuffer;
+    }
+
+    public JFileChooser getFileChooser() {
+        return fileChooser;
+    }
+
+    public void setCutBuffer(Transferable cutBuffer) {
+        this.cutBuffer = cutBuffer;
+    }
 }

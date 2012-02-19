@@ -11,8 +11,9 @@ import java.util.List;
 abstract class AbstractPluginLoader<T> extends ClassLoader {
 
     protected final String PLUGIN_FILE_EXTENSION = ".class";
+    protected final String JAR_FILE_EXTENSION = ".jar";
+
     protected final String folderName;
-    //protected final IFormGenerator formGenerator;
     protected final List<T> inputFilters;
     protected final String runningLocation;
     protected final String rootPackageName;
@@ -38,12 +39,12 @@ abstract class AbstractPluginLoader<T> extends ClassLoader {
         List<T> plugins;
 
         // If the application is run from a JAR file, try to find embedded plugins
-        if (Utils.containsCaseInsensitive(runningLocation, ".jar")) {
+        if (Utils.endsWithCaseInsensitive(runningLocation, JAR_FILE_EXTENSION)) {
             if ((plugins = getPluginsFromJar(runningLocation, folderName)) != null)
                 inputFilters.addAll(plugins);
         }
 
-        // Look for the plugins in the 'filters' directory
+        // Look for the plugins in their directory
         String pluginsDir = getPluginsDir();
         if ((plugins = getPluginsFromDir(pluginsDir)) != null)
             inputFilters.addAll(plugins);
@@ -52,7 +53,7 @@ abstract class AbstractPluginLoader<T> extends ClassLoader {
     }
 
     private String getPluginsDir() {
-        char fileSeparator = System.getProperty("file.separator").toCharArray()[0];
+        final char fileSeparator = File.separatorChar;
         String packageDir = rootPackageName.replace('.', fileSeparator);
 
         if (new File(runningLocation).isFile()) {

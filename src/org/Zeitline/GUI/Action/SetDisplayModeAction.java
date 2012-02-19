@@ -27,7 +27,7 @@ public class SetDisplayModeAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         EventTree.setDisplayMode(mode);
-        zeitline.timelines.redraw();
+        zeitline.getTimelines().redraw();
     } // actionPerformed
 
 } // class SetDisplayModeAction

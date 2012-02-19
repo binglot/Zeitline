@@ -26,8 +26,8 @@ public class MoveRightAction extends AbstractAction {
     } // MoveRightAction
 
     public void actionPerformed(ActionEvent e) {
-        zeitline.timelines.moveRight();
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getTimelines().moveRight();
+        zeitline.getSaveAction().setEnabled(true);
     } // actionPerformed
 
 } // class MoveRightAction

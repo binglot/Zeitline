@@ -10,44 +10,41 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:30
-* To change this template use File | Settings | File Templates.
-*/
+
 public class CutAction extends AbstractAction {
+    private static final String NAME = "Cut";
+    private static final String DESCRIPTION = "Cut";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.SHIFT_MASK);
 
     private Zeitline zeitline;
 
-    public CutAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public CutAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.SHIFT_MASK));
-        putValue(SHORT_DESCRIPTION, "Cut");
-    } // CutAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+    }
 
     public void actionPerformed(ActionEvent e) {
 
-        if (zeitline.cem.isVisible() && zeitline.cem.isModified() && (zeitline.cem.checkUpdate() == JOptionPane.CANCEL_OPTION))
+        if (zeitline.getCem().isVisible() && zeitline.getCem().isModified() && (zeitline.getCem().checkUpdate() == JOptionPane.CANCEL_OPTION))
             return;
 
-        Transferable t = ((TimeEventTransferHandler) zeitline.timelines.getCurrentTree().getTransferHandler()).performCut();
+        Transferable t = ((TimeEventTransferHandler) zeitline.getTimelines().getCurrentTree().getTransferHandler()).performCut();
         if (t == null)
             return;
 
-        if (zeitline.cutBuffer != null) {
-            EventTree orphan = zeitline.timelines.getOrphanTree();
+        if (zeitline.getCutBuffer() != null) {
+            EventTree orphan = zeitline.getTimelines().getOrphanTree();
             TimeEventTransferHandler transfer = (TimeEventTransferHandler) orphan.getTransferHandler();
             ComplexEvent orphan_root = (ComplexEvent) orphan.getModel().getRoot();
             transfer.performPaste(t, orphan_root);
         }
 
-        zeitline.cutBuffer = t;
-        zeitline.saveAction.setEnabled(true);
+        zeitline.setCutBuffer(t);
+        zeitline.getSaveAction().setEnabled(true);
+    }
 
-    } // actionPerformed
-
-} // class CutAction
+}

@@ -99,9 +99,9 @@ public class ImportAction
             progress_bar.setIndeterminate(true);
             // add the newly imported tree to the timeline
             EventTree tree = new EventTree(ev);
-            zeitline.timelines.addTree(tree, zeitline);
+            zeitline.getTimelines().addTree(tree, zeitline);
             // project has changed, enable the ability to save
-            zeitline.saveAction.setEnabled(true);
+            zeitline.getSaveAction().setEnabled(true);
         }
 
         // close the progress dialog

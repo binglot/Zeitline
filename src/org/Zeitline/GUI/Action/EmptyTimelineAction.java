@@ -29,13 +29,13 @@ public class EmptyTimelineAction extends AbstractAction {
     } // EmptyTimelineAction
 
     public void actionPerformed(ActionEvent e) {
-        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.timelines, "Create empty timeline");
+        ComplexEvent event = NewComplexEventDlg.showDialog(Zeitline.frame, zeitline.getTimelines(), "Create empty timeline");
 
         if (event == null) return;
 
         EventTree t = new EventTree(event);
-        zeitline.timelines.addTree(t, zeitline);
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getTimelines().addTree(t, zeitline);
+        zeitline.getSaveAction().setEnabled(true);
     } // actionPerformed
 
 } // class EmptyTimelineAction

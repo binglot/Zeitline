@@ -30,10 +30,10 @@ public class PasteAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
 
-        if (zeitline.cutBuffer == null)
+        if (zeitline.getCutBuffer() == null)
             return;
 
-        EventTree currentTree = zeitline.timelines.getCurrentTree();
+        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
         if (currentTree.getSelectionCount() != 1)
             return;
 
@@ -44,17 +44,17 @@ public class PasteAction extends AbstractAction {
             return;
         }
 
-        ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(zeitline.cutBuffer, targetNode);
+        ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(zeitline.getCutBuffer(), targetNode);
 
         zeitline.cutBuffer = null;
 
-        zeitline.saveAction.setEnabled(true);
+        zeitline.getSaveAction().setEnabled(true);
         zeitline.pasteAction.setEnabled(false);
 
     } // actionPerformed
 
     public boolean pastePossible() {
-        return (zeitline.cutBuffer != null);
+        return (zeitline.getCutBuffer() != null);
     } // pastePossible
 
 } // class PasteAction

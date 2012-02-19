@@ -25,7 +25,7 @@ public class ToggleOrphanAction extends AbstractAction {
     } // ToggleOrphanAction
 
     public void actionPerformed(ActionEvent e) {
-        zeitline.timelines.toggleOrphanVisible();
+        zeitline.getTimelines().toggleOrphanVisible();
     } // actionPerformed
 
 } // class ToggleOrphanAction

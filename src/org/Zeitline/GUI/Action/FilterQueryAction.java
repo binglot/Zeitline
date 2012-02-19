@@ -29,7 +29,7 @@ public class FilterQueryAction extends AbstractAction {
     } // FilterQueryAction
 
     public void actionPerformed(ActionEvent e) {
-        EventTree currentTree = zeitline.timelines.getCurrentTree();
+        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
 
         Query q = NewQueryDlg.showDialog(Zeitline.frame, currentTree.getDisplay(),
                 currentTree.getStartTime(),
@@ -39,7 +39,7 @@ public class FilterQueryAction extends AbstractAction {
         if (q == null)
             return;
 
-        zeitline.timelines.getCurrentTree().getDisplay().addQuery(q);
+        zeitline.getTimelines().getCurrentTree().getDisplay().addQuery(q);
     } // actionPerformed
 
 } // class FilterQueryAction

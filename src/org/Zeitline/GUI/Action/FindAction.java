@@ -29,16 +29,16 @@ public class FindAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
 
-        EventTree currentTree = zeitline.timelines.getCurrentTree();
+        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
 
         NewQueryDlg dialog = new NewQueryDlg(Zeitline.frame,
-                zeitline.mainPane.getRightComponent(),
+                zeitline.getMainPane().getRightComponent(),
                 "Find Events",
                 false,
                 NewQueryDlg.MODE_SEARCH,
                 currentTree.getStartTime(),
                 currentTree.getMaxStartTime(),
-                null, zeitline.timelines);
+                null, zeitline.getTimelines());
 
         dialog.setVisible(true);
 
