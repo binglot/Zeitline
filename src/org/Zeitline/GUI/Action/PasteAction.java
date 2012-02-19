@@ -46,7 +46,7 @@ public class PasteAction extends AbstractAction {
 
         ((TimeEventTransferHandler) currentTree.getTransferHandler()).performPaste(zeitline.getCutBuffer(), targetNode);
 
-        zeitline.cutBuffer = null;
+        zeitline.setCutBuffer(null);
 
         zeitline.getSaveAction().setEnabled(true);
         zeitline.pasteAction.setEnabled(false);
