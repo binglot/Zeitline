@@ -9,24 +9,24 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 15/02/12
-* Time: 10:11
-* To change this template use File | Settings | File Templates.
-*/
 public class FilterQueryAction extends AbstractAction {
+
+    private static final String NAME = "Filter ...";
+    private static final String DESCRIPTION = "Filter event view";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK);
 
     private Zeitline zeitline;
 
-    public FilterQueryAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public FilterQueryAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Filter event view");
-    } // FilterQueryAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        setEnabled(false);
+    }
 
     public void actionPerformed(ActionEvent e) {
         EventTree currentTree = zeitline.getTimelines().getCurrentTree();
@@ -40,6 +40,6 @@ public class FilterQueryAction extends AbstractAction {
             return;
 
         zeitline.getTimelines().getCurrentTree().getDisplay().addQuery(q);
-    } // actionPerformed
+    }
 
-} // class FilterQueryAction
+}

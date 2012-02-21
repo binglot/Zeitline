@@ -8,24 +8,24 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 15/02/12
-* Time: 10:10
-* To change this template use File | Settings | File Templates.
-*/
 public class DeleteTimelineAction extends AbstractAction {
+
+    private static final String NAME = "Delete";
+    private static final String DESCRIPTION = "Delete timeline";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.CTRL_MASK);
 
     private Zeitline zeitline;
 
-    public DeleteTimelineAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public DeleteTimelineAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Delete timeline");
-    } // DeleteTimelineAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        setEnabled(false);
+    }
 
     public void actionPerformed(ActionEvent e) {
         EventTree currentTree = zeitline.getTimelines().getCurrentTree();
@@ -36,6 +36,6 @@ public class DeleteTimelineAction extends AbstractAction {
 
         zeitline.getTimelines().deleteTree(currentTree);
         zeitline.getSaveAction().setEnabled(true);
-    } // actionPerformed
+    }
 
-} // class DeleteTimelineAction
+}

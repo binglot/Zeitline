@@ -9,35 +9,37 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:27
-* To change this template use File | Settings | File Templates.
-*/
 public class CreateTimelineFromAction extends AbstractAction {
+
+    private static final String NAME = "Create from ...";
+    private static final String DESCRIPTION = "Create new timeline from selection";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK);
 
     private Zeitline zeitline;
 
-    public CreateTimelineFromAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public CreateTimelineFromAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_T, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Create new timeline from selection");
-    } // CreateTimelineFromAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        setEnabled(false);
+    }
 
     public void actionPerformed(ActionEvent e) {
         ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), zeitline.getTimelines(), "Create new timeline");
 
-        if (event == null) return;
+        if (event == null)
+            return;
 
         zeitline.getTimelines().getCurrentTree().moveSelected(event, null);
+
         EventTree t = new EventTree(event);
         zeitline.getTimelines().addTree(t, zeitline);
         zeitline.getSaveAction().setEnabled(true);
 
-    } // actionPerformed
+    }
 
-} // class CreateTimelineFromAction
+}

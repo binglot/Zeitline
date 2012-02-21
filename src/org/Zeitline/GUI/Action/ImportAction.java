@@ -1,8 +1,8 @@
 package org.Zeitline.GUI.Action;
 
-import org.Zeitline.*;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.*;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
@@ -14,6 +14,10 @@ public class ImportAction
         extends AbstractAction
         implements StoppableRunnable {
 
+    private static final String NAME = "Import ...";
+    private static final String DESCRIPTION = "Import new events";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK);
+
     private boolean running;
     private JProgressBar progress_bar;
     private ProgressDlg pd;
@@ -22,35 +26,42 @@ public class ImportAction
     private Zeitline zeitline;
     private final List<InputFilter> inputFilters;
 
-    public ImportAction(Zeitline zeitline, List<InputFilter> inputFilters, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public ImportAction(Zeitline zeitline, ImageIcon icon, int mnemonic, List<InputFilter> inputFilters) {
+        super(NAME, icon);
         this.zeitline = zeitline;
         this.inputFilters = inputFilters;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_I, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Import new events");
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
         this.running = false;
         this.progress_bar = null;
-    } // ImportAction
+    }
 
     public void actionPerformed(ActionEvent e) {
-        if (ImportDlg.showDialog(zeitline.getFrame(), inputFilters) == ImportDlg.CANCEL_OPTION) return;
+        if (ImportDlg.showDialog(zeitline.getFrame(), inputFilters) == ImportDlg.CANCEL_OPTION)
+            return;
+
         input_filter = ImportDlg.getFilter();
-        if (input_filter == null) return;
+        if (input_filter == null)
+            return;
+
         s = input_filter.init(ImportDlg.getFileName(), zeitline.getFrame());
-        if (s == null) return;
+        if (s == null)
+            return;
 
         pd = new ProgressDlg(zeitline.getFrame(),
                 "Importing Events",
                 (StoppableRunnable) zeitline.importAction);
         pd.setVisible(true);
-    } // actionPerformed
+    }
 
     public void stop() {
         // override the deprecated stop() method to provide
         // an alternative method in halting thread execution
         running = false;
-    } // stop
+    }
 
     public void run() {
         progress_bar = pd.getProgressBar();
@@ -106,5 +117,5 @@ public class ImportAction
 
         // close the progress dialog
         pd.setVisible(false);
-    } // run
-} // class ImportAction
+    }
+}

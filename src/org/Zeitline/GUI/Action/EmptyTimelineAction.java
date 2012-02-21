@@ -9,33 +9,32 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:27
-* To change this template use File | Settings | File Templates.
-*/
 public class EmptyTimelineAction extends AbstractAction {
+
+    private static final String NAME = "Create empty ...";
+    private static final String DESCRIPTION = "Create empty timeline";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK);
 
     private Zeitline zeitline;
 
-    public EmptyTimelineAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public EmptyTimelineAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Create empty timeline");
-    } // EmptyTimelineAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+    }
 
     public void actionPerformed(ActionEvent e) {
-        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), zeitline.getTimelines(), "Create empty timeline");
+        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), zeitline.getTimelines(), DESCRIPTION);
 
-        if (event == null) return;
+        if (event == null)
+            return;
 
         EventTree t = new EventTree(event);
         zeitline.getTimelines().addTree(t, zeitline);
         zeitline.getSaveAction().setEnabled(true);
-    } // actionPerformed
+    }
 
-} // class EmptyTimelineAction
+}

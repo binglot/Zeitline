@@ -11,31 +11,30 @@ import javax.swing.tree.TreePath;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 14/02/12
-* Time: 19:32
-* To change this template use File | Settings | File Templates.
-*/
 public class CreateFromAction extends AbstractAction {
+    private static final String NAME = "Create from ...";
+    private static final String DESCRIPTION = "Create new event from selection";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK);
 
-    private Zeitline zeitline;
+    private Zeitline app;
 
-    public CreateFromAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
-        this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
-        putValue(SHORT_DESCRIPTION, "Create new event from selection");
-    } // CreateFromAction
+    public CreateFromAction(Zeitline app, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
+        this.app = app;
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+        putValue(SHORT_DESCRIPTION, DESCRIPTION);
+
+        setEnabled(false);
+    }
 
     public void actionPerformed(ActionEvent e) {
-        EventTree currentTree = zeitline.getTimelines().getCurrentTree();
+        EventTree currentTree = app.getTimelines().getCurrentTree();
+        ComplexEvent event = NewComplexEventDlg.showDialog(app.getFrame(), currentTree.getDisplay(), "Create new event");
 
-        ComplexEvent event = NewComplexEventDlg.showDialog(zeitline.getFrame(), currentTree.getDisplay(), "Create new event");
-
-        if (event == null) return;
+        if (event == null)
+            return;
 
         ComplexEvent target = currentTree.getTopSelectionParent();
 
@@ -53,8 +52,7 @@ public class CreateFromAction extends AbstractAction {
         currentTree.expandPath(path);
         currentTree.centerEvent(event);
 
-        zeitline.getSaveAction().setEnabled(true);
+        app.getSaveAction().setEnabled(true);
+    }
 
-    } // actionPerformed
-
-} // class CreateFromAction
+}

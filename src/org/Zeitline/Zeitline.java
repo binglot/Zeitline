@@ -106,7 +106,6 @@ public class Zeitline implements TreeSelectionListener {
     // TODO: Change icons.getIcon(string) to iconsRepository.NAME
     private void createMenuActions() {
         /* 'File' menu actions */
-
         saveAction = new SaveAction(this, icons.getIcon("filesave"), KeyEvent.VK_S);
         // The saveAction parameter needs to be initialised beforehand, poor coding!
         loadAction = new LoadAction(this, icons.getIcon("fileopen"), KeyEvent.VK_L);
@@ -120,53 +119,22 @@ public class Zeitline implements TreeSelectionListener {
         findAction = new FindAction(this, icons.getIcon("find"), KeyEvent.VK_D);
 
         /* 'Event' menu actions */
-
-        createFrom = new CreateFromAction(this, "Create from ...",
-                icons.getIcon("create_event"),
-                KeyEvent.VK_C);
-        createFrom.setEnabled(false);
-
-        removeEvents = new RemoveEventsAction(this, "Remove",
-                icons.getIcon("delete_event"),
-                KeyEvent.VK_R);
-        removeEvents.setEnabled(false);
-
-        importAction = new ImportAction(this, inputFilters,
-                "Import ...",
-                icons.getIcon("import"),
-                KeyEvent.VK_I);
+        createFrom = new CreateFromAction(this, icons.getIcon("create_event"), KeyEvent.VK_C);
+        removeEvents = new RemoveEventsAction(this, icons.getIcon("delete_event"), KeyEvent.VK_R);
+        importAction = new ImportAction(this, icons.getIcon("import"), KeyEvent.VK_I, inputFilters);
 
         /* 'Timeline' menu actions */
+        emptyTimeline = new EmptyTimelineAction(this, icons.getIcon("new_timeline"), KeyEvent.VK_E);
+        createTimelineFrom = new CreateTimelineFromAction(this, icons.getIcon("create_timeline"), KeyEvent.VK_C);
+        deleteTimeline = new DeleteTimelineAction(this, icons.getIcon("delete_timeline"), KeyEvent.VK_D);
 
-        emptyTimeline = new EmptyTimelineAction(this, "Create empty ...",
-                icons.getIcon("new_timeline"),
-                KeyEvent.VK_E);
-        createTimelineFrom = new CreateTimelineFromAction(this, "Create from ...",
-                icons.getIcon("create_timeline"),
-                KeyEvent.VK_C);
-        createTimelineFrom.setEnabled(false);
-
-        deleteTimeline = new DeleteTimelineAction(this, "Delete",
-                icons.getIcon("delete_timeline"),
-                KeyEvent.VK_D);
-        deleteTimeline.setEnabled(false);
-
-        moveLeft = new MoveLeftAction(this, "Move Left",
-                icons.getIcon("moveleft"),
-                KeyEvent.VK_L);
-        moveRight = new MoveRightAction(this, "Move Right",
-                icons.getIcon("moveright"),
-                KeyEvent.VK_R);
-        filterQueryAction = new FilterQueryAction(this, "Filter ...",
-                icons.getIcon("filter"),
-                KeyEvent.VK_F);
-        filterQueryAction.setEnabled(false);
-
-        toggleOrphan = new ToggleOrphanAction(this, "Show Orphans", null, KeyEvent.VK_O);
+        moveLeft = new MoveLeftAction(this, icons.getIcon("moveleft"), KeyEvent.VK_L);
+        moveRight = new MoveRightAction(this, icons.getIcon("moveright"), KeyEvent.VK_R);
+        filterQueryAction = new FilterQueryAction(this, icons.getIcon("filter"), KeyEvent.VK_F);
+        toggleOrphan = new ToggleOrphanAction(this, null, KeyEvent.VK_O);
 
         /* 'Help' menu actions */
-
-        aboutAction = new AboutAction(this, "About", KeyEvent.VK_A);
+        aboutAction = new AboutAction(this, KeyEvent.VK_A);
 
         /* actions for testing new code */
 

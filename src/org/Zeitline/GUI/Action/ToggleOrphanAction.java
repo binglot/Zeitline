@@ -6,26 +6,23 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 
-/**
-* Created by IntelliJ IDEA.
-* User: Bart
-* Date: 15/02/12
-* Time: 10:12
-* To change this template use File | Settings | File Templates.
-*/
 public class ToggleOrphanAction extends AbstractAction {
+
+    private static final String NAME = "Show Orphans";
+    private final static KeyStroke KEY_SHORTCUT = KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK);
 
     private Zeitline zeitline;
 
-    public ToggleOrphanAction(Zeitline zeitline, String text, ImageIcon icon, int mnemonic) {
-        super(text, icon);
+    public ToggleOrphanAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
+        super(NAME, icon);
         this.zeitline = zeitline;
-        putValue(MNEMONIC_KEY, new Integer(mnemonic));
-        putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_H, ActionEvent.CTRL_MASK));
-    } // ToggleOrphanAction
+
+        putValue(MNEMONIC_KEY, mnemonic);
+        putValue(ACCELERATOR_KEY, KEY_SHORTCUT);
+    }
 
     public void actionPerformed(ActionEvent e) {
         zeitline.getTimelines().toggleOrphanVisible();
-    } // actionPerformed
+    }
 
-} // class ToggleOrphanAction
+}
