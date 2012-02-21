@@ -1,5 +1,7 @@
 package org.Zeitline.Event;
 
+import org.Zeitline.GUI.Graphics.IIconRepository;
+import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Source;
 import org.Zeitline.Timestamp.ITimestamp;
@@ -20,12 +22,14 @@ public abstract class AtomicEvent
         implements Serializable {
 
     // TODO: The icon should be created by a different class.
-    protected static ImageIcon icon = new IconRepository().getIcon("atomic_small");
+    protected static ImageIcon icon = new IconRepository().getIcon(IconNames.AtomicSmall);
     protected Source source; // Source object from where the event was imported.
     protected ITimestamp reportedTime;
     protected ITimestamp adjustedTime; // WHAT IS IT?!
 
-    //public AtomicEvent(){}
+//    public AtomicEvent(IIconRepository<ImageIcon> iconRepository) {
+//        icon = iconRepository.getIcon(IconNames.AtomicSmall);
+//    }
 
     public void setSource(Source s) {
         if (source != null)

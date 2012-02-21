@@ -2,6 +2,7 @@ package org.Zeitline;
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.GUI.Graphics.IIconRepository;
+import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.GUI.Graphics.IconRepository;
 
 import java.awt.Component;
@@ -19,8 +20,8 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
     EventTreeCellRenderer() {
         super();
         icons = new IconRepository();
-        atomicIcon = icons.getIcon("atomic_small");
-        complexIcon = icons.getIcon("complex_small");
+        atomicIcon = icons.getIcon(IconNames.AtomicSmall);
+        complexIcon = icons.getIcon(IconNames.ComplexSmall);
 
     }
 

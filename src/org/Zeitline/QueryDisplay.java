@@ -1,6 +1,7 @@
 package org.Zeitline;
 
 import org.Zeitline.GUI.Graphics.IIconRepository;
+import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.GUI.Graphics.IconRepository;
 
 import java.awt.Insets;
@@ -15,7 +16,7 @@ public class QueryDisplay extends JPanel {
     protected JButton change, remove;
     protected JTextField text;
     // TODO: Change how it takes the icon.
-    private IIconRepository<ImageIcon> icons = new IconRepository();
+    private IIconRepository<ImageIcon> iconRepository = new IconRepository();
 
     public QueryDisplay(Query q, ActionListener al) {
 
@@ -29,7 +30,7 @@ public class QueryDisplay extends JPanel {
         this.add(text);
         this.add(Box.createHorizontalGlue());
 
-        change = new JButton(icons.getIcon("edit"));
+        change = new JButton(getIcon(IconNames.Edit));
         change.setBorderPainted(false);
         change.setMargin(new Insets(0, 0, 0, 0));
         change.setActionCommand("change");
@@ -47,7 +48,7 @@ public class QueryDisplay extends JPanel {
 
         this.add(change);
 
-        remove = new JButton(icons.getIcon("cancel"));
+        remove = new JButton(getIcon(IconNames.Cancel));
         remove.setBorderPainted(false);
         remove.setMargin(new Insets(0, 0, 0, 0));
         remove.setActionCommand("remove");
@@ -75,4 +76,7 @@ public class QueryDisplay extends JPanel {
         return text.getText();
     } // toString
 
+    private ImageIcon getIcon(IconNames icon) {
+        return iconRepository.getIcon(icon);
+    }
 } // class org.Zeitline.QueryDisplay

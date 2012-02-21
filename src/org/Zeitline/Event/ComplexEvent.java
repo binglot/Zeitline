@@ -1,6 +1,7 @@
 package org.Zeitline.Event;
 
 import org.Zeitline.AVLTree;
+import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Query;
 import org.Zeitline.Source;
@@ -17,7 +18,7 @@ public class ComplexEvent
         extends AbstractTimeEvent
         implements Serializable {
 
-    protected static ImageIcon icon = new IconRepository().getIcon("complex_small");
+    protected static ImageIcon icon = new IconRepository().getIcon(IconNames.ComplexSmall);
     protected static boolean defaultDeleteEmpty = true;
     protected ITimestamp endTime;
     protected AVLTree childrenByTime;

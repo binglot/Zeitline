@@ -6,6 +6,8 @@ import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.Graphics.IIconRepository;
+import org.Zeitline.GUI.Graphics.IconNames;
+import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
@@ -40,7 +42,7 @@ public class Zeitline implements TreeSelectionListener {
     private final JFileChooser fileChooser;
     private final List<FileFilter> openFileFilters;
     private final List<InputFilter> inputFilters;
-    private final IIconRepository<ImageIcon> icons;
+    private final IIconRepository<ImageIcon> iconRepository;
 
     protected Action createFrom;
     protected Action createTimelineFrom;
@@ -67,10 +69,10 @@ public class Zeitline implements TreeSelectionListener {
 
     private Transferable cutBuffer = null;
 
-    public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> icons) {
+    public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> iconRepository) {
         this.openFileFilters = openFileFilters;
         this.inputFilters = inputFilters;
-        this.icons = icons;
+        this.iconRepository = iconRepository;
 
         File currentWorkingDir = new File(System.getProperty("user.dir"));
         fileChooser = new JFileChooser(currentWorkingDir);
@@ -103,34 +105,38 @@ public class Zeitline implements TreeSelectionListener {
 
     }
 
-    // TODO: Change icons.getIcon(string) to iconsRepository.NAME
+    private ImageIcon getIcon(IconNames icon) {
+        return iconRepository.getIcon(icon);
+    }
+
+
     private void createMenuActions() {
         /* 'File' menu actions */
-        saveAction = new SaveAction(this, icons.getIcon("filesave"), KeyEvent.VK_S);
+        saveAction = new SaveAction(this, getIcon(IconNames.FileSave), KeyEvent.VK_S);
         // The saveAction parameter needs to be initialised beforehand, poor coding!
-        loadAction = new LoadAction(this, icons.getIcon("fileopen"), KeyEvent.VK_L);
+        loadAction = new LoadAction(this, getIcon(IconNames.FileOpen), KeyEvent.VK_L);
         exitAction = new ExitAction(KeyEvent.VK_X);
 
         /* 'Edit' menu actions */
-        cutAction = new CutAction(this, icons.getIcon("editcut"), KeyEvent.VK_T);
-        pasteAction = new PasteAction(this, icons.getIcon("editpaste"), KeyEvent.VK_P);
+        cutAction = new CutAction(this, getIcon(IconNames.EditCut), KeyEvent.VK_T);
+        pasteAction = new PasteAction(this, getIcon(IconNames.EditPaste), KeyEvent.VK_P);
         clearAction = new ClearAction(this, KeyEvent.VK_C);
         clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
-        findAction = new FindAction(this, icons.getIcon("find"), KeyEvent.VK_D);
+        findAction = new FindAction(this, getIcon(IconNames.Find), KeyEvent.VK_D);
 
         /* 'Event' menu actions */
-        createFrom = new CreateFromAction(this, icons.getIcon("create_event"), KeyEvent.VK_C);
-        removeEvents = new RemoveEventsAction(this, icons.getIcon("delete_event"), KeyEvent.VK_R);
-        importAction = new ImportAction(this, icons.getIcon("import"), KeyEvent.VK_I, inputFilters);
+        createFrom = new CreateFromAction(this, getIcon(IconNames.CreateEvent), KeyEvent.VK_C);
+        removeEvents = new RemoveEventsAction(this, getIcon(IconNames.DeleteEvent), KeyEvent.VK_R);
+        importAction = new ImportAction(this, getIcon(IconNames.Import), KeyEvent.VK_I, inputFilters);
 
         /* 'Timeline' menu actions */
-        emptyTimeline = new EmptyTimelineAction(this, icons.getIcon("new_timeline"), KeyEvent.VK_E);
-        createTimelineFrom = new CreateTimelineFromAction(this, icons.getIcon("create_timeline"), KeyEvent.VK_C);
-        deleteTimeline = new DeleteTimelineAction(this, icons.getIcon("delete_timeline"), KeyEvent.VK_D);
+        emptyTimeline = new EmptyTimelineAction(this, getIcon(IconNames.NewTimeline), KeyEvent.VK_E);
+        createTimelineFrom = new CreateTimelineFromAction(this, getIcon(IconNames.CreateTimeline), KeyEvent.VK_C);
+        deleteTimeline = new DeleteTimelineAction(this, getIcon(IconNames.DeleteTimeline), KeyEvent.VK_D);
 
-        moveLeft = new MoveLeftAction(this, icons.getIcon("moveleft"), KeyEvent.VK_L);
-        moveRight = new MoveRightAction(this, icons.getIcon("moveright"), KeyEvent.VK_R);
-        filterQueryAction = new FilterQueryAction(this, icons.getIcon("filter"), KeyEvent.VK_F);
+        moveLeft = new MoveLeftAction(this, getIcon(IconNames.MoveLeft), KeyEvent.VK_L);
+        moveRight = new MoveRightAction(this, getIcon(IconNames.MoveRight), KeyEvent.VK_R);
+        filterQueryAction = new FilterQueryAction(this, getIcon(IconNames.Filter), KeyEvent.VK_F);
         toggleOrphan = new ToggleOrphanAction(this, null, KeyEvent.VK_O);
 
         /* 'Help' menu actions */
