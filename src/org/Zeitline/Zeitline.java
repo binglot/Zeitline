@@ -73,27 +73,31 @@ public class Zeitline implements TreeSelectionListener {
         this.inputFilters = inputFilters;
         this.iconRepository = iconRepository;
 
-        File currentWorkingDir = new File(System.getProperty("user.dir"));
-        fileChooser = new JFileChooser(currentWorkingDir);
+        fileChooser = CreateOpenFileDialog(openFileFilters);
     }
 
     public JFrame getFrame() {
         return frame;
     }
 
-    private void addChoosableFileFilters() {
-        for(FileFilter filter: openFileFilters){
-            getFileChooser().addChoosableFileFilter(filter);
+    private static JFileChooser CreateOpenFileDialog(List<FileFilter> filters) {
+        String currentDir = System.getProperty("user.dir");
+        JFileChooser chooser = new JFileChooser(currentDir);
+
+        for(final FileFilter filter: filters){
+            chooser.addChoosableFileFilter(filter);
         }
+
+        return chooser;
     }
 
     public void createAndShowGUI() {
-        addChoosableFileFilters();
-        createMenuActions();
-
         frame = new JFrame(APPLICATION_NAME);
 
-        getFrame().setJMenuBar(createMenuBar());
+        createMenuActions();
+
+        JMenuBar topDropDownMenu = createMenuBar();
+        getFrame().setJMenuBar(topDropDownMenu);
 
         Component contents = createComponents();
         getFrame().getContentPane().add(contents, BorderLayout.CENTER);
