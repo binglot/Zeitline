@@ -20,8 +20,10 @@ public final class Start {
 //            }
 //        });
 
+        final String inputFiltersDir = "InputFilters";
+        
         FiltersProvider openFileFilters = new FiltersProvider();
-        PluginLoader<InputFilter> pluginLoader = new InputPluginLoader("InputFilters");
+        PluginLoader<InputFilter> pluginLoader = new InputPluginLoader(inputFiltersDir);
         IconRepository iconRepository = new IconRepository();
         Zeitline zeitline = new Zeitline(openFileFilters.getFilters(),  pluginLoader.getPlugins(), iconRepository);
 

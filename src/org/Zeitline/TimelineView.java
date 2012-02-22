@@ -1,40 +1,4 @@
-package org.Zeitline; /********************************************************************
-
- This file is part of org.Zeitline.Zeitline: a forensic timeline editor
-
- Written by Florian Buchholz and Courtney Falk.
-
- Copyright (c) 2004,2005 Florian Buchholz, Courtney Falk, Purdue
- University. All rights reserved.
-
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the
- "Software"), to deal with the Software without restriction, including
- without limitation the rights to use, copy, modify, merge, publish,
- distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
-
- Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimers.
- Redistributions in binary form must reproduce the above copyright
- notice, this list of conditions and the following disclaimers in the
- documentation and/or other materials provided with the distribution.
- Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
- University, nor the names of its contributors may be used to endorse
- or promote products derived from this Software without specific prior
- written permission.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
- IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
- SOFTWARE.
-
- **********************************************************************/
+package org.Zeitline;
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.AtomicEvent;
@@ -93,7 +57,6 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     protected FindEntries validFindPosition;
     protected EventTreeModel currentFindModel;
     protected boolean findLeft = true;
-    ;
     protected boolean splitView;
     protected Action moveLeftAction, moveRightAction,
             filterAction, removeAction, saveAction, pasteAction,
@@ -152,7 +115,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         if (moveRightAction != null)
             moveRightAction.setEnabled(false);
 
-    } // TimeLineView
+    }
 
     public void showSplit() {
 
@@ -164,7 +127,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
         splitView = true;
 
-    } // showSplit
+    }
 
     public void hideSplit() {
 
@@ -174,7 +137,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         this.revalidate();
         splitView = false;
 
-    } // hideSplit
+    }
 
     public void addTree(EventTree t, TreeSelectionListener app) {
         addTreeToTab(rightTrees, t, app);
@@ -214,7 +177,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
         this.revalidate();
 
-    } // addTreeToTab
+    }
 
     protected void removeTab(JTabbedPane pane, int index) {
 
@@ -249,9 +212,10 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
                 moveRightAction.setEnabled(false);
         } else
             pane.requestFocus();
+
         this.revalidate();
 
-    } // removeTab
+    }
 
     protected void makeRightLeft() {
 
@@ -261,11 +225,11 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         this.add(leftTrees);
         this.revalidate();
 
-    } // makeRightLeft
+    }
 
     public EventTree getCurrentTree() {
         return currentTree;
-    } // getCurrentTree
+    }
 
     public void moveRight() {
 
@@ -276,7 +240,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
                 ((TreeDisplay) leftTrees.getSelectedComponent()).getTree(), null);
         removeTab(leftTrees, leftTrees.getSelectedIndex());
 
-    } // moveRight
+    }
 
     public void moveLeft() {
 
@@ -287,7 +251,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
                 ((TreeDisplay) rightTrees.getSelectedComponent()).getTree(), null);
         removeTab(rightTrees, rightTrees.getSelectedIndex());
 
-    } // moveLeft
+    }
 
     public void redraw() {
 
@@ -299,7 +263,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             ((EventTreeModel) t.getModel()).refresh();
         }
 
-    } // redraw
+    }
 
     public void deleteTree(EventTree toDelete) {
 
@@ -325,7 +289,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         }
 
 
-    } // deleteTree;
+    }
 
     public void clearSelections() {
 
@@ -337,7 +301,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         if (!isOrphanVisible)
             orphanTree.clearSelection();
 
-    } // clearSelections
+    }
 
     public void removeSelected(EventTree source) {
 
@@ -345,7 +309,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         ComplexEvent target = (ComplexEvent) orphan_model.getRoot();
         source.moveSelected(target, orphan_model);
 
-    } // removeSelected
+    }
 
     public void showOrphan() {
 
@@ -355,7 +319,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         addTree(orphanTree, null);
         isOrphanVisible = true;
 
-    } // showOrphan
+    }
 
     public void hideOrphan() {
 
@@ -365,7 +329,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         deleteTree(orphanTree);
         isOrphanVisible = false;
 
-    } // hideOrphan
+    }
 
     public void toggleOrphanVisible() {
 
@@ -374,11 +338,11 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         else
             showOrphan();
 
-    } // toggleOrphanVisible
+    }
 
     public EventTree getOrphanTree() {
         return orphanTree;
-    } // getOrphanTree
+    }
 
     // TreeSelectionListener interface
     public void valueChanged(TreeSelectionEvent e) {
@@ -404,7 +368,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         AbstractTimeEvent event = (AbstractTimeEvent) currentSelection.getLastPathComponent();
         displayEvent(event);
 
-    } // valueChanged
+    }
 
     private boolean checkComplexMask(TreePath oldSelection, EventTree oldTree, EventTree newTree) {
 
@@ -471,7 +435,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             pasteAction.setEnabled(((PasteAction) pasteAction).pastePossible());
         }
 
-    } // displayEvent
+    }
 
     private void hideEventMask() {
         atomicMask.setVisible(false);
@@ -972,4 +936,4 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     }
 
 
-} // class org.Zeitline.TimelineView
+}

@@ -7,7 +7,6 @@ import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
-import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
@@ -113,7 +112,6 @@ public class Zeitline implements TreeSelectionListener {
     private void createMenuActions() {
         /* 'File' menu actions */
         saveAction = new SaveAction(this, getIcon(IconNames.FileSave), KeyEvent.VK_S);
-        // The saveAction parameter needs to be initialised beforehand, poor coding!
         loadAction = new LoadAction(this, getIcon(IconNames.FileOpen), KeyEvent.VK_L);
         exitAction = new ExitAction(KeyEvent.VK_X);
 
@@ -133,7 +131,6 @@ public class Zeitline implements TreeSelectionListener {
         emptyTimeline = new EmptyTimelineAction(this, getIcon(IconNames.NewTimeline), KeyEvent.VK_E);
         createTimelineFrom = new CreateTimelineFromAction(this, getIcon(IconNames.CreateTimeline), KeyEvent.VK_C);
         deleteTimeline = new DeleteTimelineAction(this, getIcon(IconNames.DeleteTimeline), KeyEvent.VK_D);
-
         moveLeft = new MoveLeftAction(this, getIcon(IconNames.MoveLeft), KeyEvent.VK_L);
         moveRight = new MoveRightAction(this, getIcon(IconNames.MoveRight), KeyEvent.VK_R);
         filterQueryAction = new FilterQueryAction(this, getIcon(IconNames.Filter), KeyEvent.VK_F);
@@ -142,8 +139,7 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Help' menu actions */
         aboutAction = new AboutAction(this, KeyEvent.VK_A);
 
-        /* actions for testing new code */
-
+        /* Actions for testing new code */
         testAction = new TestAction(this, "TEST", KeyEvent.VK_T);
         testAction2 = new TestAction2(this, "TEST2", KeyEvent.VK_2);
 
@@ -158,75 +154,25 @@ public class Zeitline implements TreeSelectionListener {
         JMenuItem menuItem;
         JRadioButtonMenuItem rbMenuItem;
         JCheckBoxMenuItem cbMenuItem;
+        Action[] actions;
 
         menuBar = new JMenuBar();
 
-        menu = new JMenu("File");
-        menu.setMnemonic(KeyEvent.VK_F);
+        actions = new Action[] { saveAction, loadAction, exitAction };
+        menu = CreateMenu("File", actions, KeyEvent.VK_F);
         menuBar.add(menu);
 
-        menuItem = createMenuItem(getSaveAction());
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(loadAction);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(exitAction);
-        menu.add(menuItem);
-
-        menu = new JMenu("Edit");
-        menu.setMnemonic(KeyEvent.VK_E);
+        actions = new Action[] { cutAction, pasteAction, clearAction, clearAllAction, findAction };
+        menu = CreateMenu("Edit", actions, KeyEvent.VK_E);
         menuBar.add(menu);
 
-        menuItem = createMenuItem(cutAction);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(pasteAction);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(clearAction);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(clearAllAction);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(findAction);
-        menu.add(menuItem);
-
-        menu = new JMenu("Event");
-        menu.setMnemonic(KeyEvent.VK_N);
+        actions = new Action[] { createFrom, removeEvents, importAction };
+        menu = CreateMenu("Event", actions, KeyEvent.VK_N);
         menuBar.add(menu);
 
-        menuItem = createMenuItem(createFrom);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(removeEvents);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(importAction);
-        menu.add(menuItem);
-
-        menu = new JMenu("Timeline");
-        menu.setMnemonic(KeyEvent.VK_T);
+        actions = new Action[] { emptyTimeline, createTimelineFrom, deleteTimeline, moveLeft, moveRight, filterQueryAction };
+        menu = CreateMenu("Timeline", actions, KeyEvent.VK_T);
         menuBar.add(menu);
-
-        menuItem = createMenuItem(emptyTimeline);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(createTimelineFrom);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(deleteTimeline);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(moveLeft);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(moveRight);
-        menu.add(menuItem);
-
-        menuItem = createMenuItem(filterQueryAction);
-        menu.add(menuItem);
 
         menuItem = new JCheckBoxMenuItem(toggleOrphan);
         menu.add(menuItem);
@@ -252,15 +198,12 @@ public class Zeitline implements TreeSelectionListener {
         menu.add(submenu);
         menuBar.add(menu);
 
-        menu = new JMenu("Help");
-        menu.setMnemonic(KeyEvent.VK_H);
+        actions = new Action[] { aboutAction };
+        menu = CreateMenu("Help", actions, KeyEvent.VK_H);
         menuBar.add(menu);
 
-        menuItem = createMenuItem(aboutAction);
-        menu.add(menuItem);
 
         return menuBar;
-
     }
 
     private JToolBar createToolBar() {
@@ -270,7 +213,7 @@ public class Zeitline implements TreeSelectionListener {
         toolBar.setRollover(true);
 
         toolBar.add(createButton(loadAction));
-        toolBar.add(createButton(getSaveAction()));
+        toolBar.add(createButton(saveAction));
         toolBar.addSeparator(new Dimension(16, 32));
         toolBar.add(createButton(cutAction));
         toolBar.add(createButton(pasteAction));
@@ -364,6 +307,24 @@ public class Zeitline implements TreeSelectionListener {
             removeEvents.setEnabled(true);
         }
 
+    }
+
+    private void AddMenuItem(JMenu menu, Action action) {
+        JMenuItem menuItem;
+        menuItem = createMenuItem(action);
+
+        menu.add(menuItem);
+    }
+
+    private JMenu CreateMenu(String name, Action[] actions, int mnemonic) {
+        JMenu menu = new JMenu(name);
+
+        menu.setMnemonic(mnemonic);
+        for(final Action action: actions) {
+            AddMenuItem(menu, action);
+        }
+
+        return menu;
     }
 
     public JButton createButton(Action a) {
