@@ -68,6 +68,9 @@ public class IconRepository implements  IIconRepository<ImageIcon> {
             case ComplexSmall:
                 fileName = "complex_small";
                 break;
+            default:
+                System.err.println("Could not find the requested icon: " + name.toString());
+                break;
         }
 
         return getIcon(fileName);
