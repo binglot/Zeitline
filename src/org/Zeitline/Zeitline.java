@@ -18,8 +18,11 @@ import java.awt.*;
 import java.awt.datatransfer.Transferable;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_NAME = "Zeitline";
@@ -39,7 +42,6 @@ public class Zeitline implements TreeSelectionListener {
     protected JMenuItem menuMoveLeft, menuMoveRight;
 
     private final JFileChooser fileChooser;
-    private final List<FileFilter> openFileFilters;
     private final List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> iconRepository;
 
@@ -69,15 +71,10 @@ public class Zeitline implements TreeSelectionListener {
     private Transferable cutBuffer = null;
 
     public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> iconRepository) {
-        this.openFileFilters = openFileFilters;
         this.inputFilters = inputFilters;
         this.iconRepository = iconRepository;
 
         fileChooser = CreateOpenFileDialog(openFileFilters);
-    }
-
-    public JFrame getFrame() {
-        return frame;
     }
 
     private static JFileChooser CreateOpenFileDialog(List<FileFilter> filters) {
@@ -146,45 +143,51 @@ public class Zeitline implements TreeSelectionListener {
         /* Actions for testing new code */
         testAction = new TestAction(this, "TEST", KeyEvent.VK_T);
         testAction2 = new TestAction2(this, "TEST2", KeyEvent.VK_2);
-
-
-        displayMode = EventTree.DISPLAY_ALL;
     }
 
     public JMenuBar createMenuBar() {
 
         JMenuBar menuBar;
-        JMenu menu, submenu;
-        JMenuItem menuItem;
-        JRadioButtonMenuItem rbMenuItem;
-        JCheckBoxMenuItem cbMenuItem;
-        Action[] actions;
+        JMenu menu;
+        List<JMenu> menus = new ArrayList<JMenu>();
+        List<Action> actions;
 
         menuBar = new JMenuBar();
 
-        actions = new Action[] { saveAction, loadAction, exitAction };
-        menu = CreateMenu("File", actions, KeyEvent.VK_F);
-        menuBar.add(menu);
+        actions = asList(saveAction, loadAction, exitAction);
+        menus.add(CreateMenu("File", actions, KeyEvent.VK_F));
 
-        actions = new Action[] { cutAction, pasteAction, clearAction, clearAllAction, findAction };
-        menu = CreateMenu("Edit", actions, KeyEvent.VK_E);
-        menuBar.add(menu);
+        actions = asList(cutAction, pasteAction, clearAction, clearAllAction, findAction);
+        menus.add(CreateMenu("Edit", actions, KeyEvent.VK_E));
 
-        actions = new Action[] { createFrom, removeEvents, importAction };
-        menu = CreateMenu("Event", actions, KeyEvent.VK_N);
-        menuBar.add(menu);
+        actions = asList(createFrom, removeEvents, importAction);
+        menus.add(CreateMenu("Event", actions, KeyEvent.VK_N));
 
-        actions = new Action[] { emptyTimeline, createTimelineFrom, deleteTimeline, moveLeft, moveRight, filterQueryAction };
+        actions = asList(emptyTimeline, createTimelineFrom, deleteTimeline, moveLeft, moveRight, filterQueryAction);
         menu = CreateMenu("Timeline", actions, KeyEvent.VK_T);
-        menuBar.add(menu);
-
-        menuItem = new JCheckBoxMenuItem(toggleOrphan);
+        JMenuItem menuItem = new JCheckBoxMenuItem(toggleOrphan);
         menu.add(menuItem);
+        menus.add(menu);
 
-        menu = new JMenu("View");
-        menu.setMnemonic(KeyEvent.VK_V);
-        menuBar.add(menu);
+        actions = asList();
+        menu = CreateMenu("View", actions, KeyEvent.VK_V);
+        JMenu submenu = CreateDateFormatSubMenu();
+        menu.add(submenu);
+        menus.add(menu);
 
+        actions = asList(aboutAction);
+        menus.add(CreateMenu("Help", actions, KeyEvent.VK_H));
+
+        for(final JMenu menuToAdd: menus){
+            menuBar.add(menuToAdd);
+        }
+
+        return menuBar;
+    }
+
+    private JMenu CreateDateFormatSubMenu() {
+        JMenu submenu;
+        JRadioButtonMenuItem rbMenuItem;
         submenu = new JMenu("Time Display");
         submenu.setMnemonic(KeyEvent.VK_D);
 
@@ -198,16 +201,7 @@ public class Zeitline implements TreeSelectionListener {
         rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "hh:mm:ss", KeyEvent.VK_H, EventTree.DISPLAY_HMS));
         group.add(rbMenuItem);
         submenu.add(rbMenuItem);
-
-        menu.add(submenu);
-        menuBar.add(menu);
-
-        actions = new Action[] { aboutAction };
-        menu = CreateMenu("Help", actions, KeyEvent.VK_H);
-        menuBar.add(menu);
-
-
-        return menuBar;
+        return submenu;
     }
 
     private JToolBar createToolBar() {
@@ -242,21 +236,21 @@ public class Zeitline implements TreeSelectionListener {
 
     private Component createComponents() {
 
-        long ts;
-
-        Date afterInsert = new Date();
-
+//        long ts;
+//        Date afterInsert = new Date();
         toolBar = createToolBar();
 
         // Create panel that contains the Event masks
         JPanel maskOverlay = new JPanel();
-        maskOverlay.setLayout(new OverlayLayout(maskOverlay));
+        OverlayLayout layoutManager = new OverlayLayout(maskOverlay);
+        maskOverlay.setLayout(layoutManager);
+
         cem = new ComplexEventMask();
         aem = new AtomicEventMask();
-        maskOverlay.add(getCem());
+        maskOverlay.add(cem);
         maskOverlay.add(aem);
-        maskOverlay.setMinimumSize(getCem().getPreferredSize());
-        getCem().setVisible(false);
+        maskOverlay.setMinimumSize(cem.getPreferredSize());
+        cem.setVisible(false);
         aem.setVisible(false);
 
         timelines = new TimelineView(this, moveLeft, moveRight,
@@ -320,7 +314,7 @@ public class Zeitline implements TreeSelectionListener {
         menu.add(menuItem);
     }
 
-    private JMenu CreateMenu(String name, Action[] actions, int mnemonic) {
+    private JMenu CreateMenu(String name, List<Action> actions, int mnemonic) {
         JMenu menu = new JMenu(name);
 
         menu.setMnemonic(mnemonic);
@@ -381,4 +375,9 @@ public class Zeitline implements TreeSelectionListener {
     public void setCutBuffer(Transferable cutBuffer) {
         this.cutBuffer = cutBuffer;
     }
+
+    public JFrame getFrame() {
+        return frame;
+    }
+
 }
