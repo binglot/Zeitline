@@ -17,12 +17,14 @@ import java.io.Serializable;
  * and methods for managing the source from where the event is
  * imported and a user identifier (though not currently used).
  */
+
 public abstract class AtomicEvent
         extends AbstractTimeEvent
         implements Serializable {
 
     // TODO: The icon should be created by a different class.
     protected static ImageIcon icon = new IconRepository().getIcon(IconNames.AtomicSmall);
+    // =
     protected Source source; // Source object from where the event was imported.
     protected ITimestamp reportedTime;
     protected ITimestamp adjustedTime; // WHAT IS IT?!
