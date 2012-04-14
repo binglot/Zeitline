@@ -10,6 +10,10 @@ import java.util.List;
 
 abstract class AbstractPluginLoader<T> extends ClassLoader {
 
+    // 14 Apr 2012: Dirty solution just for now
+    boolean IS_JAR_FILE = false;
+    // =
+
     protected final String PLUGIN_FILE_EXTENSION = ".class";
     protected final String JAR_FILE_EXTENSION = ".jar";
 
@@ -53,6 +57,9 @@ abstract class AbstractPluginLoader<T> extends ClassLoader {
     }
 
     private String getPluginsDir() {
+        if (IS_JAR_FILE)
+            return folderName;
+        
         final char fileSeparator = File.separatorChar;
         String packageDir = rootPackageName.replace('.', fileSeparator);
 
