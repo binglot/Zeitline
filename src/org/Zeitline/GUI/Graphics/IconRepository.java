@@ -1,12 +1,11 @@
 package org.Zeitline.GUI.Graphics;
 
-import org.Zeitline.Utils;
 import org.Zeitline.Zeitline;
 
 import javax.swing.*;
 import java.net.URL;
 
-public class IconRepository implements  IIconRepository<ImageIcon> {
+public class IconRepository implements IIconRepository<ImageIcon> {
     private static final String ICONS_DIR = "icons";
     private static final String ICONS_EXTENSION = ".png";
 
@@ -77,11 +76,15 @@ public class IconRepository implements  IIconRepository<ImageIcon> {
     }
 
     private ImageIcon getIcon(String imageName) {
-        String imgLocation = Utils.pathJoin(ICONS_DIR, imageName + ICONS_EXTENSION);
+        // Avoid using Utils.PathJoin() below!
+        // That's because it concatenates using '\' which breaks the .JAR file.
+        //
+        String imgLocation = ICONS_DIR + "/" + imageName + ICONS_EXTENSION;
         URL imageURL = Zeitline.class.getResource(imgLocation);
 
-        if (imageURL != null)
+        if (imageURL != null) {
             return new ImageIcon(imageURL);
+        }
 
         System.err.println("Resource not found: " + imgLocation);
         return null;
