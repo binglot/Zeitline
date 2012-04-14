@@ -136,4 +136,12 @@ public class L2tEvent
         JLabel label = new JLabel("", JLabel.LEADING);
         return formGenerator.getFormItem(name, label);
     }
+
+    public ITimestamp getTime() {
+        return time;
+    }
+
+    public String getTimezone() {
+        return timezone;
+    }
 }
