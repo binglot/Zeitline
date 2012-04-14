@@ -2,7 +2,7 @@ package org.Zeitline.GUI;
 
 import java.awt.*;
 
-class FormItem {
+class FormItem implements IFormItem {
 
     private String labelText;
     private Component component;
@@ -12,10 +12,12 @@ class FormItem {
         component = c;
     }
 
+    @Override
     public String getLabelText() {
         return labelText;
     }
 
+    @Override
     public Component getComponent() {
         return component;
     }
