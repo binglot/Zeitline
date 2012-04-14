@@ -2,6 +2,7 @@ package org.Zeitline.Plugin.Input;
 
 import org.Zeitline.GUI.FormGenerator;
 import org.Zeitline.GUI.IFormGenerator;
+import org.Zeitline.GUI.IFormItem;
 import org.Zeitline.Plugin.IClassInstantiator;
 import org.Zeitline.Plugin.PluginLoader;
 
