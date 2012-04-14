@@ -2,9 +2,9 @@ package org.Zeitline.GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.List;
 
-public interface IFormGenerator<T> {
-    JPanel createForm(ArrayList<T> items);
+public interface IFormGenerator<T extends IFormItem> {
+    JPanel createForm(List<T> items);
     T getFormItem(String label, Component component);
 }

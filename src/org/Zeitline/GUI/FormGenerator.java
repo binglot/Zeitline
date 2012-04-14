@@ -2,16 +2,14 @@ package org.Zeitline.GUI;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.List;
 
-public final class FormGenerator implements IFormGenerator<FormItem> {
+public final class FormGenerator implements IFormGenerator<IFormItem> {
 
     public FormGenerator() {}
 
     @Override
-    public JPanel createForm(ArrayList<FormItem> items) {
+    public JPanel createForm(List<IFormItem> items) {
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -22,7 +20,7 @@ public final class FormGenerator implements IFormGenerator<FormItem> {
 
 
         //for (Enumeration itemList = items.elements(); itemList.hasMoreElements(); ) {
-        for (FormItem item: items) {
+        for (IFormItem item: items) {
             c.gridx = 0;
             c.gridy = ypos;
             c.anchor = GridBagConstraints.PAGE_START;
@@ -43,7 +41,7 @@ public final class FormGenerator implements IFormGenerator<FormItem> {
     }
 
     @Override
-    public FormItem getFormItem(String label, Component component) {
+    public IFormItem getFormItem(String label, Component component) {
         return new FormItem(label, component);
     }
 
