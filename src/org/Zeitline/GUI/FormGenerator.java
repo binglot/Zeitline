@@ -2,15 +2,16 @@ package org.Zeitline.GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Vector;
 
-public final class FormGenerator implements IFormGenerator {
+public final class FormGenerator implements IFormGenerator<FormItem> {
 
     public FormGenerator() {}
 
     @Override
-    public JPanel createForm(Vector items) {
+    public JPanel createForm(ArrayList<FormItem> items) {
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
@@ -20,18 +21,18 @@ public final class FormGenerator implements IFormGenerator {
         c.insets = new Insets(5, 5, 5, 5);
 
 
-        for (Enumeration itemList = items.elements(); itemList.hasMoreElements(); ) {
+        //for (Enumeration itemList = items.elements(); itemList.hasMoreElements(); ) {
+        for (FormItem item: items) {
             c.gridx = 0;
             c.gridy = ypos;
             c.anchor = GridBagConstraints.PAGE_START;
-            FormItem formItem = (FormItem) (itemList.nextElement());
-            JLabel label = new JLabel(formItem.getLabelText(), JLabel.TRAILING);
+            JLabel label = new JLabel(item.getLabelText(), JLabel.TRAILING);
             contentPanel.add(label, c);
 
             // TODO: consider c.weight
             c.gridx = 1;
             c.anchor = GridBagConstraints.CENTER;
-            Component comp = formItem.getComponent();
+            Component comp = item.getComponent();
             label.setLabelFor(comp);
             // TODO consider flag for scrollbar
             contentPanel.add(comp, c);
