@@ -2,9 +2,11 @@ package org.Zeitline.GUI;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.Serializable;
 import java.util.List;
 
-public final class FormGenerator implements IFormGenerator<IFormItem> {
+public final class FormGenerator
+        implements IFormGenerator<IFormItem>, Serializable {
 
     public FormGenerator() {}
 

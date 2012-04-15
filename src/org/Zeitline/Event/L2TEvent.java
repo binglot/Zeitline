@@ -82,7 +82,7 @@ public class L2TEvent
     // As presented on the main panel, along with its date.
     @Override
     public String getName() {
-        return macb + " "  + sourceType;
+        return macb + " " + shortDesc;
     }
 
     // It's used to sort events (FilterComparator class).
@@ -124,8 +124,12 @@ public class L2TEvent
     // Labels that are shown when an entry is selected.
     //
     private void initPanel() {
-        List<IFormItem> items = new ArrayList<IFormItem>(labels.length);
+        // The condition is here due to the serialization
+        if (labels == null){
+            InitializeLabels();
+        }
 
+        List<IFormItem> items = new ArrayList<IFormItem>(labels.length);
         for (JLabel label: labels){
             items.add(formGenerator.getFormItem(label.getText(), label));
         }
