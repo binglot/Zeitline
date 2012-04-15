@@ -28,7 +28,7 @@ public class L2TFilter extends InputFilter {
     protected LinkedList event_queue = new LinkedList();
 
     public L2TFilter(IFormGenerator formGenerator) {
-        super(formGenerator, NAME, INPUT_FILE_EXTENSION,DESCRIPTION);
+        super(formGenerator, NAME, INPUT_FILE_EXTENSION, DESCRIPTION);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class L2TFilter extends InputFilter {
             String[] fields = desc.split(FIELDS_SEPARATOR);
             if (fields.length != FIELDS_NUMBER)
                 return false;
-            
+
             if (fields[0].equals("date") && fields[1].equals("time") && fields[10].equals("desc") && fields[16].equals("extra"))
                 return true;
 
@@ -112,8 +112,7 @@ public class L2TFilter extends InputFilter {
             return new L2TEvent(timestamp, fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9],
                     fields[10], Integer.decode(fields[11]), fields[12], fields[13], fields[14], fields[15], fields[16],
                     formGenerator);
-        }
-        else {
+        } else {
             return (MACTimeEvent) event_queue.removeFirst();
         }
     }
@@ -125,10 +124,20 @@ public class L2TFilter extends InputFilter {
         if (dateFields.length != 3 || timeFields.length != 3)
             return null;
 
+
         // Timestamp class needs updating so that the code below doesn't need to subtract any values!
         //
-        return new Timestamp(Integer.decode(dateFields[2]) - 1900, Integer.decode(dateFields[0]) - 1, Integer.decode(dateFields[1]),
-                Integer.decode(timeFields[0]), Integer.decode(timeFields[1]), Integer.decode(timeFields[2]),
+        // if you use decode() instead of valueOf() then if you pass octal string (e.g. 08) it can throw an exception
+        int year = Integer.valueOf(dateFields[2]) - 1900;
+        int month = Integer.valueOf(dateFields[0]) - 1;
+        int day = Integer.valueOf(dateFields[1]);
+
+        int hour = Integer.valueOf(timeFields[0]);
+        int minute = Integer.valueOf(timeFields[1]);
+        int second = Integer.valueOf(timeFields[2]);
+
+        return new Timestamp(year, month, day,
+                hour, minute, second,
                 0); // nanoseconds
     }
 
