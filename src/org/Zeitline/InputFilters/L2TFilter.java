@@ -13,7 +13,6 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
 import java.util.LinkedList;
 
 public class L2TFilter extends InputFilter {
@@ -25,11 +24,11 @@ public class L2TFilter extends InputFilter {
     private static final String FIELDS_SEPARATOR = ",";
     private static final int FIELDS_NUMBER = 17;
 
+    private LinkedList event_queue = new LinkedList();
     private BufferedReader fileInput;
     private int linesNo;
     private int currentLineNo;
     private int descLinesNo;
-    protected LinkedList event_queue = new LinkedList();
 
 
     public L2TFilter(IFormGenerator formGenerator) {
@@ -38,7 +37,6 @@ public class L2TFilter extends InputFilter {
 
     @Override
     public Source init(String filename, Component parent) {
-        FileReader reader;
         try {
             fileInput = new BufferedReader(new FileReader(filename));
             linesNo = countLines(filename);
@@ -140,8 +138,7 @@ public class L2TFilter extends InputFilter {
         int minute = Integer.valueOf(timeFields[1]);
         int second = Integer.valueOf(timeFields[2]);
 
-        return new Timestamp(year, month, day,
-                hour, minute, second,
+        return new Timestamp(year, month, day, hour, minute, second,
                 0); // nanoseconds
     }
 
