@@ -90,6 +90,7 @@ public class Zeitline implements TreeSelectionListener {
 
     public void createAndShowGUI() {
         frame = new JFrame(APPLICATION_NAME);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         createMenuActions();
 
@@ -193,7 +194,7 @@ public class Zeitline implements TreeSelectionListener {
 
         ButtonGroup group = new ButtonGroup();
 
-        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "yyyy-mm-dd hh:mm:ss.d", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
+        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "yyyy-mm-dd hh:mm:ss", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
         rbMenuItem.setSelected(true);
         group.add(rbMenuItem);
         submenu.add(rbMenuItem);
