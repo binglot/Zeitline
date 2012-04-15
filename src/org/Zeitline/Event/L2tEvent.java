@@ -27,14 +27,14 @@ public class L2TEvent
     private final String desc;
     private final int version;
     private final String filename;
-    private final long inode;
+    private final String inode;
     private final String notes;
     private final String format;
     private final String extra;
     private final IFormGenerator<IFormItem> formGenerator;
 
     public L2TEvent(ITimestamp time, String timezone, String macb, String source, String sourceType, String type, String user,
-                    String host, String shortDesc, String desc, int version, String filename, long inode, String notes,
+                    String host, String shortDesc, String desc, int version, String filename, String inode, String notes,
                     String format, String extra, IFormGenerator<IFormItem> formGenerator){
 
         this.time = time;
@@ -55,10 +55,12 @@ public class L2TEvent
         this.extra = extra;
         this.formGenerator = formGenerator;
 
-        // Inherited bad behaviour from the AtomicEvent class.
-        // Will need need to fix it!
-        adjustedTime = startTime;
-        reportedTime = startTime;
+        // Inherited bad behaviour from the AtomicEvent and AbstractTimeEvent classes.
+        // Will need to fix it!
+        startTime = time;
+        adjustedTime = time;
+        reportedTime = time;
+        uniqueId = idCounter;
         // =
     }
 
