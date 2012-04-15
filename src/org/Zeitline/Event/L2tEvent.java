@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class L2tEvent
+public class L2TEvent
         extends AtomicEvent
         implements Serializable {
 
@@ -33,8 +33,8 @@ public class L2tEvent
     private final String extra;
     private final IFormGenerator<IFormItem> formGenerator;
 
-    public L2tEvent(ITimestamp time, String timezone, String macb, String source, String sourceType, String type, String user,
-                    String host, String shortDesc, String desc, int version, String filename, long inode, String notes, 
+    public L2TEvent(ITimestamp time, String timezone, String macb, String source, String sourceType, String type, String user,
+                    String host, String shortDesc, String desc, int version, String filename, long inode, String notes,
                     String format, String extra, IFormGenerator<IFormItem> formGenerator){
 
         this.time = time;

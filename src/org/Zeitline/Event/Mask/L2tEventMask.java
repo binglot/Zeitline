@@ -1,19 +1,19 @@
 package org.Zeitline.Event.Mask;
 
-import org.Zeitline.Event.L2tEvent;
+import org.Zeitline.Event.L2TEvent;
 import org.Zeitline.Source;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class L2tEventMask extends JPanel {
+public class L2TEventMask extends JPanel {
 
     private final static int FIELD_WIDTH = 15;
 
     private JPanel display;
     private JPanel descriptionPanel;
 
-    private L2tEvent current;
+    private L2TEvent current;
 
     private JLabel lblTimeValue = new JLabel();
     private JLabel lblTimezoneValue = new JLabel();
@@ -22,7 +22,7 @@ public class L2tEventMask extends JPanel {
     private JLabel lblSourceNameValue = new JLabel();
     private JLabel lblSourceCreatedValue = new JLabel();
 
-    public L2tEventMask() {
+    public L2TEventMask() {
         display = new JPanel();
         descriptionPanel = new JPanel(new GridBagLayout());
         JPanel topPanel = new JPanel(new GridBagLayout());
@@ -157,7 +157,7 @@ public class L2tEventMask extends JPanel {
         panel.add(lblSourceCreatedValue, c);
     }
 
-    public void set(L2tEvent e) {
+    public void set(L2TEvent e) {
         // Needs further checking
         Source s = e.getSource();
         // =
