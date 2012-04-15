@@ -10,8 +10,10 @@ import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.LineNumberReader;
 import java.util.LinkedList;
 
 public class L2TFilter extends InputFilter {
@@ -23,9 +25,12 @@ public class L2TFilter extends InputFilter {
     private static final String FIELDS_SEPARATOR = ",";
     private static final int FIELDS_NUMBER = 17;
 
-    private RandomAccessFile fileInput;
-    private int descLinesNo = 0;
+    private BufferedReader fileInput;
+    private int linesNo;
+    private int currentLineNo;
+    private int descLinesNo;
     protected LinkedList event_queue = new LinkedList();
+
 
     public L2TFilter(IFormGenerator formGenerator) {
         super(formGenerator, NAME, INPUT_FILE_EXTENSION, DESCRIPTION);
@@ -33,11 +38,10 @@ public class L2TFilter extends InputFilter {
 
     @Override
     public Source init(String filename, Component parent) {
+        FileReader reader;
         try {
-            // WHY IS IT RandomAccessFile?! 14/04/2012
-            //
-            //	    fileInput = new BufferedReader(new FileReader(filename));
-            fileInput = new RandomAccessFile(filename, "r");
+            fileInput = new BufferedReader(new FileReader(filename));
+            linesNo = countLines(filename);
         } catch (IOException ioe) {
             return null;
         }
@@ -48,7 +52,21 @@ public class L2TFilter extends InputFilter {
         return new Source(NAME, filename, Source.GRANULARITY_SEC);
     }
 
-    private boolean FirstLineIsExtra(RandomAccessFile fileInput) {
+    private int countLines(String filename) throws IOException {
+        int counter = 0;
+
+        while((fileInput.readLine()) != null) {
+            counter++;
+        }
+
+        fileInput.close();
+        fileInput = new BufferedReader(new FileReader(filename));
+        
+        // The reader's not closed for a purpose
+        return counter;
+    }
+
+    private boolean FirstLineIsExtra(BufferedReader fileInput) {
         try {
             String desc = fileInput.readLine();
             String[] fields = desc.split(FIELDS_SEPARATOR);
@@ -71,26 +89,12 @@ public class L2TFilter extends InputFilter {
         String[] fields;
 
         if (event_queue.isEmpty()) {
-//            try {
-//                while ((line = fileInput.readLine()) != null) {
-//                    fields = line.split(",");
-//
-//                    if (fields.length != 17)
-//                        System.err.println("Line not in a proper format: " + line);
-//                    else
-//                        break;
-//
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//                return null;
-//            }
-
 
             while (true) {
 
                 try {
                     line = fileInput.readLine();
+                    currentLineNo++;
                 } catch (IOException ioe) {
                     return null;
                 }
@@ -146,25 +150,15 @@ public class L2TFilter extends InputFilter {
         return 0;
     }
 
-    ///
-    // Subtracting 1 from the count due to the extra description line at the top
-    //
-
     @Override
     public long getTotalCount() {
-        try {
-            return fileInput.length() - descLinesNo;
-        } catch (IOException ie) {
-            return 0;
-        }
+        return linesNo - descLinesNo;
     }
 
     @Override
     public long getProcessedCount() {
-        try {
-            return fileInput.getFilePointer() - descLinesNo;
-        } catch (IOException ie) {
-            return 0;
-        }
+        return currentLineNo;
     }
+
+
 }
