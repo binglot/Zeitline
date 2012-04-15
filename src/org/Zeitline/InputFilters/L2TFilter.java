@@ -110,7 +110,7 @@ public class L2TFilter extends InputFilter {
             ITimestamp timestamp = CreateTimestamp(date, time);
 
             return new L2TEvent(timestamp, fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9],
-                    fields[10], Integer.decode(fields[11]), fields[12], Long.decode(fields[13]), fields[14], fields[15], fields[16],
+                    fields[10], Integer.decode(fields[11]), fields[12], fields[13], fields[14], fields[15], fields[16],
                     formGenerator);
         }
         else {
@@ -119,14 +119,16 @@ public class L2TFilter extends InputFilter {
     }
 
     private ITimestamp CreateTimestamp(String date, String time) {
-        String[] dateFields = date.split("/"); // format: DD/MM/YYYY
+        String[] dateFields = date.split("/"); // format: MM/DD/YYYY
         String[] timeFields = time.split(":"); // format: HH:MM:SS
 
         if (dateFields.length != 3 || timeFields.length != 3)
             return null;
 
-        return new Timestamp(Integer.decode(dateFields[2]), Integer.decode(dateFields[1]), Integer.decode(dateFields[0]),
-                Integer.decode(timeFields[2]), Integer.decode(timeFields[1]), Integer.decode(timeFields[0]),
+        // Timestamp class needs updating so that the code below doesn't need to subtract any values!
+        //
+        return new Timestamp(Integer.decode(dateFields[2]) - 1900, Integer.decode(dateFields[0]) - 1, Integer.decode(dateFields[1]),
+                Integer.decode(timeFields[0]), Integer.decode(timeFields[1]), Integer.decode(timeFields[2]),
                 0); // nanoseconds
     }
 
