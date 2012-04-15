@@ -263,7 +263,7 @@ public class Timestamp extends java.util.Date implements ITimestamp {
         String hourString;
         String minuteString;
         String secondString;
-        String nanosString;
+        //String nanosString;
         String zeros = "000000000";
         String yearZeros = "0000";
         StringBuffer timestampBuf;
@@ -301,28 +301,31 @@ public class Timestamp extends java.util.Date implements ITimestamp {
         } else {
             secondString = Integer.toString(second);
         }
-        if (nanos == 0) {
-            nanosString = "0";
-        } else {
-            nanosString = Integer.toString(nanos);
-
-            // Add leading zeros
-            nanosString = zeros.substring(0, (9-nanosString.length())) +
-                    nanosString;
-
-            // Truncate trailing zeros
-            char[] nanosChar = new char[nanosString.length()];
-            nanosString.getChars(0, nanosString.length(), nanosChar, 0);
-            int truncIndex = 8;
-            while (nanosChar[truncIndex] == '0') {
-                truncIndex--;
-            }
-
-            nanosString = new String(nanosChar, 0, truncIndex + 1);
-        }
+        // 15 Apr 2012: Don't want nanoseconds in the output.
+        //
+//        if (nanos == 0) {
+//            nanosString = "0";
+//        } else {
+//            nanosString = Integer.toString(nanos);
+//
+//            // Add leading zeros
+//            nanosString = zeros.substring(0, (9-nanosString.length())) +
+//                    nanosString;
+//
+//            // Truncate trailing zeros
+//            char[] nanosChar = new char[nanosString.length()];
+//            nanosString.getChars(0, nanosString.length(), nanosChar, 0);
+//            int truncIndex = 8;
+//            while (nanosChar[truncIndex] == '0') {
+//                truncIndex--;
+//            }
+//
+//            nanosString = new String(nanosChar, 0, truncIndex + 1);
+//        }
 
         // do a string buffer here instead.
-        timestampBuf = new StringBuffer(20+nanosString.length());
+//        timestampBuf = new StringBuffer(20+nanosString.length());
+        timestampBuf = new StringBuffer(20);
         timestampBuf.append(yearString);
         timestampBuf.append("-");
         timestampBuf.append(monthString);
@@ -334,8 +337,8 @@ public class Timestamp extends java.util.Date implements ITimestamp {
         timestampBuf.append(minuteString);
         timestampBuf.append(":");
         timestampBuf.append(secondString);
-        timestampBuf.append(".");
-        timestampBuf.append(nanosString);
+//        timestampBuf.append(".");
+//        timestampBuf.append(nanosString);
 
         return (timestampBuf.toString());
     }
