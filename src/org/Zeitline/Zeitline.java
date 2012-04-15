@@ -4,6 +4,7 @@ import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
+import org.Zeitline.Event.Mask.L2TEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
@@ -31,6 +32,7 @@ public class Zeitline implements TreeSelectionListener {
     protected EventTree tree;
     private ComplexEventMask cem;
     protected AtomicEventMask aem;
+    private L2TEventMask lem;
     private JSplitPane mainPane;
     private TimelineView timelines;
     protected JToolBar toolBar;
@@ -101,7 +103,8 @@ public class Zeitline implements TreeSelectionListener {
         getFrame().getContentPane().add(contents, BorderLayout.CENTER);
 
         getFrame().pack();
-        getFrame().setSize(800, 600);
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH);
+        //getFrame().setSize(800, 600);
         getFrame().setVisible(true);
 
     }
@@ -248,17 +251,20 @@ public class Zeitline implements TreeSelectionListener {
 
         cem = new ComplexEventMask();
         aem = new AtomicEventMask();
+        lem = new L2TEventMask();
         maskOverlay.add(cem);
         maskOverlay.add(aem);
+        maskOverlay.add(lem);
         maskOverlay.setMinimumSize(cem.getPreferredSize());
         cem.setVisible(false);
         aem.setVisible(false);
+        lem.setVisible(false);
 
         timelines = new TimelineView(this, moveLeft, moveRight,
                 filterQueryAction, deleteTimeline,
                 getSaveAction(), pasteAction,
                 cutAction, clearAction, findAction,
-                getCem(), aem);
+                getCem(), aem, lem);
 
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 getTimelines(), new JScrollPane(maskOverlay));

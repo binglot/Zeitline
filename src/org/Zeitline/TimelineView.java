@@ -3,12 +3,16 @@ package org.Zeitline;
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Event.L2TEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
+import org.Zeitline.Event.Mask.L2TEventMask;
 import org.Zeitline.GUI.Action.PasteAction;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import javax.swing.event.*;
+import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
@@ -16,21 +20,10 @@ import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 import java.util.Vector;
-
-import javax.swing.Action;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.TreePath;
 
 public class TimelineView extends JPanel implements TreeSelectionListener,
         FocusListener,
@@ -45,6 +38,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     private final TreeSelectionListener app;
     protected ComplexEventMask complexMask;
+    protected L2TEventMask l2tMask;
     protected AtomicEventMask atomicMask;
     protected JSplitPane treePane;
     protected JTabbedPane leftTrees, rightTrees;
@@ -62,18 +56,19 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             filterAction, removeAction, saveAction, pasteAction,
             cutAction, clearAction, findAction;
     protected boolean isOrphanVisible;
-    protected Vector timelines;
+    protected List<EventTree> timelines;
 
     public TimelineView(TreeSelectionListener app, Action left, Action right,
                         Action filter, Action remove, Action save,
                         Action paste, Action cut, Action clear,
                         Action find,
-                        ComplexEventMask cem, AtomicEventMask aem) {
+                        ComplexEventMask cem, AtomicEventMask aem, L2TEventMask lem) {
         this.app = app;
         complexMask = cem;
         atomicMask = aem;
+        l2tMask = lem;
 
-        timelines = new Vector();
+        timelines = new ArrayList<EventTree>();
 
         leftTrees = new JTabbedPane(JTabbedPane.TOP,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -146,7 +141,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     protected void addTreeToTab(JTabbedPane target, EventTree t, TreeSelectionListener app) {
 
         if (target == leftTrees)
-            timelines.insertElementAt(t, leftTrees.getTabCount());
+            timelines.add(leftTrees.getTabCount(), t);
         else
             timelines.add(t);
 
@@ -188,9 +183,9 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
         tree.removeFocusListener(this);
         if (pane == leftTrees)
-            timelines.removeElementAt(index);
+            timelines.remove(index);
         else
-            timelines.removeElementAt(index + leftTrees.getTabCount());
+            timelines.remove(index + leftTrees.getTabCount());
 
         pane.removeTabAt(index);
 
@@ -259,7 +254,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         EventTree t;
 
         for (i = 0; i < timelines.size(); i++) {
-            t = (EventTree) timelines.elementAt(i);
+            t = timelines.get(i);
             ((EventTreeModel) t.getModel()).refresh();
         }
 
@@ -268,12 +263,11 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     public void deleteTree(EventTree toDelete) {
 
         int i;
-        EventTree t;
 
         hideEventMask();
 
         for (i = 0; i < timelines.size(); i++) {
-            if (((EventTree) timelines.elementAt(i)).equals(toDelete)) {
+            if ((timelines.get(i)).equals(toDelete)) {
                 int divider = leftTrees.getTabCount();
                 if (i < divider)
                     removeTab(leftTrees, i);
@@ -296,7 +290,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         int i;
 
         for (i = 0; i < timelines.size(); i++)
-            ((EventTree) timelines.elementAt(i)).clearSelection();
+            (timelines.get(i)).clearSelection();
 
         if (!isOrphanVisible)
             orphanTree.clearSelection();
@@ -420,8 +414,13 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     private void displayEvent(AbstractTimeEvent event) {
 
-
-        if (event instanceof AtomicEvent) {
+        if (event instanceof L2TEvent) {
+            complexMask.setVisible(false);
+            L2TEvent le = (L2TEvent) event;
+            l2tMask.set(le);
+            l2tMask.setVisible(true);
+            pasteAction.setEnabled(false);
+        } else if (event instanceof AtomicEvent) {
             complexMask.setVisible(false);
             AtomicEvent ae = (AtomicEvent) event;
             atomicMask.set(ae);
@@ -438,6 +437,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     }
 
     private void hideEventMask() {
+        l2tMask.setVisible(false);
         atomicMask.setVisible(false);
         complexMask.setVisible(false);
     } // hideEventMask
@@ -639,7 +639,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             if (timelines.size() == 0)
                 return orphanTree;
             else
-                return (EventTree) timelines.elementAt(0);
+                return timelines.get(0);
         }
 
         if ((index = timelines.indexOf(current)) == -1)
@@ -648,7 +648,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         if (index + 2 > timelines.size())
             return null;
 
-        return (EventTree) timelines.elementAt(index + 1);
+        return timelines.get(index + 1);
 
     } // getNextTree
 
@@ -660,7 +660,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             if (timelines.size() == 0)
                 return orphanTree;
             else
-                return (EventTree) timelines.elementAt(timelines.size() - 1);
+                return timelines.get(timelines.size() - 1);
         }
 
         if ((index = timelines.indexOf(current)) == -1)
@@ -669,7 +669,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         if (index == 0)
             return null;
 
-        return (EventTree) timelines.elementAt(index - 1);
+        return timelines.get(index - 1);
 
     } // getPreviousTree
 
@@ -685,7 +685,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         }
 
         for (i = 0; i < timelines.size(); i++) {
-            if (((EventTree) timelines.elementAt(i)).equals(t)) {
+            if ((timelines.get(i)).equals(t)) {
                 int divider = leftTrees.getTabCount();
                 if (i < divider)
                     leftTrees.setSelectedIndex(i);
@@ -869,30 +869,30 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     protected class FindEntries {
 
-        protected Stack entries;
+        protected Stack<EntryItem> entries;
 
         FindEntries() {
-            entries = new Stack();
+            entries = new Stack<EntryItem>();
         }
 
         public int getCurrentIndex() {
             if (entries.empty())
                 return -1;
-            EntryItem ei = (EntryItem) entries.peek();
+            EntryItem ei = entries.peek();
             return ei.getIndex();
         }
 
         public ComplexEvent getCurrentEvent() {
             if (entries.empty())
                 return null;
-            EntryItem ei = (EntryItem) entries.peek();
+            EntryItem ei = entries.peek();
             return ei.getParent();
         }
 
         public void setCurrentIndex(int newIndex) {
             if (entries.empty())
                 return;
-            EntryItem ei = (EntryItem) entries.peek();
+            EntryItem ei = entries.peek();
             ei.setIndex(newIndex);
         }
 
@@ -901,7 +901,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         }
 
         public EntryItem pop() {
-            return (EntryItem) entries.pop();
+            return entries.pop();
         }
 
         public boolean isEmpty() {
@@ -913,7 +913,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             FindEntries ret = new FindEntries();
 
             for (int i = 0; i < entries.size(); i++) {
-                EntryItem item = (EntryItem) entries.elementAt(i);
+                EntryItem item = entries.elementAt(i);
                 ret.push(new EntryItem(item.getParent(), item.getIndex()));
             }
 
@@ -925,10 +925,10 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             if (entries.empty())
                 return null;
 
-            Vector temp = new Vector();
+            List<ComplexEvent> temp = new ArrayList<ComplexEvent>();
 
             for (int i = 0; i < entries.size(); i++)
-                temp.add(((EntryItem) entries.elementAt(i)).getParent());
+                temp.add((entries.elementAt(i)).getParent());
 
             return new TreePath(temp.toArray());
 
