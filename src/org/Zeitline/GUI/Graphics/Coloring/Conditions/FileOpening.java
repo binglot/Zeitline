@@ -19,6 +19,9 @@ public class FileOpening implements ICondition {
         if (entry.getShortDesc().contains("opened by"))
             return true;
 
+        if (entry.getSourceType().equals("RecentDocs key"))
+            return true;
+
         return false;
     }
 
