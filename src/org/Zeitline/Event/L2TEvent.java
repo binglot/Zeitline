@@ -144,11 +144,14 @@ public class L2TEvent
         String[] labelNames = getDescription().split("\n");
 
         for (int i = 0; i < labelNames.length; i++){
-            String fields[] = labelNames[i].split(": ");
             JLabel label = labels[i];
-
-            label.setText(fields[1]);
+            label.setText(getValue(labelNames[i]));
         }
+    }
+
+    private String getValue(String labelWithValue){
+        String[] fields = labelWithValue.split(": ");
+        return fields.length == 2 ? fields[1] : "";
     }
 
     public ITimestamp getTime() {

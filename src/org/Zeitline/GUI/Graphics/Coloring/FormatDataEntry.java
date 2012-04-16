@@ -45,19 +45,24 @@ public class FormatDataEntry {
         valid = true;
     }
 
+    private String getValue(String labelWithValue){
+        String[] fields = labelWithValue.split(": ");
+        return fields.length == 2 ? fields[1] : "";
+    }
+
     public String getSourceType() {
-        return sourceType.split(": ")[1];
+        return getValue(sourceType);
     }
 
     public String getSource() {
-        return source.split(": ")[1];
+        return getValue(source);
     }
 
     public String getShortDesc() {
-        return shortDesc.split(": ")[1];
+        return getValue(shortDesc);
     }
 
     public String getDesc() {
-        return desc.split(": ")[1];
+        return getValue(desc);
     }
 }
