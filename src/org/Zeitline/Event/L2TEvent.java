@@ -98,20 +98,20 @@ public class L2TEvent
     public String getDescription() {
 
         // First the most important entries
-        return "Source Type: " + sourceType +
-                "\nSource: " + source +
-                "\nMACB: " + macb +
-                "\nShort: " + shortDesc +
+        return "Source Type: " + sourceType +  //  0
+                "\nSource: " + source +        //  1
+                "\nMACB: " + macb +            //  2
+                "\nShort: " + shortDesc +      //  3
         // Then the rest (ex. 'format' field)
-                "\nType: " + type +
-                "\nUser: " + user +
-                "\nHost: " + host +
-                "\nDescription: " + desc +
-                "\nVersion: " + version +
-                "\nFilename: " + filename +
-                "\nInode: " + inode +
-                "\nNotes: " + notes +
-                "\nExtra: " + extra;
+                "\nType: " + type +            //  4
+                "\nUser: " + user +            //  5
+                "\nHost: " + host +            //  6
+                "\nDescription: " + desc +     //  7
+                "\nVersion: " + version +      //  8
+                "\nFilename: " + filename +    //  9
+                "\nInode: " + inode +          // 10
+                "\nNotes: " + notes +          // 11
+                "\nExtra: " + extra;           // 12
     }
 
     public JPanel getPanel() {

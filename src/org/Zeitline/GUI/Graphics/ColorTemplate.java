@@ -1,27 +1,31 @@
 package org.Zeitline.GUI.Graphics;
 
 import org.Zeitline.GUI.EventTree.IEventTreeColorTemplate;
+import org.Zeitline.GUI.Graphics.Coloring.ConditionsRepository;
+import org.Zeitline.GUI.Graphics.Coloring.FormatDataEntry;
+import org.Zeitline.GUI.Graphics.Coloring.ICondition;
 
 import javax.swing.tree.DefaultTreeCellRenderer;
 import java.awt.*;
 
 public class ColorTemplate implements IEventTreeColorTemplate {
 
-    private static final int FIELDS_NUMBER = 13;
+    private static final ConditionsRepository conditionsRepository = new ConditionsRepository();
 
     @Override
     public void setColor(String description, DefaultTreeCellRenderer renderer) {
-        String fields[] = description.split("\n");
+        FormatDataEntry entry = new FormatDataEntry(description);
 
-        if (fields == null || fields.length != FIELDS_NUMBER)
+        if (!entry.isValid()){
             return;
+        }
 
-        for(String entry: fields) {
-            if (entry.endsWith("WEBHIST")){
-                renderer.setForeground(Color.RED);
-
+        for(ICondition condition: conditionsRepository.getConditions()) {
+            if (condition.match(entry)) {
+                condition.format(renderer);
                 return;
             }
         }
     }
+
 }

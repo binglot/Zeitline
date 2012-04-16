@@ -111,6 +111,9 @@ public class L2TFilter extends InputFilter {
             String time = fields[1];
             ITimestamp timestamp = CreateTimestamp(date, time);
 
+            //
+            // If the order of fields change, remember to correct them in the Coloring Template!
+            //
             return new L2TEvent(timestamp, fields[2], fields[3], fields[4], fields[5], fields[6], fields[7], fields[8], fields[9],
                     fields[10], Integer.decode(fields[11]), fields[12], fields[13], fields[14], fields[15], fields[16],
                     formGenerator);
