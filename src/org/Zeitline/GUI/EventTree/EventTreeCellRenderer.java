@@ -15,15 +15,14 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
 
     // TODO: Change how it takes the icon.
     protected static ImageIcon atomicIcon, complexIcon;
-    private static final int FIELDS_NUMBER = 13;
-    IIconRepository<ImageIcon> icons;
+    private IEventTreeColorTemplate colorTemplate;
 
-    EventTreeCellRenderer() {
+    EventTreeCellRenderer(IEventTreeColorTemplate colorTemplate, IIconRepository<ImageIcon> icons) {
         super();
-        icons = new IconRepository();
+
+        this.colorTemplate = colorTemplate;
         atomicIcon = icons.getIcon(IconNames.AtomicSmall);
         complexIcon = icons.getIcon(IconNames.ComplexSmall);
-
     }
 
     public Component getTreeCellRendererComponent(JTree tree,
@@ -47,27 +46,12 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
       */
         AbstractTimeEvent node = (AbstractTimeEvent) value;
         setIcon(node.getIcon());
-        setFontColor(node.getDescription());
+        colorTemplate.setColor(node.getDescription(), this);
+        //setFontColor(node.getDescription());
         //setIcon(((AbstractTimeEvent) value).getIcon());
 
 
         return this;
 
     }
-
-    private void setFontColor(String description) {
-        String fields[] = description.split("\n");
-
-        if (fields == null || fields.length != FIELDS_NUMBER)
-            return;
-
-        for(String entry: fields) {
-            if (entry.endsWith("WEBHIST")){
-                this.setForeground(Color.RED);
-
-                return;
-            }
-        }
-    }
-
 }
