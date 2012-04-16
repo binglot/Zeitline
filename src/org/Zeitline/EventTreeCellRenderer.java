@@ -5,7 +5,7 @@ import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.GUI.Graphics.IconRepository;
 
-import java.awt.Component;
+import java.awt.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -15,6 +15,7 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
 
     // TODO: Change how it takes the icon.
     protected static ImageIcon atomicIcon, complexIcon;
+    private static final int FIELDS_NUMBER = 13;
     IIconRepository<ImageIcon> icons;
 
     EventTreeCellRenderer() {
@@ -44,11 +45,29 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
           else
               setIcon(complexIcon);
       */
+        AbstractTimeEvent node = (AbstractTimeEvent) value;
+        setIcon(node.getIcon());
+        setFontColor(node.getDescription());
+        //setIcon(((AbstractTimeEvent) value).getIcon());
 
-        setIcon(((AbstractTimeEvent) value).getIcon());
 
         return this;
 
+    }
+
+    private void setFontColor(String description) {
+        String fields[] = description.split("\n");
+
+        if (fields == null || fields.length != FIELDS_NUMBER)
+            return;
+
+        for(String entry: fields) {
+            if (entry.endsWith("WEBHIST")){
+                this.setForeground(Color.RED);
+
+                return;
+            }
+        }
     }
 
 }
