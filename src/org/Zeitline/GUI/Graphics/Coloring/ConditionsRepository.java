@@ -7,11 +7,17 @@ public class ConditionsRepository {
     private ICondition[] list;
 
     public ConditionsRepository() {
+        //
+        // Unfortunately, the order of the conditions matters.
+        //
         list = new ICondition[] {
-                new WebHistory(),
+                new DeviceOrUsbUsage(),
+                new DeletedData(),
                 new FileOpening(),
                 new Execution(),
+                new LogFile(),
 
+                new WebHistory(),
         };
     }
 

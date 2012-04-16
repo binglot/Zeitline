@@ -98,7 +98,7 @@ public class L2TEvent
     public String getDescription() {
 
         // First the most important entries
-        return "Source Type: " + sourceType +  //  0
+        return "Source Type: " + sourceType +  //  0 <= FormatDataEntry class needs this numbers
                 "\nSource: " + source +        //  1
                 "\nMACB: " + macb +            //  2
                 "\nShort: " + shortDesc +      //  3
