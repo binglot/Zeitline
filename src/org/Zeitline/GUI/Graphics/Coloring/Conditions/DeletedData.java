@@ -20,7 +20,6 @@ public class DeletedData implements ICondition {
 
     @Override
     public void format(DefaultTreeCellRenderer renderer) {
-        renderer.setForeground(Color.WHITE);
-        renderer.setBackground(Color.BLACK);
+        renderer.setForeground(new Color(128, 0, 0)); // MAROON
     }
 }
