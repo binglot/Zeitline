@@ -10,24 +10,14 @@ public class Execution implements ICondition {
     @Override
     public boolean match(FormatDataEntry entry) {
 
+        // This catches Prefetch so there's no need to check for it.
         if (entry.getSource().equals("PRE"))
             return true;
 
-        //
-        // 16/04/2012: I've commented the rest of checks because they are redundant.
-        //             Please correct me if I'm wrong.
-        //
+        if (entry.getSourceType().equals("UserAssist key"))
+            return true;
 
-        // The text 'typed the following cmd' is what the field Description starts with (startsWith()).
-        //if (entry.getDesc().startsWith("typed the following cmd"))
-        //    return true;
-
-        // The text 'CMD typed' is the value of the Type entry (equals()).
-        //if (entry.getShortDesc().contains("CMD typed"))
-        //    return true;
-
-        // In Rob's template it's "RunMRU key" and that's the value of the Source Type entry (equals()).
-        if (entry.getShortDesc().startsWith("RunMRU value"))
+        if (entry.getSourceType().equals("RunMRU key"))
             return true;
 
         return false;
