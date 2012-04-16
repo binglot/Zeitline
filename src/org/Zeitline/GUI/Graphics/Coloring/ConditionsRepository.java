@@ -10,6 +10,7 @@ public class ConditionsRepository {
         list = new ICondition[] {
                 new WebHistory(),
                 new FileOpening(),
+                new Execution(),
 
         };
     }
