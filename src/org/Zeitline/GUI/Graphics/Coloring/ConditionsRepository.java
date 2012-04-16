@@ -8,16 +8,16 @@ public class ConditionsRepository {
 
     public ConditionsRepository() {
         //
-        // Unfortunately, the order of the conditions matters.
+        // Unfortunately, the order of the conditions does matter.
         //
         list = new ICondition[] {
                 new DeviceOrUsbUsage(),
                 new DeletedData(),
-                new FileOpening(),
                 new Execution(),
+                new FileOpening(),
                 new LogFile(),
-
-                new WebHistory(),
+                new FolderOpening(),
+                new WebHistory()
         };
     }
 
