@@ -616,7 +616,11 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
     } // treeStructureChanged
 
     public void mouseClicked(MouseEvent e) {
-        setCurrentTree(((TreeDisplay) ((JTabbedPane) e.getSource()).getSelectedComponent()).getTree());
+        JTabbedPane pane = (JTabbedPane) e.getSource();
+        TreeDisplay selected = (TreeDisplay) pane.getSelectedComponent();
+        
+        if (selected != null)
+            setCurrentTree(selected.getTree());
     }
 
     public void mouseEntered(MouseEvent e) {
