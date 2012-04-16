@@ -47,11 +47,7 @@ public class EventTreeCellRenderer extends DefaultTreeCellRenderer {
         AbstractTimeEvent node = (AbstractTimeEvent) value;
         setIcon(node.getIcon());
         colorTemplate.setColor(node.getDescription(), this);
-        //setFontColor(node.getDescription());
-        //setIcon(((AbstractTimeEvent) value).getIcon());
-
 
         return this;
-
     }
 }
