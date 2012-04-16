@@ -43,14 +43,14 @@ public class FormatDataEntry {
     }
 
     public String getSource() {
-        return source;
+        return source.split(": ")[1];
     }
 
     public String getShortDesc() {
-        return shortDesc;
+        return shortDesc.split(": ")[1];
     }
 
     public String getDesc() {
-        return desc;
+        return desc.split(": ")[1];
     }
 }
