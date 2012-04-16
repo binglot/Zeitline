@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.GUI.EventTree; /********************************************************************
 
  This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -53,7 +53,7 @@ public class EventTreeModel implements TreeModel {
 
     public EventTreeModel(ComplexEvent root) {
         rootEvent = root;
-    } // org.Zeitline.EventTreeModel
+    } // org.Zeitline.GUI.EventTree.EventTreeModel
 
     public void refresh() {
         fireTreeStructureChanged(rootEvent);
@@ -245,4 +245,4 @@ public class EventTreeModel implements TreeModel {
         return new TreePath(elements.toArray());
 
     } // getTreePath
-} // org.Zeitline.EventTreeModel
+} // org.Zeitline.GUI.EventTree.EventTreeModel

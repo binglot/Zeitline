@@ -20,9 +20,9 @@ public class TestAction2 extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
 
         /*
-       org.Zeitline.EventTree tree = timelines.getCurrentTree();
+       org.Zeitline.GUI.EventTree.EventTree tree = timelines.getCurrentTree();
 
-       org.Zeitline.EventTreeModel currentModel = (org.Zeitline.EventTreeModel)tree.getModel();
+       org.Zeitline.GUI.EventTree.EventTreeModel currentModel = (org.Zeitline.GUI.EventTree.EventTreeModel)tree.getModel();
 
        org.Zeitline.Event.ComplexEvent currentRoot = (org.Zeitline.Event.ComplexEvent)currentModel.getRoot();
 

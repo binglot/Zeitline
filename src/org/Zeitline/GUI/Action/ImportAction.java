@@ -3,6 +3,7 @@ package org.Zeitline.GUI.Action;
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.*;
+import org.Zeitline.GUI.EventTree.EventTree;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;

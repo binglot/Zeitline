@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.GUI.EventTree; /********************************************************************
 
  This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -36,6 +36,7 @@ package org.Zeitline; /*********************************************************
 
  **********************************************************************/
 
+import org.Zeitline.*;
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
 
@@ -63,16 +64,16 @@ import javax.swing.tree.TreeSelectionModel;
 
 /**
  * Class for managing events in a JTree component. EventTrees use
- * the org.Zeitline.EventTreeModel or the org.Zeitline.EventTreeModelFilter classes for its
+ * the org.Zeitline.GUI.EventTree.EventTreeModel or the org.Zeitline.GUI.EventTree.EventTreeModelFilter classes for its
  * TreeModel. Drag and drop support and cut and paste support for
  * events is achieved via the org.Zeitline.TimeEventTransferHandler class. The
  * selection model is set to <tt> DISCONTIGUOUS_TREE_SELECTION </tt>.
- * The JTree cells are rendered by the org.Zeitline.EventTreeCellRenderer class.
+ * The JTree cells are rendered by the org.Zeitline.GUI.EventTree.EventTreeCellRenderer class.
  *
  * @see EventTreeCellRenderer
  * @see EventTreeModel
  * @see EventTreeModelFilter
- * @see TimeEventTransferHandler
+ * @see org.Zeitline.TimeEventTransferHandler
  */
 
 public class EventTree extends JTree implements TreeSelectionListener {
@@ -80,7 +81,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
     /**
      * The original data model for the tree. This variable is used
      * when filter models (see {@link EventTreeModelFilter
-     * org.Zeitline.EventTreeModelFilter}) are active and we need to access the
+     * org.Zeitline.GUI.EventTree.EventTreeModelFilter}) are active and we need to access the
      * true model or revert back to the original one.
      */
     protected EventTreeModel origModel;
@@ -91,12 +92,12 @@ public class EventTree extends JTree implements TreeSelectionListener {
     protected TransferableEvent transferable;
 
     /**
-     * The {@link TreeDisplay org.Zeitline.TreeDisplay} associated with this tree.
+     * The {@link org.Zeitline.TreeDisplay org.Zeitline.TreeDisplay} associated with this tree.
      */
     protected TreeDisplay display = null;
 
     /**
-     * A stack containing all the {@link Query org.Zeitline.Query} objects that
+     * A stack containing all the {@link org.Zeitline.Query org.Zeitline.Query} objects that
      * are active inputFilters for the tree.
      */
     protected Stack queryStack;
@@ -151,7 +152,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
     protected static int display_mode = DISPLAY_ALL;
 
     /**
-     * Returns a new org.Zeitline.EventTree with root <tt> root </tt>.
+     * Returns a new org.Zeitline.GUI.EventTree.EventTree with root <tt> root </tt>.
      *
      * @param root the root node of the tree
      */
@@ -190,7 +191,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
       */
         //	addTreeSelectionListener(this);
 
-    } // org.Zeitline.EventTree
+    } // org.Zeitline.GUI.EventTree.EventTree
 
     /**
      * Overrides <tt> java.awt.Component</tt>'s <tt>
@@ -248,7 +249,7 @@ public class EventTree extends JTree implements TreeSelectionListener {
     /**
      * Adds a new view filter on top of the original model or any
      * existing inputFilters. A new {@link EventTreeModelFilter
-     * org.Zeitline.EventTreeModelFilter} class is created with the org.Zeitline.Query and set
+     * org.Zeitline.GUI.EventTree.EventTreeModelFilter} class is created with the org.Zeitline.Query and set
      * as the new TreeModel for the tree. Because expanded paths
      * are not remembered when a TreeModel is changed, we remember
      * the expanded paths before activating the new model and then
@@ -276,8 +277,8 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
     /**
      * Removes the active {@link EventTreeModelFilter
-     * org.Zeitline.EventTreeModelFilter} TreeFilter class and replaces it with
-     * that model's delegate. If no <tt> org.Zeitline.EventTreeModelFilter </tt> is
+     * org.Zeitline.GUI.EventTree.EventTreeModelFilter} TreeFilter class and replaces it with
+     * that model's delegate. If no <tt> org.Zeitline.GUI.EventTree.EventTreeModelFilter </tt> is
      * currently active, the method has no effect.  Because expanded
      * paths are not remembered when a TreeModel is changed, we
      * remember the expanded paths before activating the new model and
@@ -338,13 +339,13 @@ public class EventTree extends JTree implements TreeSelectionListener {
      * (with a TreeSet data structure). Once all selected events are
      * associated with their parent, for each parent the events are
      * removed from the tree with the {@link EventTreeModel
-     * org.Zeitline.EventTreeModel}'s {@link EventTreeModel#removeNodes
+     * org.Zeitline.GUI.EventTree.EventTreeModel}'s {@link EventTreeModel#removeNodes
      * removeNodes()} method. They are then inserted either directly
      * into the target <tt>org.Zeitline.Event.ComplexEvent</tt> or through the target
      * model's {@link EventTreeModel#insertNode insertNode()} method.
      *
      * @param target       the target event to which the selected events are moved
-     * @param target_model the <tt> org.Zeitline.EventTreeModel</tt> of the target event.
+     * @param target_model the <tt> org.Zeitline.GUI.EventTree.EventTreeModel</tt> of the target event.
      *                     If this is <tt>null</tt>, the events are inserted directly into
      *                     <tt>target</tt>, otherwise they are inserted through the model.
      */
@@ -667,4 +668,4 @@ public class EventTree extends JTree implements TreeSelectionListener {
 
         scrollRectToVisible(visible);
     } // centerPath
-} // org.Zeitline.EventTree
+} // org.Zeitline.GUI.EventTree.EventTree

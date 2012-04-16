@@ -1,4 +1,4 @@
-package org.Zeitline; /********************************************************************
+package org.Zeitline.GUI.EventTree; /********************************************************************
 
  This file is part of org.Zeitline.Zeitline: a forensic timeline editor
 
@@ -38,6 +38,7 @@ package org.Zeitline; /*********************************************************
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
+import org.Zeitline.Query;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -52,14 +53,14 @@ public class EventTreeModelFilter extends EventTreeModel {
 
     public EventTreeModelFilter(EventTreeModel delegate) {
         this(delegate, null);
-    } // org.Zeitline.EventTreeModelFilter(org.Zeitline.EventTreeModel)
+    } // org.Zeitline.GUI.EventTree.EventTreeModelFilter(org.Zeitline.GUI.EventTree.EventTreeModel)
 
     public EventTreeModelFilter(EventTreeModel delegate, Query q) {
         super(null);
         rootEvent = (ComplexEvent) delegate.getRoot();
         this.delegate = delegate;
         query = q;
-    } // org.Zeitline.EventTreeModelFilter(org.Zeitline.EventTreeModel,org.Zeitline.Query)
+    } // org.Zeitline.GUI.EventTree.EventTreeModelFilter(org.Zeitline.GUI.EventTree.EventTreeModel,org.Zeitline.Query)
 
     public void setQuery(Query q) {
         query = q;
@@ -271,4 +272,4 @@ public class EventTreeModelFilter extends EventTreeModel {
         return delegate;
     } // getDelegate
 
-} // org.Zeitline.EventTreeModelFilter
+} // org.Zeitline.GUI.EventTree.EventTreeModelFilter

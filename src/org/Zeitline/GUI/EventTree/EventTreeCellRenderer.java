@@ -1,4 +1,4 @@
-package org.Zeitline;
+package org.Zeitline.GUI.EventTree;
 
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.GUI.Graphics.IIconRepository;

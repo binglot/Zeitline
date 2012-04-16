@@ -1,6 +1,6 @@
 package org.Zeitline.GUI.Action;
 
-import org.Zeitline.EventTree;
+import org.Zeitline.GUI.EventTree.EventTree;
 import org.Zeitline.NewQueryDlg;
 import org.Zeitline.Zeitline;
 

@@ -38,6 +38,8 @@ package org.Zeitline; /*********************************************************
 
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.AbstractTimeEvent;
+import org.Zeitline.GUI.EventTree.EventTree;
+import org.Zeitline.GUI.EventTree.EventTreeModel;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;

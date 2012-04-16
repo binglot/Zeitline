@@ -1,8 +1,8 @@
 package org.Zeitline.GUI.Action;
 
 import org.Zeitline.Event.ComplexEvent;
-import org.Zeitline.EventTree;
-import org.Zeitline.EventTreeModel;
+import org.Zeitline.GUI.EventTree.EventTree;
+import org.Zeitline.GUI.EventTree.EventTreeModel;
 import org.Zeitline.NewComplexEventDlg;
 import org.Zeitline.Zeitline;
 

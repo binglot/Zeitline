@@ -8,6 +8,8 @@ import org.Zeitline.Event.Mask.AtomicEventMask;
 import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.Event.Mask.L2TEventMask;
 import org.Zeitline.GUI.Action.PasteAction;
+import org.Zeitline.GUI.EventTree.EventTree;
+import org.Zeitline.GUI.EventTree.EventTreeModel;
 
 import javax.swing.*;
 import javax.swing.event.*;
@@ -23,7 +25,6 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 public class TimelineView extends JPanel implements TreeSelectionListener,
         FocusListener,
