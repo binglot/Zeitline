@@ -9,7 +9,13 @@ public class WebHistory implements ICondition {
 
     @Override
     public boolean match(FormatDataEntry entry) {
-        return entry.getSource().endsWith("WEBHIST");
+        if (entry.getSource().equals("WEBHIST"))
+            return true;
+
+        if (entry.getSource().equals("LSO")) // Flash Cookie
+            return true;
+
+        return false;
     }
 
     @Override
