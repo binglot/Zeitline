@@ -14,8 +14,8 @@ public class FindAction extends AbstractAction {
 
     private Zeitline app;
 
-    public FindAction(Zeitline app, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public FindAction(Zeitline app, int mnemonic) {
+        super(NAME);
         this.app = app;
         putValue(MNEMONIC_KEY, mnemonic);
         putValue(ACCELERATOR_KEY, KEY_SHORTCUT);

@@ -18,8 +18,8 @@ public class CreateFromAction extends AbstractAction {
 
     private Zeitline app;
 
-    public CreateFromAction(Zeitline app, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public CreateFromAction(Zeitline app, int mnemonic) {
+        super(NAME);
         this.app = app;
 
         putValue(MNEMONIC_KEY, mnemonic);

@@ -14,8 +14,8 @@ public class MoveRightAction extends AbstractAction {
 
     private Zeitline zeitline;
 
-    public MoveRightAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public MoveRightAction(Zeitline zeitline, int mnemonic) {
+        super(NAME);
         this.zeitline = zeitline;
 
         putValue(MNEMONIC_KEY, mnemonic);

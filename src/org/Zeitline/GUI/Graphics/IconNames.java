@@ -18,5 +18,6 @@ public enum IconNames {
     Edit,
     Cancel,
     AtomicSmall,
-    ComplexSmall
+    ComplexSmall,
+    Unknown,
 }

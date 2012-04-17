@@ -27,8 +27,8 @@ public class ImportAction
     private Zeitline zeitline;
     private final List<InputFilter> inputFilters;
 
-    public ImportAction(Zeitline zeitline, ImageIcon icon, int mnemonic, List<InputFilter> inputFilters) {
-        super(NAME, icon);
+    public ImportAction(Zeitline zeitline, int mnemonic, List<InputFilter> inputFilters) {
+        super(NAME);
         this.zeitline = zeitline;
         this.inputFilters = inputFilters;
 

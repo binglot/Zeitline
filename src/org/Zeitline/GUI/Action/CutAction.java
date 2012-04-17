@@ -18,8 +18,8 @@ public class CutAction extends AbstractAction {
 
     private Zeitline app;
 
-    public CutAction(Zeitline app, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public CutAction(Zeitline app, int mnemonic) {
+        super(NAME);
         this.app = app;
 
         putValue(MNEMONIC_KEY, mnemonic);

@@ -16,8 +16,8 @@ public class DeleteTimelineAction extends AbstractAction {
 
     private Zeitline zeitline;
 
-    public DeleteTimelineAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public DeleteTimelineAction(Zeitline zeitline, int mnemonic) {
+        super(NAME);
         this.zeitline = zeitline;
 
         putValue(MNEMONIC_KEY, mnemonic);

@@ -13,8 +13,8 @@ public class ToggleOrphanAction extends AbstractAction {
 
     private Zeitline zeitline;
 
-    public ToggleOrphanAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public ToggleOrphanAction(Zeitline zeitline, int mnemonic) {
+        super(NAME);
         this.zeitline = zeitline;
 
         putValue(MNEMONIC_KEY, mnemonic);

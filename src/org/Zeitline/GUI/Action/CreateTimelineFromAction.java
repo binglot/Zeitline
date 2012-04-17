@@ -17,8 +17,8 @@ public class CreateTimelineFromAction extends AbstractAction {
 
     private Zeitline zeitline;
 
-    public CreateTimelineFromAction(Zeitline zeitline, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public CreateTimelineFromAction(Zeitline zeitline, int mnemonic) {
+        super(NAME);
         this.zeitline = zeitline;
 
         putValue(MNEMONIC_KEY, mnemonic);

@@ -21,8 +21,8 @@ public class LoadAction extends AbstractAction {
     private final JFileChooser fileChooser;
 
 
-    public LoadAction(Zeitline app, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public LoadAction(Zeitline app, int mnemonic) {
+        super(NAME);
         this.app = app;
         this.fileChooser = app.getFileChooser();
 

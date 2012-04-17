@@ -6,6 +6,8 @@ import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Plugin.Input.InputPluginLoader;
 import org.Zeitline.Plugin.PluginLoader;
 
+import javax.swing.*;
+
 import static javax.swing.SwingUtilities.invokeLater;
 
 public final class Start {
@@ -15,6 +17,20 @@ public final class Start {
         invokeLater(new Runnable() {
             public void run() {
                 final String inputFiltersDir = "InputFilters";
+                try {
+                    //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+                    String name = "OfficeBlack2007";
+                    UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.Substance" + name + "LookAndFeel");
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (InstantiationException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (UnsupportedLookAndFeelException e) {
+                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                }
+
 
                 FiltersProvider openFileFilters = new FiltersProvider();
                 PluginLoader<InputFilter> pluginLoader = new InputPluginLoader(inputFiltersDir);

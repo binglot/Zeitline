@@ -23,8 +23,8 @@ public class SaveAction extends AbstractAction {
 
     private final Zeitline app;
 
-    public SaveAction(Zeitline app, ImageIcon icon, int mnemonic) {
-        super(NAME, icon);
+    public SaveAction(Zeitline app, int mnemonic) {
+        super(NAME);
         this.app = app;
 
         putValue(MNEMONIC_KEY, mnemonic);
