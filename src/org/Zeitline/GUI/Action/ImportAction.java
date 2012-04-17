@@ -54,7 +54,7 @@ public class ImportAction
 
         pd = new ProgressDlg(zeitline.getFrame(),
                 "Importing Events",
-                (StoppableRunnable) zeitline.getImportAction());
+                this);
         pd.setVisible(true);
     }
 

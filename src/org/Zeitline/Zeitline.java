@@ -362,47 +362,6 @@ public class Zeitline implements TreeSelectionListener {
 
     }
 
-    private void AddMenuItem(JMenu menu, Action action) {
-        JMenuItem menuItem;
-        menuItem = createMenuItem(action);
-
-        menu.add(menuItem);
-    }
-
-    private JMenu CreateMenu(String name, List<Action> actions, int mnemonic) {
-        JMenu menu = new JMenu(name);
-
-        menu.setMnemonic(mnemonic);
-        for (final Action action : actions) {
-            AddMenuItem(menu, action);
-        }
-
-        return menu;
-    }
-
-    public JButton createButton(Action a) {
-        JButton b = new JButton(a);
-        b.setText(null);
-        b.setMnemonic(0);
-        String name = (String) a.getValue(a.NAME);
-
-        InputMap imap = b.getInputMap(b.WHEN_IN_FOCUSED_WINDOW);
-        KeyStroke ks = (KeyStroke) a.getValue(a.ACCELERATOR_KEY);
-        imap.put(ks, name);
-
-        return b;
-    }
-
-    public JMenuItem createMenuItem(Action a) {
-
-        JMenuItem m = new JMenuItem(a);
-        m.setIcon(null);
-
-        return m;
-
-    }
-
-
     public ComplexEventMask getCem() {
         return cem;
     }
@@ -433,10 +392,6 @@ public class Zeitline implements TreeSelectionListener {
 
     public JFrame getFrame() {
         return frame;
-    }
-
-    public Action getImportAction() {
-        return importAction;
     }
 
     public Action getPasteAction() {
