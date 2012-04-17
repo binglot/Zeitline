@@ -9,7 +9,7 @@ public class IconRepository implements IIconRepository<ImageIcon> {
     private static final String ICONS_DIR = "icons";
     private static final String ICONS_EXTENSION = ".png";
 
-    public ImageIcon getIcon(IconNames name) {
+    private String getFileName(IconNames name){
         String fileName = null;
 
         switch (name) {
@@ -72,14 +72,28 @@ public class IconRepository implements IIconRepository<ImageIcon> {
                 break;
         }
 
-        return getIcon(fileName);
+        return fileName;
     }
 
-    private ImageIcon getIcon(String imageName) {
+    
+    public ImageIcon getIcon(IconNames name) {
+        return getImage(name);
+    }
+
+    @Override
+    public URL getIconUrl(IconNames imageName) {
+        String fileName = getFileName(imageName);
+
+        String imgLocation = ICONS_DIR + "/" + fileName + ICONS_EXTENSION;
+        return Zeitline.class.getResource(imgLocation);
+    }
+
+    private ImageIcon getImage(IconNames name) {
         // Avoid using Utils.PathJoin() below!
         // That's because it concatenates using '\' which breaks the .JAR file.
         //
-        String imgLocation = ICONS_DIR + "/" + imageName + ICONS_EXTENSION;
+        String fileName = getFileName(name);
+        String imgLocation = ICONS_DIR + "/" + fileName + ICONS_EXTENSION;
         URL imageURL = Zeitline.class.getResource(imgLocation);
 
         if (imageURL != null) {
@@ -89,5 +103,4 @@ public class IconRepository implements IIconRepository<ImageIcon> {
         System.err.println("Resource not found: " + imgLocation);
         return null;
     }
-
 }
