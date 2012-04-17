@@ -46,15 +46,9 @@ public class Zeitline implements TreeSelectionListener {
     public static final String APPLICATION_NAME = "Zeitline";
     public static final String APPLICATION_VERSION = "v0.3";
 
-    protected EventTree tree;
     private ComplexEventMask cem;
-    protected AtomicEventMask aem;
-    private L2TEventMask lem;
     private JSplitPane mainPane;
     private TimelineView timelines;
-    private SetDisplayModeAction displayModeAction;
-
-    protected int displayMode;
 
     private JRibbonFrame frame;
 
@@ -64,28 +58,25 @@ public class Zeitline implements TreeSelectionListener {
     private final List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> iconRepository;
 
-    protected Action createFrom;
-    protected Action createTimelineFrom;
-    public Action importAction;
-    protected Action moveLeft;
-    protected Action moveRight;
-    protected Action exitAction;
-    protected Action removeEvents;
-    protected Action toggleOrphan;
-    protected Action clearAction;
-    protected Action clearAllAction;
-    protected Action filterQueryAction;
-    protected Action cutAction;
-    public Action pasteAction;
-    protected Action findAction;
-    protected Action emptyTimeline;
-    protected Action deleteTimeline;
-    protected Action aboutAction;
-
-    protected Action testAction;
-    protected Action testAction2;
+    private Action createFrom;
+    private Action createTimelineFrom;
+    private Action importAction;
+    private Action moveLeft;
+    private Action moveRight;
+    private Action exitAction;
+    private Action removeEvents;
+    private Action toggleOrphan;
+    private Action clearAction;
+    private Action clearAllAction;
+    private Action filterQueryAction;
+    private Action cutAction;
+    private Action pasteAction;
+    private Action findAction;
+    private Action emptyTimeline;
+    private Action deleteTimeline;
+    private Action aboutAction;
     private Action saveAction;
-    protected Action loadAction;
+    private Action loadAction;
 
     private Transferable cutBuffer = null;
 
@@ -247,10 +238,6 @@ public class Zeitline implements TreeSelectionListener {
 //        helpBand.addCommandButton(aboutButton, RibbonElementPriority.TOP);
 //        aboutButton.addActionListener(aboutAction);
 
-        /* Actions for testing new code */
-//        testAction = new TestAction(this, "TEST", KeyEvent.VK_T);
-//        testAction2 = new TestAction2(this, "TEST2", KeyEvent.VK_2);
-
         fileBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(fileBand.getControlPanel()),
                 new IconRibbonBandResizePolicy(fileBand.getControlPanel())));
         editBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(editBand.getControlPanel()),
@@ -285,41 +272,21 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
-    private JCommandMenuButton getChangeDisplayDateButton(final String format, final int mode) {
+    private JCommandMenuButton getChangeDisplayDateButton(String format, final int mode) {
         JCommandMenuButton button = new JCommandMenuButton(format, null);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SetDisplay(format, mode);
+                setDateFormatDisplay(mode);
             }
         });
 
         return button;
     }
     
-    private void SetDisplay(String format, int mode){
-        new SetDisplayModeAction(this, format, KeyEvent.VK_Y, mode);
-    }
-
-    private List<JRadioButtonMenuItem> createDateFormatSubMenu() {
-//        JMenu submenu = new JMenu("Time Display");
-//        submenu.setMnemonic(KeyEvent.VK_D);
-
-        List<JRadioButtonMenuItem> buttons = new ArrayList<JRadioButtonMenuItem>();
-
-        ButtonGroup group = new ButtonGroup();
-        JRadioButtonMenuItem rbMenuItem;
-
-        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "yyyy-mm-dd hh:mm:ss", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
-        rbMenuItem.setSelected(true);
-        group.add(rbMenuItem);
-        buttons.add(rbMenuItem);
-
-        rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "hh:mm:ss", KeyEvent.VK_H, EventTree.DISPLAY_HMS));
-        group.add(rbMenuItem);
-        buttons.add(rbMenuItem);
-
-        return buttons;
+    private void setDateFormatDisplay(int mode){
+        EventTree.setDisplayMode(mode);
+        this.getTimelines().redraw();
     }
 
     private Component createComponents() {
@@ -332,8 +299,8 @@ public class Zeitline implements TreeSelectionListener {
         maskOverlay.setLayout(layoutManager);
 
         cem = new ComplexEventMask();
-        aem = new AtomicEventMask();
-        lem = new L2TEventMask();
+        AtomicEventMask aem = new AtomicEventMask();
+        L2TEventMask lem = new L2TEventMask();
         maskOverlay.add(cem);
         maskOverlay.add(aem);
         maskOverlay.add(lem);
@@ -346,7 +313,7 @@ public class Zeitline implements TreeSelectionListener {
                 filterQueryAction, deleteTimeline,
                 getSaveAction(), pasteAction,
                 cutAction, clearAction, findAction,
-                getCem(), aem, lem);
+                cem, aem, lem);
 
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
                 getTimelines(), new JScrollPane(maskOverlay));
@@ -466,6 +433,14 @@ public class Zeitline implements TreeSelectionListener {
 
     public JFrame getFrame() {
         return frame;
+    }
+
+    public Action getImportAction() {
+        return importAction;
+    }
+
+    public Action getPasteAction() {
+        return pasteAction;
     }
 
 }

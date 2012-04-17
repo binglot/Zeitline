@@ -48,8 +48,7 @@ public class PasteAction extends AbstractAction {
         app.setCutBuffer(null);
 
         app.getSaveAction().setEnabled(true);
-        app.pasteAction.setEnabled(false);
-
+        app.getPasteAction().setEnabled(false);
     }
 
     public boolean pastePossible() {
