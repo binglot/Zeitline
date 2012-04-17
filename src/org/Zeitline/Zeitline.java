@@ -221,8 +221,12 @@ public class Zeitline implements TreeSelectionListener {
             @Override
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
-
-                for(JCommandMenuButton button: getChangeDateFormatButtons()){
+                List<JCommandMenuButton> buttons = asList(
+                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL),
+                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS)
+                );
+                
+                for(JCommandMenuButton button: buttons){
                     menu.addMenuButton(button);
                 }
 
@@ -281,26 +285,18 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
-    private List<JCommandMenuButton> getChangeDateFormatButtons(){
-        JCommandMenuButton dateAndTime = new JCommandMenuButton("yyyy-mm-dd hh:mm:ss", null);
-        dateAndTime.addActionListener(new ActionListener() {
+    private JCommandMenuButton getChangeDisplayDateButton(final String format, final int mode) {
+        JCommandMenuButton button = new JCommandMenuButton(format, null);
+        button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                SetDisplay("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL);
+                SetDisplay(format, mode);
             }
         });
 
-        JCommandMenuButton time = new JCommandMenuButton("hh:mm:ss", null);
-        time.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SetDisplay("hh:mm:ss", EventTree.DISPLAY_HMS);
-            }
-        });
-
-        return asList(dateAndTime, time);
+        return button;
     }
-
+    
     private void SetDisplay(String format, int mode){
         new SetDisplayModeAction(this, format, KeyEvent.VK_Y, mode);
     }
