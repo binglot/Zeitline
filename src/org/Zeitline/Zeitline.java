@@ -11,7 +11,6 @@ import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
@@ -94,10 +93,42 @@ public class Zeitline implements TreeSelectionListener {
         this.inputFilters = inputFilters;
         this.iconRepository = iconRepository;
 
-        fileChooser = CreateOpenFileDialog(openFileFilters);
+        fileChooser = createOpenFileDialog(openFileFilters);
+        setActionListeners();
     }
 
-    private static JFileChooser CreateOpenFileDialog(List<FileFilter> filters) {
+    private void setActionListeners() {
+        /* 'File' menu actions */
+        saveAction = new SaveAction(this, KeyEvent.VK_S);
+        loadAction = new LoadAction(this, KeyEvent.VK_L);
+        exitAction = new ExitAction(KeyEvent.VK_X);
+
+        /* 'Edit' menu actions */
+        cutAction = new CutAction(this, KeyEvent.VK_T);
+        pasteAction = new PasteAction(this, KeyEvent.VK_P);
+        clearAction = new ClearAction(this, KeyEvent.VK_C);
+        clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
+        findAction = new FindAction(this, KeyEvent.VK_D);
+
+        /* 'Event' menu actions */
+        createFrom = new CreateFromAction(this, KeyEvent.VK_C);
+        removeEvents = new RemoveEventsAction(this, KeyEvent.VK_R);
+        importAction = new ImportAction(this, KeyEvent.VK_I, inputFilters);
+
+        /* 'Timeline' menu actions */
+        emptyTimeline = new EmptyTimelineAction(this, KeyEvent.VK_E);
+        createTimelineFrom = new CreateTimelineFromAction(this, KeyEvent.VK_C);
+        deleteTimeline = new DeleteTimelineAction(this, KeyEvent.VK_D);
+        moveLeft = new MoveLeftAction(this, KeyEvent.VK_L);
+        moveRight = new MoveRightAction(this, KeyEvent.VK_R);
+        filterQueryAction = new FilterQueryAction(this, KeyEvent.VK_F);
+        toggleOrphan = new ToggleOrphanAction(this, KeyEvent.VK_O);
+
+        /* 'Help' menu actions */
+        aboutAction = new AboutAction(this, KeyEvent.VK_A);
+    }
+
+    private static JFileChooser createOpenFileDialog(List<FileFilter> filters) {
         String currentDir = System.getProperty("user.dir");
         JFileChooser chooser = new JFileChooser(currentDir);
 
@@ -136,93 +167,48 @@ public class Zeitline implements TreeSelectionListener {
         // Ribbon Project
         //
 
-        /* 'File' menu actions */
-        saveAction = new SaveAction(this, KeyEvent.VK_S);
-        loadAction = new LoadAction(this, KeyEvent.VK_L);
-        exitAction = new ExitAction(KeyEvent.VK_X);
-
+        /* 'File' band */
         JRibbonBand fileBand = new JRibbonBand("File", null);
-        JCommandButton saveButton = new JCommandButton("Save", getIcon(IconNames.FileSave));
-        JCommandButton openButton = new JCommandButton("Open", getIcon(IconNames.FileOpen));
-        JCommandButton exitButton = new JCommandButton("Exit", getIcon(IconNames.Unknown));
-        fileBand.addCommandButton(saveButton, RibbonElementPriority.TOP);
-        fileBand.addCommandButton(openButton, RibbonElementPriority.TOP);
-        fileBand.addCommandButton(exitButton, RibbonElementPriority.TOP);
-        saveButton.addActionListener(saveAction);
-        openButton.addActionListener(loadAction);
-        exitButton.addActionListener(exitAction);
+        List<JCommandButton> fileBandButtons = asList(
+            createButton("Save", saveAction, IconNames.FileSave),
+            createButton("Open", loadAction, IconNames.FileOpen),
+            createButton("Exit", exitAction, IconNames.Unknown)
+        );
+        addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.TOP);
 
-        /* 'Edit' menu actions */
-        cutAction = new CutAction(this, KeyEvent.VK_T);
-        pasteAction = new PasteAction(this, KeyEvent.VK_P);
-        clearAction = new ClearAction(this, KeyEvent.VK_C);
-        clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
-        findAction = new FindAction(this, KeyEvent.VK_D);
+        /* 'Edit' band */
+        JRibbonBand editBand = new JRibbonBand("Edit", null);
+        List<JCommandButton> editBandButtons = asList(
+                createButton("Cut", cutAction, IconNames.EditCut),
+                createButton("Paste", pasteAction, IconNames.EditPaste),
+                createButton("Clear", clearAction, IconNames.Unknown),
+                createButton("Clear All", clearAllAction, IconNames.Unknown),
+                createButton("Find", findAction, IconNames.Find)
+        );
+        addButtonsToBand(editBand, editBandButtons, RibbonElementPriority.TOP);
 
-        JRibbonBand editBand = new JRibbonBand("Edit", getIcon(IconNames.Unknown));
-        JCommandButton cutButton = new JCommandButton("Cut", getIcon(IconNames.EditCut));
-        JCommandButton pasteButton = new JCommandButton("Paste", getIcon(IconNames.EditPaste));
-        JCommandButton clearButton = new JCommandButton("Clear", getIcon(IconNames.Unknown));
-        JCommandButton clearAllButton = new JCommandButton("Clear All", getIcon(IconNames.Unknown));
-        JCommandButton findButton = new JCommandButton("Find", getIcon(IconNames.Find));
-        editBand.addCommandButton(cutButton, RibbonElementPriority.TOP);
-        editBand.addCommandButton(pasteButton, RibbonElementPriority.TOP);
-        editBand.addCommandButton(clearButton, RibbonElementPriority.TOP);
-        editBand.addCommandButton(clearAllButton, RibbonElementPriority.TOP);
-        editBand.addCommandButton(findButton, RibbonElementPriority.TOP);
-        cutButton.addActionListener(cutAction);
-        pasteButton.addActionListener(pasteAction);
-        clearButton.addActionListener(clearAction);
-        clearAllButton.addActionListener(clearAllAction);
-        findButton.addActionListener(findAction);
 
-        /* 'Event' menu actions */
-        createFrom = new CreateFromAction(this, KeyEvent.VK_C);
-        removeEvents = new RemoveEventsAction(this, KeyEvent.VK_R);
-        importAction = new ImportAction(this, KeyEvent.VK_I, inputFilters);
+        /* 'Event' band */
+        JRibbonBand eventBand = new JRibbonBand("Event", null);
+        List<JCommandButton> eventBandButtons = asList(
+                createButton("Create From", createFrom, IconNames.CreateEvent),
+                createButton("Remove", removeEvents, IconNames.DeleteEvent),
+                createButton("Import", importAction, IconNames.Import)
+        );
+        addButtonsToBand(eventBand, eventBandButtons, RibbonElementPriority.TOP);
 
-        JRibbonBand eventBand = new JRibbonBand("Event", getIcon(IconNames.Unknown));
-        JCommandButton createFromButton = new JCommandButton("Create From", getIcon(IconNames.CreateEvent));
-        JCommandButton removeEventsButton = new JCommandButton("Remove", getIcon(IconNames.DeleteEvent));
-        JCommandButton importButton = new JCommandButton("Import", getIcon(IconNames.Import));
-        eventBand.addCommandButton(createFromButton, RibbonElementPriority.TOP);
-        eventBand.addCommandButton(removeEventsButton, RibbonElementPriority.TOP);
-        eventBand.addCommandButton(importButton, RibbonElementPriority.TOP);
-        createFromButton.addActionListener(createFrom);
-        removeEventsButton.addActionListener(removeEvents);
-        importButton.addActionListener(importAction);
-
-        /* 'Timeline' menu actions */
-        emptyTimeline = new EmptyTimelineAction(this, KeyEvent.VK_E);
-        createTimelineFrom = new CreateTimelineFromAction(this, KeyEvent.VK_C);
-        deleteTimeline = new DeleteTimelineAction(this, KeyEvent.VK_D);
-        moveLeft = new MoveLeftAction(this, KeyEvent.VK_L);
-        moveRight = new MoveRightAction(this, KeyEvent.VK_R);
-        filterQueryAction = new FilterQueryAction(this, KeyEvent.VK_F);
-        toggleOrphan = new ToggleOrphanAction(this, KeyEvent.VK_O);
-
+        /* 'Timeline' band */
         JRibbonBand timelineBand = new JRibbonBand("Timeline", null);
-        JCommandButton emptyTimelineButton = new JCommandButton("Empty Timeline", getIcon(IconNames.NewTimeline));
-        JCommandButton createTimelineButton = new JCommandButton("Create Timeline", getIcon(IconNames.CreateTimeline));
-        JCommandButton deleteTimelineButton = new JCommandButton("Delete Timeline", getIcon(IconNames.DeleteTimeline));
-        JCommandButton MoveLeftButton = new JCommandButton("Move Left", getIcon(IconNames.MoveLeft));
-        JCommandButton MoveRightButton = new JCommandButton("Move Right", getIcon(IconNames.MoveRight));
-        JCommandButton FilterQueryButton = new JCommandButton("Filter Query", getIcon(IconNames.Filter));
-        JCommandButton toggleOrphanButton = new JCommandButton("Toggle Orphan", getIcon(IconNames.Unknown));
-        timelineBand.addCommandButton(emptyTimelineButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(createTimelineButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(deleteTimelineButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(MoveLeftButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(MoveRightButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(FilterQueryButton, RibbonElementPriority.TOP);
-        timelineBand.addCommandButton(toggleOrphanButton, RibbonElementPriority.TOP);
-        emptyTimelineButton.addActionListener(emptyTimeline);
-        createTimelineButton.addActionListener(createTimelineFrom);
-        deleteTimelineButton.addActionListener(deleteTimeline);
-        MoveLeftButton.addActionListener(moveLeft);
-        MoveRightButton.addActionListener(moveRight);
-        FilterQueryButton.addActionListener(filterQueryAction);
-        toggleOrphanButton.addActionListener(toggleOrphan);
+        List<JCommandButton> timelineBandButtons = asList(
+                createButton("Empty Timeline", emptyTimeline, IconNames.NewTimeline),
+                createButton("Create Timeline", createTimelineFrom, IconNames.CreateTimeline),
+                createButton("Delete Timeline", deleteTimeline, IconNames.DeleteTimeline),
+                createButton("Move Left", moveLeft, IconNames.MoveLeft),
+                createButton("Move Right", moveRight, IconNames.MoveRight),
+                createButton("Filter Query", filterQueryAction, IconNames.Filter),
+                createButton("Toggle Orphan", toggleOrphan, IconNames.Unknown)
+                );
+        addButtonsToBand(timelineBand, timelineBandButtons, RibbonElementPriority.TOP);
 
         //
         // Ribbon View
@@ -234,14 +220,11 @@ public class Zeitline implements TreeSelectionListener {
         formatButton.setPopupCallback(new PopupPanelCallback() {
             @Override
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-//                JCommandButtonPanel panel = new JCommandButtonPanel(1);
-//                panel.addButtonGroup("Styles", 0);
                 JCommandPopupMenu menu = new JCommandPopupMenu();
 
                 for(JCommandMenuButton button: getChangeDateFormatButtons()){
                     menu.addMenuButton(button);
                 }
-
 
                 return menu;
             }
@@ -253,8 +236,7 @@ public class Zeitline implements TreeSelectionListener {
         // Ribbon Help
         //
 
-        /* 'Help' menu actions */
-//        aboutAction = new AboutAction(this, KeyEvent.VK_A);
+        /* 'Help' menu */
 //
 //        JRibbonBand helpBand = new JRibbonBand("Help", null);
 //        JCommandButton aboutButton = new JCommandButton("About", getIcon(IconNames.Unknown));
@@ -284,6 +266,19 @@ public class Zeitline implements TreeSelectionListener {
 
 
         return tasks;
+    }
+
+    private void addButtonsToBand(JRibbonBand band, List<JCommandButton> buttons, RibbonElementPriority priority) {
+        for(JCommandButton button: buttons){
+            band.addCommandButton(button, priority);
+        }
+    }
+
+    private JCommandButton createButton(String name, Action action, IconNames icon) {
+        JCommandButton button = new JCommandButton(name, getIcon(icon));
+        button.addActionListener(action);
+
+        return button;
     }
 
     private List<JCommandMenuButton> getChangeDateFormatButtons(){
