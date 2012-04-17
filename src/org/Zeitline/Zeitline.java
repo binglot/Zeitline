@@ -11,8 +11,13 @@ import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
+import org.pushingpixels.flamingo.api.common.JCommandButtonPanel;
+import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
+import org.pushingpixels.flamingo.api.common.popup.JCommandPopupMenu;
+import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
+import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
 import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
@@ -28,6 +33,8 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,6 +53,7 @@ public class Zeitline implements TreeSelectionListener {
     private L2TEventMask lem;
     private JSplitPane mainPane;
     private TimelineView timelines;
+    private SetDisplayModeAction displayModeAction;
 
     protected int displayMode;
 
@@ -217,16 +225,41 @@ public class Zeitline implements TreeSelectionListener {
         toggleOrphanButton.addActionListener(toggleOrphan);
 
         //
+        // Ribbon View
+        //
+
+        JRibbonBand displayBand = new JRibbonBand("Display", null);
+        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.Unknown));
+        formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        formatButton.setPopupCallback(new PopupPanelCallback() {
+            @Override
+            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+//                JCommandButtonPanel panel = new JCommandButtonPanel(1);
+//                panel.addButtonGroup("Styles", 0);
+                JCommandPopupMenu menu = new JCommandPopupMenu();
+
+                for(JCommandMenuButton button: getChangeDateFormatButtons()){
+                    menu.addMenuButton(button);
+                }
+
+
+                return menu;
+            }
+        });
+
+        displayBand.addCommandButton(formatButton, RibbonElementPriority.TOP);
+
+        //
         // Ribbon Help
         //
 
         /* 'Help' menu actions */
-        aboutAction = new AboutAction(this, KeyEvent.VK_A);
-
-        JRibbonBand helpBand = new JRibbonBand("Help", null);
-        JCommandButton aboutButton = new JCommandButton("About", getIcon(IconNames.Unknown));
-        helpBand.addCommandButton(aboutButton, RibbonElementPriority.TOP);
-        aboutButton.addActionListener(aboutAction);
+//        aboutAction = new AboutAction(this, KeyEvent.VK_A);
+//
+//        JRibbonBand helpBand = new JRibbonBand("Help", null);
+//        JCommandButton aboutButton = new JCommandButton("About", getIcon(IconNames.Unknown));
+//        helpBand.addCommandButton(aboutButton, RibbonElementPriority.TOP);
+//        aboutButton.addActionListener(aboutAction);
 
         /* Actions for testing new code */
 //        testAction = new TestAction(this, "TEST", KeyEvent.VK_T);
@@ -240,76 +273,62 @@ public class Zeitline implements TreeSelectionListener {
                 new IconRibbonBandResizePolicy(eventBand.getControlPanel())));
         timelineBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(timelineBand.getControlPanel()),
                 new IconRibbonBandResizePolicy(timelineBand.getControlPanel())));
-        helpBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(helpBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(helpBand.getControlPanel())));
+        displayBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(displayBand.getControlPanel()),
+                new IconRibbonBandResizePolicy(displayBand.getControlPanel())));
 
         RibbonTask projectTask = new RibbonTask("Project", fileBand, editBand, eventBand, timelineBand);
-        RibbonTask helpTask = new RibbonTask("Help", helpBand);
+        RibbonTask viewTask = new RibbonTask("View", displayBand);
 
         tasks.add(projectTask);
-        tasks.add(helpTask);
+        tasks.add(viewTask);
 
 
         return tasks;
     }
 
-    public JMenuBar createMenuBar() {
+    private List<JCommandMenuButton> getChangeDateFormatButtons(){
+        JCommandMenuButton dateAndTime = new JCommandMenuButton("yyyy-mm-dd hh:mm:ss", null);
+        dateAndTime.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SetDisplay("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL);
+            }
+        });
 
-        JMenuBar menuBar;
-        JMenu menu;
-        List<JMenu> menus = new ArrayList<JMenu>();
-        List<Action> actions;
+        JCommandMenuButton time = new JCommandMenuButton("hh:mm:ss", null);
+        time.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SetDisplay("hh:mm:ss", EventTree.DISPLAY_HMS);
+            }
+        });
 
-        menuBar = new JMenuBar();
-
-        actions = asList(saveAction, loadAction, exitAction);
-        menus.add(CreateMenu("File", actions, KeyEvent.VK_F));
-
-        actions = asList(cutAction, pasteAction, clearAction, clearAllAction, findAction);
-        menus.add(CreateMenu("Edit", actions, KeyEvent.VK_E));
-
-        actions = asList(createFrom, removeEvents, importAction);
-        menus.add(CreateMenu("Event", actions, KeyEvent.VK_N));
-
-        actions = asList(emptyTimeline, createTimelineFrom, deleteTimeline, moveLeft, moveRight, filterQueryAction);
-        menu = CreateMenu("Timeline", actions, KeyEvent.VK_T);
-        JMenuItem menuItem = new JCheckBoxMenuItem(toggleOrphan);
-        menu.add(menuItem);
-        menus.add(menu);
-
-        actions = asList();
-        menu = CreateMenu("View", actions, KeyEvent.VK_V);
-        JMenu submenu = CreateDateFormatSubMenu();
-        menu.add(submenu);
-        menus.add(menu);
-
-        actions = asList(aboutAction);
-        menus.add(CreateMenu("Help", actions, KeyEvent.VK_H));
-
-        for (final JMenu menuToAdd : menus) {
-            menuBar.add(menuToAdd);
-        }
-
-        return menuBar;
+        return asList(dateAndTime, time);
     }
 
-    private JMenu CreateDateFormatSubMenu() {
-        JMenu submenu;
-        JRadioButtonMenuItem rbMenuItem;
-        submenu = new JMenu("Time Display");
-        submenu.setMnemonic(KeyEvent.VK_D);
+    private void SetDisplay(String format, int mode){
+        new SetDisplayModeAction(this, format, KeyEvent.VK_Y, mode);
+    }
+
+    private List<JRadioButtonMenuItem> createDateFormatSubMenu() {
+//        JMenu submenu = new JMenu("Time Display");
+//        submenu.setMnemonic(KeyEvent.VK_D);
+
+        List<JRadioButtonMenuItem> buttons = new ArrayList<JRadioButtonMenuItem>();
 
         ButtonGroup group = new ButtonGroup();
+        JRadioButtonMenuItem rbMenuItem;
 
         rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "yyyy-mm-dd hh:mm:ss", KeyEvent.VK_Y, EventTree.DISPLAY_ALL));
         rbMenuItem.setSelected(true);
         group.add(rbMenuItem);
-        submenu.add(rbMenuItem);
+        buttons.add(rbMenuItem);
 
         rbMenuItem = new JRadioButtonMenuItem(new SetDisplayModeAction(this, "hh:mm:ss", KeyEvent.VK_H, EventTree.DISPLAY_HMS));
         group.add(rbMenuItem);
-        submenu.add(rbMenuItem);
-        return submenu;
+        buttons.add(rbMenuItem);
+
+        return buttons;
     }
 
     private Component createComponents() {
