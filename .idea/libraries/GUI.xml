@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="GUI">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/flamingo-6.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/substance-6.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/trident-6.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/flamingo-6.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

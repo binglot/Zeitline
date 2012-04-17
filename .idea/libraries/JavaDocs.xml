@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="JavaDocs">
+    <CLASSES />
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/flamingo-6.3-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>
