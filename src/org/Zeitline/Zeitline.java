@@ -11,13 +11,12 @@ import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
-import org.pushingpixels.flamingo.api.common.JCommandToggleButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
 import org.pushingpixels.flamingo.api.common.icon.ResizableIcon;
-import org.pushingpixels.flamingo.api.common.model.ActionButtonModel;
-import org.pushingpixels.flamingo.api.common.popup.JPopupPanel;
-import org.pushingpixels.flamingo.api.common.popup.PopupPanelCallback;
-import org.pushingpixels.flamingo.api.ribbon.*;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonBand;
+import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
+import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
+import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
 import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
@@ -29,8 +28,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.datatransfer.Transferable;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -96,7 +93,7 @@ public class Zeitline implements TreeSelectionListener {
         String currentDir = System.getProperty("user.dir");
         JFileChooser chooser = new JFileChooser(currentDir);
 
-        for(final FileFilter filter: filters){
+        for (final FileFilter filter : filters) {
             chooser.addChoosableFileFilter(filter);
         }
 
@@ -107,7 +104,7 @@ public class Zeitline implements TreeSelectionListener {
         frame = new JRibbonFrame(APPLICATION_NAME);
         List<RibbonTask> tasks = createRibbon();
 
-        for (RibbonTask task: tasks){
+        for (RibbonTask task : tasks) {
             frame.getRibbon().addTask(task);
         }
 
@@ -289,7 +286,7 @@ public class Zeitline implements TreeSelectionListener {
         actions = asList(aboutAction);
         menus.add(CreateMenu("Help", actions, KeyEvent.VK_H));
 
-        for(final JMenu menuToAdd: menus){
+        for (final JMenu menuToAdd : menus) {
             menuBar.add(menuToAdd);
         }
 
@@ -399,7 +396,7 @@ public class Zeitline implements TreeSelectionListener {
         JMenu menu = new JMenu(name);
 
         menu.setMnemonic(mnemonic);
-        for(final Action action: actions) {
+        for (final Action action : actions) {
             AddMenuItem(menu, action);
         }
 
