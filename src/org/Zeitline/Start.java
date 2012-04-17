@@ -1,5 +1,6 @@
 package org.Zeitline;
 
+import org.Zeitline.GUI.FeelAndLook;
 import org.Zeitline.GUI.Graphics.IconRepository;
 import org.Zeitline.OpenFileFilters.FiltersProvider;
 import org.Zeitline.Plugin.Input.InputFilter;
@@ -17,20 +18,9 @@ public final class Start {
         invokeLater(new Runnable() {
             public void run() {
                 final String inputFiltersDir = "InputFilters";
-                try {
-                    //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-                    String name = "OfficeBlack2007";
-                    UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.Substance" + name + "LookAndFeel");
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } catch (InstantiationException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } catch (UnsupportedLookAndFeelException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                }
 
+                FeelAndLook ui = new FeelAndLook();
+                ui.setUI("Twilight");
 
                 FiltersProvider openFileFilters = new FiltersProvider();
                 PluginLoader<InputFilter> pluginLoader = new InputPluginLoader(inputFiltersDir);
