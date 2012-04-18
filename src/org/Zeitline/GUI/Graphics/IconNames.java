@@ -6,7 +6,7 @@ public enum IconNames {
     EditCut,
     EditPaste,
     Find,
-    CreateEvent,
+    Group,
     DeleteEvent,
     Import,
     NewTimeline,

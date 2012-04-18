@@ -28,8 +28,8 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case Find:
                 fileName = "find";
                 break;
-            case CreateEvent:
-                fileName = "create_event";
+            case Group:
+                fileName = "group_events";
                 break;
             case DeleteEvent:
                 fileName = "delete_event";

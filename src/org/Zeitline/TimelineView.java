@@ -57,16 +57,19 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
             filterAction, removeAction, saveAction, pasteAction,
             cutAction, clearAction, findAction;
     protected boolean isOrphanVisible;
-    protected List<EventTree> timelines = new ArrayList<>();
+    protected List<EventTree> timelines;
 
     public TimelineView(TreeSelectionListener app, Action left, Action right,
                         Action filter, Action remove, Action save,
-                        Action paste, Action cut, Action find,
+                        Action paste, Action cut, Action clear,
+                        Action find,
                         ComplexEventMask cem, AtomicEventMask aem, L2TEventMask lem) {
         this.app = app;
         complexMask = cem;
         atomicMask = aem;
         l2tMask = lem;
+
+        timelines = new ArrayList<EventTree>();
 
         leftTrees = new JTabbedPane(JTabbedPane.TOP,
                 JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -100,6 +103,7 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         saveAction = save;
         pasteAction = paste;
         cutAction = cut;
+        clearAction = clear;
         findAction = find;
 
         if (moveLeftAction != null)

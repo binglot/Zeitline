@@ -65,8 +65,7 @@ public class Zeitline implements TreeSelectionListener {
     private Action exitAction;
     private Action removeEvents;
     private Action toggleOrphan;
-//    private Action clearAction;
-//    private Action clearAllAction;
+    private Action clearAction;
     private Action filterQueryAction;
     private Action cutAction;
     private Action pasteAction;
@@ -116,7 +115,7 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Edit' menu actions */
         cutAction = new CutAction(this, KeyEvent.VK_T);
         pasteAction = new PasteAction(this, KeyEvent.VK_P);
-        //clearAction = new ClearAction(this, KeyEvent.VK_C);
+        clearAction = new ClearAction(this, KeyEvent.VK_C);
         //clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
         findAction = new FindAction(this, KeyEvent.VK_D);
 
@@ -182,7 +181,7 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Event' band */
         JRibbonBand eventBand = new JRibbonBand("Event", null);
         List<JCommandButton> eventBandButtons1 = asList(
-                createButton("Bundle", createFrom, IconNames.CreateEvent),
+                createButton("Group", createFrom, IconNames.Group),
                 createButton("Remove", removeEvents, IconNames.DeleteEvent),
                 createButton("Import", importAction, IconNames.Import)
         );
@@ -197,9 +196,9 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Timeline' band */
         JRibbonBand timelineBand = new JRibbonBand("Timeline", null);
         List<JCommandButton> timelineBandButtons1 = asList(
-                createButton("Empty Timeline", emptyTimeline, IconNames.NewTimeline),
-                createButton("Delete Timeline", deleteTimeline, IconNames.DeleteTimeline),
-                createButton("Create Timeline", createTimelineFrom, IconNames.CreateTimeline)
+                createButton("Empty", emptyTimeline, IconNames.NewTimeline),
+                createButton("Delete", deleteTimeline, IconNames.DeleteTimeline),
+                createButton("From Selected", createTimelineFrom, IconNames.CreateTimeline)
         );
         List<JCommandButton> timelineBandButtons2 = asList(
                 createButton("Move Left", moveLeft, IconNames.MoveLeft),
@@ -360,7 +359,7 @@ public class Zeitline implements TreeSelectionListener {
         timelines = new TimelineView(this, moveLeft, moveRight,
                 filterQueryAction, deleteTimeline,
                 getSaveAction(), pasteAction,
-                cutAction, findAction,
+                cutAction, clearAction, findAction,
                 cem, aem, lem);
 
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
