@@ -87,6 +87,26 @@ public class Zeitline implements TreeSelectionListener {
         setActionListeners();
     }
 
+    public void createAndShowGUI() {
+        frame = new JRibbonFrame(APPLICATION_NAME);
+        List<RibbonTask> tasks = createRibbon();
+
+        for (RibbonTask task : tasks) {
+            frame.getRibbon().addTask(task);
+        }
+
+        // Add the 'About' button
+        frame.getRibbon().configureHelp(getIcon(IconNames.Help), aboutAction);
+
+        Component contents = createComponents();
+        getFrame().getContentPane().add(contents, BorderLayout.CENTER);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        getFrame().pack();
+        frame.setExtendedState(Frame.MAXIMIZED_BOTH); //getFrame().setSize(800, 600);
+        getFrame().setVisible(true);
+    }
+
     private void setActionListeners() {
         /* 'File' menu actions */
         saveAction = new SaveAction(this, KeyEvent.VK_S);
@@ -127,23 +147,6 @@ public class Zeitline implements TreeSelectionListener {
         }
 
         return chooser;
-    }
-
-    public void createAndShowGUI() {
-        frame = new JRibbonFrame(APPLICATION_NAME);
-        List<RibbonTask> tasks = createRibbon();
-
-        for (RibbonTask task : tasks) {
-            frame.getRibbon().addTask(task);
-        }
-
-        Component contents = createComponents();
-        getFrame().getContentPane().add(contents, BorderLayout.CENTER);
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getFrame().pack();
-        frame.setExtendedState(Frame.MAXIMIZED_BOTH); //getFrame().setSize(800, 600);
-        getFrame().setVisible(true);
     }
 
     private ResizableIcon getIcon(IconNames icon) {
@@ -216,10 +219,11 @@ public class Zeitline implements TreeSelectionListener {
         //
 
         JRibbonBand displayBand = new JRibbonBand("Display", null);
-
-        JCommandButton formatButton = createFormatButton();
-
-        displayBand.addCommandButton(formatButton, RibbonElementPriority.TOP);
+        List<JCommandButton> displayBandButtons = asList(
+                createFormatPopupButton(),
+                createOrderPopupButton()
+        );
+        addButtonsToBand(displayBand, displayBandButtons, RibbonElementPriority.TOP);
 
         //
         // Ribbon Help
@@ -245,10 +249,35 @@ public class Zeitline implements TreeSelectionListener {
         tasks.add(viewTask);
 
 
+
         return tasks;
     }
 
-    private JCommandButton createFormatButton() {
+    private JCommandButton createOrderPopupButton() {
+        JCommandButton orderButton = new JCommandButton("Arrange", getIcon(IconNames.Unknown));
+
+        orderButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        orderButton.setPopupCallback(new PopupPanelCallback() {
+            @Override
+            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+                JCommandPopupMenu menu = new JCommandPopupMenu();
+                List<JCommandMenuButton> buttons = asList(
+                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL),
+                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS)
+                );
+
+                for (JCommandMenuButton button : buttons) {
+                    menu.addMenuButton(button);
+                }
+
+                return menu;
+            }
+        });
+
+        return orderButton;
+    }
+
+    private JCommandButton createFormatPopupButton() {
         JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.Unknown));
 
         formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
