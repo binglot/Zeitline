@@ -10,6 +10,7 @@ import org.Zeitline.GUI.EventTree.EventTree;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
+import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
 import org.pushingpixels.flamingo.api.common.icon.ImageWrapperResizableIcon;
@@ -34,6 +35,8 @@ import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -169,7 +172,7 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'File' band */
         JRibbonBand fileBand = new JRibbonBand("File", null);
-        List<JCommandButton> fileBandButtons = asList(
+        List<AbstractCommandButton> fileBandButtons = asList(
                 createButton("Save", saveAction, IconNames.FileSave),
                 createButton("Open", loadAction, IconNames.FileOpen),
                 createButton("Exit", exitAction, IconNames.Exit)
@@ -178,7 +181,7 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'Edit' band */
         JRibbonBand editBand = new JRibbonBand("Edit", null);
-        List<JCommandButton> editBandButtons = asList(
+        List<AbstractCommandButton> editBandButtons = asList(
                 createButton("Cut", cutAction, IconNames.EditCut),
                 createButton("Paste", pasteAction, IconNames.EditPaste)
         );
@@ -186,12 +189,12 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'Event' band */
         JRibbonBand eventBand = new JRibbonBand("Event", null);
-        List<JCommandButton> eventBandButtons1 = asList(
+        List<AbstractCommandButton> eventBandButtons1 = asList(
                 createButton("Group", createFrom, IconNames.Group),
                 createButton("Remove", removeEvents, IconNames.DeleteEvent),
                 createButton("Import", importAction, IconNames.Import)
         );
-        List<JCommandButton> eventBandButtons2 = asList(
+        List<AbstractCommandButton> eventBandButtons2 = asList(
                 createButton("Find", findAction, IconNames.Find),
                 createButton("Filter", filterQueryAction, IconNames.Filter)
         );
@@ -201,16 +204,16 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'Timeline' band */
         JRibbonBand timelineBand = new JRibbonBand("Timeline", null);
-        List<JCommandButton> timelineBandButtons1 = asList(
+        List<AbstractCommandButton> timelineBandButtons1 = asList(
                 createButton("Add", emptyTimeline, IconNames.NewTimeline),
                 createButton("Delete", deleteTimeline, IconNames.DeleteTimeline),
                 createButton("From Selected", createTimelineFrom, IconNames.CreateTimeline)
         );
-        List<JCommandButton> timelineBandButtons2 = asList(
+        List<AbstractCommandButton> timelineBandButtons2 = asList(
                 createButton("Move Left", moveLeft, IconNames.MoveLeft),
                 createButton("Move Right", moveRight, IconNames.MoveRight)
         );
-        List<JCommandButton> timelineBandButtons3 = asList(
+        List<AbstractCommandButton> timelineBandButtons3 = asList(
                 createButton("Show Removed", toggleOrphan, IconNames.Orphan) // "Toggle Orphan"
         );
         addButtonsToBand(timelineBand, timelineBandButtons1, RibbonElementPriority.MEDIUM);
@@ -224,22 +227,15 @@ public class Zeitline implements TreeSelectionListener {
         //
 
         JRibbonBand displayBand = new JRibbonBand("Display", null);
-        List<JCommandButton> displayBandButtons = asList(
+        List<AbstractCommandButton> displayBandButtons = asList(
                 createFormatPopupButton(),
                 createOrderPopupButton()
         );
         addButtonsToBand(displayBand, displayBandButtons, RibbonElementPriority.TOP);
 
         //
-        // Ribbon Help
+        // Set Policies and add Ribbon Tasks
         //
-
-        /* 'Help' menu */
-//
-//        JRibbonBand helpBand = new JRibbonBand("Help", null);
-//        JCommandButton aboutButton = new JCommandButton("About", getIcon(IconNames.Unknown));
-//        helpBand.addCommandButton(aboutButton, RibbonElementPriority.TOP);
-//        aboutButton.addActionListener(aboutAction);
 
         fileBand.setResizePolicies(getRibbonResizePolicies(fileBand));
         editBand.setResizePolicies(getRibbonResizePolicies(editBand));
@@ -253,12 +249,10 @@ public class Zeitline implements TreeSelectionListener {
         tasks.add(projectTask);
         tasks.add(viewTask);
 
-
-
         return tasks;
     }
 
-    private JCommandButton createOrderPopupButton() {
+    private AbstractCommandButton createOrderPopupButton() {
         JCommandButton orderButton = new JCommandButton("Arrange", getIcon(IconNames.Sort));
 
         orderButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
@@ -282,7 +276,7 @@ public class Zeitline implements TreeSelectionListener {
         return orderButton;
     }
 
-    private JCommandButton createFormatPopupButton() {
+    private AbstractCommandButton createFormatPopupButton() {
         JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.DateFormat));
 
         formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
@@ -315,15 +309,26 @@ public class Zeitline implements TreeSelectionListener {
         );
     }
 
-    private void addButtonsToBand(JRibbonBand band, List<JCommandButton> buttons, RibbonElementPriority priority) {
-        for (JCommandButton button : buttons) {
+    private void addButtonsToBand(JRibbonBand band, List<AbstractCommandButton> buttons, RibbonElementPriority priority) {
+        for (AbstractCommandButton button : buttons) {
             band.addCommandButton(button, priority);
         }
     }
 
-    private JCommandButton createButton(String name, Action action, IconNames icon) {
-        JCommandButton button = new JCommandButton(name, getIcon(icon));
+    private AbstractCommandButton createButton(String name, Action action, IconNames icon) {
+        final AbstractCommandButton button = new JCommandButton(name, getIcon(icon));
         button.addActionListener(action);
+        button.setEnabled(action.isEnabled());
+
+        // JCommandButton doesn't integrate javax.swing.Action and therefore the hack below.
+        action.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("enabled")) {
+                    button.setEnabled((Boolean)evt.getNewValue());
+                }
+            }
+        });
 
         return button;
     }
