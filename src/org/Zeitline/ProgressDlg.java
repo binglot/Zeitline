@@ -1,11 +1,10 @@
 package org.Zeitline;
 
-import org.Zeitline.GUI.Action.ImportAction;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.concurrent.ExecutionException;
 
 public class ProgressDlg
         extends JDialog
@@ -13,8 +12,8 @@ public class ProgressDlg
 
     private Thread thread;
     private JLabel status;
-    private JProgressBar progress_bar;
-    private JButton cancel_button;
+    private JProgressBar progressBar;
+    private JButton cancelButton;
     private StoppableRunnable runner;
 
     public ProgressDlg(Frame owner, String title, StoppableRunnable run) {
@@ -31,13 +30,13 @@ public class ProgressDlg
         status = new JLabel("Adding events to the timeline", JLabel.CENTER);
         pane.add(status);
 
-        progress_bar = new JProgressBar();
-        progress_bar.setStringPainted(true);
-        pane.add(progress_bar);
+        progressBar = new JProgressBar();
+        progressBar.setStringPainted(true);
+        pane.add(progressBar);
 
-        cancel_button = new JButton("Cancel");
-        cancel_button.addActionListener(this);
-        pane.add(cancel_button);
+        cancelButton = new JButton("Cancel");
+        cancelButton.addActionListener(this);
+        pane.add(cancelButton);
 
         setResizable(false);
         pack();
@@ -47,7 +46,7 @@ public class ProgressDlg
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
 
-        if (source == cancel_button) {
+        if (source == cancelButton) {
             //            thread.stop();
             /*
            if (runner instanceof org.Zeitline.Zeitline.ImportAction) {
@@ -62,7 +61,7 @@ public class ProgressDlg
     }
 
     public JProgressBar getProgressBar() {
-        return progress_bar;
+        return progressBar;
     }
 
     public void setStatus(String newStatus) {
@@ -70,6 +69,11 @@ public class ProgressDlg
     }
 
     public void setVisible(boolean visible) {
+        // It can throw an exception if a skin is used.
+        // Need to look at diff. implementations, e.g.:
+        // http://docs.oracle.com/javase/tutorial/uiswing/components/progress.html
+        // http://stackoverflow.com/questions/8916721/java-swing-update-label/8917565#8917565
+
         if (visible) {
             // must start thread first
             thread.start();
@@ -79,5 +83,4 @@ public class ProgressDlg
             super.setVisible(false);
         }
     }
-
 }
