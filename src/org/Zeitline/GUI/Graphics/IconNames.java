@@ -20,5 +20,6 @@ public enum IconNames {
     AtomicSmall,
     ComplexSmall,
     Unknown,
-    Help,
+    Info,
+    Exit,
 }

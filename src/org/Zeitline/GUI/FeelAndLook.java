@@ -41,15 +41,8 @@ public class FeelAndLook {
 
     private void setFeelAndLook(String name) {
         try {
-
             UIManager.setLookAndFeel(name);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (UnsupportedLookAndFeelException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException e) {
             e.printStackTrace();
         }
     }

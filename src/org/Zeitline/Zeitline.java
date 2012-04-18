@@ -65,8 +65,8 @@ public class Zeitline implements TreeSelectionListener {
     private Action exitAction;
     private Action removeEvents;
     private Action toggleOrphan;
-    private Action clearAction;
-    private Action clearAllAction;
+//    private Action clearAction;
+//    private Action clearAllAction;
     private Action filterQueryAction;
     private Action cutAction;
     private Action pasteAction;
@@ -96,7 +96,7 @@ public class Zeitline implements TreeSelectionListener {
         }
 
         // Add the 'About' button
-        frame.getRibbon().configureHelp(getIcon(IconNames.Help), aboutAction);
+        frame.getRibbon().configureHelp(getIcon(IconNames.Info), aboutAction);
 
         Component contents = createComponents();
         getFrame().getContentPane().add(contents, BorderLayout.CENTER);
@@ -116,8 +116,8 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Edit' menu actions */
         cutAction = new CutAction(this, KeyEvent.VK_T);
         pasteAction = new PasteAction(this, KeyEvent.VK_P);
-        clearAction = new ClearAction(this, KeyEvent.VK_C);
-        clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
+        //clearAction = new ClearAction(this, KeyEvent.VK_C);
+        //clearAllAction = new ClearAllAction(this, KeyEvent.VK_A);
         findAction = new FindAction(this, KeyEvent.VK_D);
 
         /* 'Event' menu actions */
@@ -154,7 +154,7 @@ public class Zeitline implements TreeSelectionListener {
     }
 
     private List<RibbonTask> createRibbon() {
-        List<RibbonTask> tasks = new ArrayList<RibbonTask>();
+        List<RibbonTask> tasks = new ArrayList<>();
 
         //
         // Ribbon Project
@@ -165,7 +165,7 @@ public class Zeitline implements TreeSelectionListener {
         List<JCommandButton> fileBandButtons = asList(
                 createButton("Save", saveAction, IconNames.FileSave),
                 createButton("Open", loadAction, IconNames.FileOpen),
-                createButton("Exit", exitAction, IconNames.Unknown)
+                createButton("Exit", exitAction, IconNames.Exit)
         );
         addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.LOW);
 
@@ -173,9 +173,9 @@ public class Zeitline implements TreeSelectionListener {
         JRibbonBand editBand = new JRibbonBand("Edit", null);
         List<JCommandButton> editBandButtons = asList(
                 createButton("Cut", cutAction, IconNames.EditCut),
-                createButton("Paste", pasteAction, IconNames.EditPaste),
-                createButton("Clear", clearAction, IconNames.Unknown),
-                createButton("Clear All", clearAllAction, IconNames.Unknown)
+                createButton("Paste", pasteAction, IconNames.EditPaste)
+//                createButton("Clear", clearAction, IconNames.Unknown),
+//                createButton("Clear All", clearAllAction, IconNames.Unknown)
         );
         addButtonsToBand(editBand, editBandButtons, RibbonElementPriority.MEDIUM);
 
@@ -360,7 +360,7 @@ public class Zeitline implements TreeSelectionListener {
         timelines = new TimelineView(this, moveLeft, moveRight,
                 filterQueryAction, deleteTimeline,
                 getSaveAction(), pasteAction,
-                cutAction, clearAction, findAction,
+                cutAction, findAction,
                 cem, aem, lem);
 
         mainPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,

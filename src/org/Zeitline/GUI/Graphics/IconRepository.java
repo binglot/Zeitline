@@ -70,8 +70,11 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case Unknown:
                 fileName = "unknown";
                 break;
-            case Help:
-                fileName = "help";
+            case Info:
+                fileName = "info";
+                break;
+            case Exit:
+                fileName = "exit";
                 break;
             default:
             System.err.println("Could not find the requested icon: " + name.toString());
