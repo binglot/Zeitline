@@ -101,12 +101,12 @@ public class Zeitline implements TreeSelectionListener {
         frame.getRibbon().configureHelp(getSmallIcon(IconNames.Info), aboutAction);
 
         Component contents = createComponents();
-        getFrame().getContentPane().add(contents, BorderLayout.CENTER);
+        frame.getContentPane().add(contents, BorderLayout.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        getFrame().pack();
+        frame.pack();
         frame.setExtendedState(Frame.MAXIMIZED_BOTH); //getFrame().setSize(800, 600);
-        getFrame().setVisible(true);
+        frame.setVisible(true);
     }
 
     private void setActionListeners() {
@@ -320,7 +320,8 @@ public class Zeitline implements TreeSelectionListener {
         button.addActionListener(action);
         button.setEnabled(action.isEnabled());
 
-        // JCommandButton doesn't integrate javax.swing.Action and therefore the hack below.
+        // JCommandButton doesn't integrate javax.swing.Action and therefore the hack below
+        // i.e. if the action's 'enabled' field has been changed, so has the button's field
         action.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
