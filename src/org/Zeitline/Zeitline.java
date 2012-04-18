@@ -95,7 +95,7 @@ public class Zeitline implements TreeSelectionListener {
         }
 
         // Add the 'About' button
-        frame.getRibbon().configureHelp(getIcon(IconNames.Info), aboutAction);
+        frame.getRibbon().configureHelp(getSmallIcon(IconNames.Info), aboutAction);
 
         Component contents = createComponents();
         getFrame().getContentPane().add(contents, BorderLayout.CENTER);
@@ -148,8 +148,16 @@ public class Zeitline implements TreeSelectionListener {
         return chooser;
     }
 
+    private ResizableIcon getSmallIcon(IconNames icon) {
+        return getIcon(icon, 16, 16);
+    }
+
     private ResizableIcon getIcon(IconNames icon) {
-        return ImageWrapperResizableIcon.getIcon(iconRepository.getIconUrl(icon), new Dimension(48, 48));
+        return getIcon(icon, 48, 48);
+    }
+
+    private ResizableIcon getIcon(IconNames icon, int width, int height) {
+        return ImageWrapperResizableIcon.getIcon(iconRepository.getIconUrl(icon), new Dimension(width, height));
     }
 
     private List<RibbonTask> createRibbon() {
@@ -173,8 +181,6 @@ public class Zeitline implements TreeSelectionListener {
         List<JCommandButton> editBandButtons = asList(
                 createButton("Cut", cutAction, IconNames.EditCut),
                 createButton("Paste", pasteAction, IconNames.EditPaste)
-//                createButton("Clear", clearAction, IconNames.Unknown),
-//                createButton("Clear All", clearAllAction, IconNames.Unknown)
         );
         addButtonsToBand(editBand, editBandButtons, RibbonElementPriority.MEDIUM);
 
@@ -253,7 +259,7 @@ public class Zeitline implements TreeSelectionListener {
     }
 
     private JCommandButton createOrderPopupButton() {
-        JCommandButton orderButton = new JCommandButton("Arrange", getIcon(IconNames.Unknown));
+        JCommandButton orderButton = new JCommandButton("Arrange", getIcon(IconNames.Sort));
 
         orderButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
         orderButton.setPopupCallback(new PopupPanelCallback() {
@@ -261,8 +267,8 @@ public class Zeitline implements TreeSelectionListener {
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
                 List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL, null),
-                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS, null)
+                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL, getSmallIcon(IconNames.SortAsc)),
+                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS, getSmallIcon(IconNames.SortDesc))
                 );
 
                 for (JCommandMenuButton button : buttons) {
@@ -285,8 +291,8 @@ public class Zeitline implements TreeSelectionListener {
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
                 List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL, getIcon(IconNames.DateFull)),
-                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS, getIcon(IconNames.DateShort))
+                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL, getIcon(IconNames.DateFull, 16, 16)),
+                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS, getIcon(IconNames.DateShort, 16, 16))
                 );
 
                 for (JCommandMenuButton button : buttons) {
