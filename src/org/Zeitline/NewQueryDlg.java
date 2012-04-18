@@ -1,76 +1,15 @@
-package org.Zeitline; /********************************************************************
-
- This file is part of org.Zeitline.Zeitline: a forensic timeline editor
-
- Written by Florian Buchholz and Courtney Falk.
-
- Copyright (c) 2004,2005 Florian Buchholz, Courtney Falk, Purdue
- University. All rights reserved.
-
- Permission is hereby granted, free of charge, to any person obtaining
- a copy of this software and associated documentation files (the
- "Software"), to deal with the Software without restriction, including
- without limitation the rights to use, copy, modify, merge, publish,
- distribute, sublicense, and/or sell copies of the Software, and to
- permit persons to whom the Software is furnished to do so, subject to
- the following conditions:
-
- Redistributions of source code must retain the above copyright notice,
- this list of conditions and the following disclaimers.
- Redistributions in binary form must reproduce the above copyright
- notice, this list of conditions and the following disclaimers in the
- documentation and/or other materials provided with the distribution.
- Neither the names of Florian Buchholz, Courtney Falk, CERIAS, Purdue
- University, nor the names of its contributors may be used to endorse
- or promote products derived from this Software without specific prior
- written permission.
-
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- NON-INFRINGEMENT.  IN NO EVENT SHALL THE CONTRIBUTORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
- IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
- IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS WITH THE
- SOFTWARE.
-
- **********************************************************************/
-
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
+package org.Zeitline;
 
 import org.Zeitline.Timestamp.ITimestamp;
 import org.Zeitline.Timestamp.Timestamp;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.Calendar;
+import java.util.Date;
 
 public class NewQueryDlg extends JDialog
         implements ActionListener, ItemListener, ChangeListener, KeyListener {
@@ -81,6 +20,7 @@ public class NewQueryDlg extends JDialog
     private static NewQueryDlg dialog;
     private static Query query = null;
     private JTextField keywords;
+    private JTextField regex;
     private JSpinner startTime;
     private JCheckBox controlStartTime;
     private JCheckBox wrapSearch;
@@ -121,7 +61,7 @@ public class NewQueryDlg extends JDialog
         dialog.setVisible(true);
         return query;
 
-    } // showDialog(Component,Component,Timestamp,Timestamp,org.Zeitline.Query)
+    }
 
     public NewQueryDlg(Frame frame,
                        Component locationComp,
@@ -151,6 +91,9 @@ public class NewQueryDlg extends JDialog
 
         keywords = new JTextField(30);
         keywords.addKeyListener(this);
+
+        regex = new JTextField(30);
+        regex.addKeyListener(this);
 
         startTime = new JSpinner(new SpinnerDateModel(new Date(sTime.getTime()),
                 null,
@@ -192,6 +135,9 @@ public class NewQueryDlg extends JDialog
             if (s != null)
                 keywords.setText(s);
 
+            String r = preset.getRegexText();
+            if (r != null)
+                regex.setText(r);
         }
 
         findInit = false;
@@ -241,6 +187,20 @@ public class NewQueryDlg extends JDialog
         c.gridwidth = 2;
         fieldPane.add(keywords, c);
 
+        label = new JLabel("Regular expression:");
+        label.setLabelFor(regex);
+        c.gridx = 0;
+        c.gridy = 4;
+        c.anchor = GridBagConstraints.LINE_START;
+        fieldPane.add(label, c);
+
+        c.gridx = 0;
+        c.gridy = 5;
+        c.anchor = GridBagConstraints.CENTER;
+        c.weightx = 1;
+        c.gridwidth = 2;
+        fieldPane.add(regex, c);
+
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane, BoxLayout.LINE_AXIS));
         buttonPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
@@ -266,7 +226,7 @@ public class NewQueryDlg extends JDialog
             wrapSearch = new JCheckBox("Wrap search", false);
             wrapSearch.addChangeListener(this);
             c.gridx = 0;
-            c.gridy = 4;
+            c.gridy = 6;
             c.anchor = GridBagConstraints.PAGE_START;
             fieldPane.add(wrapSearch, c);
 
@@ -398,11 +358,14 @@ public class NewQueryDlg extends JDialog
         else
             end = null;
 
+        String onlyWhitespace = "\\A\\s*\\Z";
+
         if ((start == null) && (end == null) &&
-                (keywords.getText().matches("\\A\\s*\\Z"))) // only whitespace
+                (keywords.getText().matches(onlyWhitespace)) &&
+                (regex.getText().matches(onlyWhitespace)))
             return null;
         else
-            return new Query(start, end, keywords.getText());
+            return new Query(start, end, keywords.getText(), regex.getText());
 
     }
 
