@@ -22,7 +22,6 @@ import org.pushingpixels.flamingo.api.ribbon.JRibbonFrame;
 import org.pushingpixels.flamingo.api.ribbon.RibbonElementPriority;
 import org.pushingpixels.flamingo.api.ribbon.RibbonTask;
 import org.pushingpixels.flamingo.api.ribbon.resize.CoreRibbonResizePolicies;
-import org.pushingpixels.flamingo.api.ribbon.resize.IconRibbonBandResizePolicy;
 import org.pushingpixels.flamingo.api.ribbon.resize.RibbonBandResizePolicy;
 
 import javax.swing.*;
@@ -161,11 +160,11 @@ public class Zeitline implements TreeSelectionListener {
         /* 'File' band */
         JRibbonBand fileBand = new JRibbonBand("File", null);
         List<JCommandButton> fileBandButtons = asList(
-            createButton("Save", saveAction, IconNames.FileSave),
-            createButton("Open", loadAction, IconNames.FileOpen),
-            createButton("Exit", exitAction, IconNames.Unknown)
+                createButton("Save", saveAction, IconNames.FileSave),
+                createButton("Open", loadAction, IconNames.FileOpen),
+                createButton("Exit", exitAction, IconNames.Unknown)
         );
-        addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.TOP);
+        addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.LOW);
 
         /* 'Edit' band */
         JRibbonBand editBand = new JRibbonBand("Edit", null);
@@ -173,57 +172,52 @@ public class Zeitline implements TreeSelectionListener {
                 createButton("Cut", cutAction, IconNames.EditCut),
                 createButton("Paste", pasteAction, IconNames.EditPaste),
                 createButton("Clear", clearAction, IconNames.Unknown),
-                createButton("Clear All", clearAllAction, IconNames.Unknown),
-                createButton("Find", findAction, IconNames.Find)
+                createButton("Clear All", clearAllAction, IconNames.Unknown)
         );
-        addButtonsToBand(editBand, editBandButtons, RibbonElementPriority.TOP);
-
+        addButtonsToBand(editBand, editBandButtons, RibbonElementPriority.MEDIUM);
 
         /* 'Event' band */
         JRibbonBand eventBand = new JRibbonBand("Event", null);
-        List<JCommandButton> eventBandButtons = asList(
-                createButton("Create From", createFrom, IconNames.CreateEvent),
+        List<JCommandButton> eventBandButtons1 = asList(
+                createButton("Bundle", createFrom, IconNames.CreateEvent),
                 createButton("Remove", removeEvents, IconNames.DeleteEvent),
                 createButton("Import", importAction, IconNames.Import)
         );
-        addButtonsToBand(eventBand, eventBandButtons, RibbonElementPriority.TOP);
+        List<JCommandButton> eventBandButtons2 = asList(
+                createButton("Find", findAction, IconNames.Find),
+                createButton("Filter", filterQueryAction, IconNames.Filter)
+        );
+        addButtonsToBand(eventBand, eventBandButtons1, RibbonElementPriority.TOP);
+        eventBand.startGroup(); // Adds a separator
+        addButtonsToBand(eventBand, eventBandButtons2, RibbonElementPriority.TOP);
 
         /* 'Timeline' band */
         JRibbonBand timelineBand = new JRibbonBand("Timeline", null);
-        List<JCommandButton> timelineBandButtons = asList(
+        List<JCommandButton> timelineBandButtons1 = asList(
                 createButton("Empty Timeline", emptyTimeline, IconNames.NewTimeline),
-                createButton("Create Timeline", createTimelineFrom, IconNames.CreateTimeline),
                 createButton("Delete Timeline", deleteTimeline, IconNames.DeleteTimeline),
+                createButton("Create Timeline", createTimelineFrom, IconNames.CreateTimeline)
+        );
+        List<JCommandButton> timelineBandButtons2 = asList(
                 createButton("Move Left", moveLeft, IconNames.MoveLeft),
-                createButton("Move Right", moveRight, IconNames.MoveRight),
-                createButton("Filter Query", filterQueryAction, IconNames.Filter),
-                createButton("Toggle Orphan", toggleOrphan, IconNames.Unknown)
-                );
-        addButtonsToBand(timelineBand, timelineBandButtons, RibbonElementPriority.TOP);
+                createButton("Move Right", moveRight, IconNames.MoveRight)
+        );
+        List<JCommandButton> timelineBandButtons3 = asList(
+                createButton("Show Removed", toggleOrphan, IconNames.Unknown) // "Toggle Orphan"
+        );
+        addButtonsToBand(timelineBand, timelineBandButtons1, RibbonElementPriority.MEDIUM);
+        timelineBand.startGroup(); // Adds a separator
+        addButtonsToBand(timelineBand, timelineBandButtons2, RibbonElementPriority.TOP);
+        timelineBand.startGroup(); // Adds a separator
+        addButtonsToBand(timelineBand, timelineBandButtons3, RibbonElementPriority.MEDIUM);
 
         //
         // Ribbon View
         //
 
         JRibbonBand displayBand = new JRibbonBand("Display", null);
-        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.Unknown));
-        formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-        formatButton.setPopupCallback(new PopupPanelCallback() {
-            @Override
-            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-                JCommandPopupMenu menu = new JCommandPopupMenu();
-                List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL),
-                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS)
-                );
-                
-                for(JCommandMenuButton button: buttons){
-                    menu.addMenuButton(button);
-                }
 
-                return menu;
-            }
-        });
+        JCommandButton formatButton = createFormatButton();
 
         displayBand.addCommandButton(formatButton, RibbonElementPriority.TOP);
 
@@ -238,16 +232,11 @@ public class Zeitline implements TreeSelectionListener {
 //        helpBand.addCommandButton(aboutButton, RibbonElementPriority.TOP);
 //        aboutButton.addActionListener(aboutAction);
 
-        fileBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(fileBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(fileBand.getControlPanel())));
-        editBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(editBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(editBand.getControlPanel())));
-        eventBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(eventBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(eventBand.getControlPanel())));
-        timelineBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(timelineBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(timelineBand.getControlPanel())));
-        displayBand.setResizePolicies(Arrays.<RibbonBandResizePolicy>asList(new CoreRibbonResizePolicies.None(displayBand.getControlPanel()),
-                new IconRibbonBandResizePolicy(displayBand.getControlPanel())));
+        fileBand.setResizePolicies(getRibbonResizePolicies(fileBand));
+        editBand.setResizePolicies(getRibbonResizePolicies(editBand));
+        eventBand.setResizePolicies(getRibbonResizePolicies(eventBand));
+        timelineBand.setResizePolicies(getRibbonResizePolicies(timelineBand));
+        displayBand.setResizePolicies(getRibbonResizePolicies(displayBand));
 
         RibbonTask projectTask = new RibbonTask("Project", fileBand, editBand, eventBand, timelineBand);
         RibbonTask viewTask = new RibbonTask("View", displayBand);
@@ -259,8 +248,41 @@ public class Zeitline implements TreeSelectionListener {
         return tasks;
     }
 
+    private JCommandButton createFormatButton() {
+        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.Unknown));
+
+        formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
+        formatButton.setPopupCallback(new PopupPanelCallback() {
+            @Override
+            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
+                JCommandPopupMenu menu = new JCommandPopupMenu();
+                List<JCommandMenuButton> buttons = asList(
+                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL),
+                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS)
+                );
+
+                for (JCommandMenuButton button : buttons) {
+                    menu.addMenuButton(button);
+                }
+
+                return menu;
+            }
+        });
+
+        return formatButton;
+    }
+
+    private List<RibbonBandResizePolicy> getRibbonResizePolicies(JRibbonBand band) {
+        return Arrays.<RibbonBandResizePolicy>asList(
+                new CoreRibbonResizePolicies.None(band.getControlPanel()),
+                new CoreRibbonResizePolicies.Mirror(band.getControlPanel()),
+                new CoreRibbonResizePolicies.Mid2Low(band.getControlPanel()),
+                new CoreRibbonResizePolicies.High2Low(band.getControlPanel())
+        );
+    }
+
     private void addButtonsToBand(JRibbonBand band, List<JCommandButton> buttons, RibbonElementPriority priority) {
-        for(JCommandButton button: buttons){
+        for (JCommandButton button : buttons) {
             band.addCommandButton(button, priority);
         }
     }
@@ -283,16 +305,13 @@ public class Zeitline implements TreeSelectionListener {
 
         return button;
     }
-    
-    private void setDateFormatDisplay(int mode){
+
+    private void setDateFormatDisplay(int mode) {
         EventTree.setDisplayMode(mode);
         this.getTimelines().redraw();
     }
 
     private Component createComponents() {
-//        long ts;
-//        Date afterInsert = new Date();
-
         // Create panel that contains the Event masks
         JPanel maskOverlay = new JPanel();
         OverlayLayout layoutManager = new OverlayLayout(maskOverlay);
