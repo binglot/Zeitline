@@ -192,6 +192,9 @@ public class TimeEventTransferHandler extends TransferHandler
         if (drawDragImage) {
             //	    Point ptDragOrigin = dge.getDragOrigin();
             TreePath path = tree.getPathForLocation(ptDragOrigin.x, ptDragOrigin.y);
+            if (path == null) // Prevents from triggering an exception when dragging 'background' of unselected timeline
+                return;
+
             Rectangle pathBounds = tree.getPathBounds(path);
 
             JLabel lbl = (JLabel) tree.getCellRenderer().
