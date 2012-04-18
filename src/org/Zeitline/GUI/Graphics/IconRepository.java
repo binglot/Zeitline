@@ -76,6 +76,9 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case Exit:
                 fileName = "exit";
                 break;
+            case Orphan:
+                fileName = "orphan";
+                break;
             default:
             System.err.println("Could not find the requested icon: " + name.toString());
             break;

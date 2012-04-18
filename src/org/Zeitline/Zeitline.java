@@ -196,7 +196,7 @@ public class Zeitline implements TreeSelectionListener {
         /* 'Timeline' band */
         JRibbonBand timelineBand = new JRibbonBand("Timeline", null);
         List<JCommandButton> timelineBandButtons1 = asList(
-                createButton("Empty", emptyTimeline, IconNames.NewTimeline),
+                createButton("Add", emptyTimeline, IconNames.NewTimeline),
                 createButton("Delete", deleteTimeline, IconNames.DeleteTimeline),
                 createButton("From Selected", createTimelineFrom, IconNames.CreateTimeline)
         );
@@ -205,7 +205,7 @@ public class Zeitline implements TreeSelectionListener {
                 createButton("Move Right", moveRight, IconNames.MoveRight)
         );
         List<JCommandButton> timelineBandButtons3 = asList(
-                createButton("Show Removed", toggleOrphan, IconNames.Unknown) // "Toggle Orphan"
+                createButton("Show Removed", toggleOrphan, IconNames.Orphan) // "Toggle Orphan"
         );
         addButtonsToBand(timelineBand, timelineBandButtons1, RibbonElementPriority.MEDIUM);
         timelineBand.startGroup(); // Adds a separator
