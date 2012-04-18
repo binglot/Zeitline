@@ -261,8 +261,8 @@ public class Zeitline implements TreeSelectionListener {
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
                 List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL),
-                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS)
+                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL, null),
+                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS, null)
                 );
 
                 for (JCommandMenuButton button : buttons) {
@@ -277,7 +277,7 @@ public class Zeitline implements TreeSelectionListener {
     }
 
     private JCommandButton createFormatPopupButton() {
-        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.Unknown));
+        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.DateFormat));
 
         formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
         formatButton.setPopupCallback(new PopupPanelCallback() {
@@ -285,8 +285,8 @@ public class Zeitline implements TreeSelectionListener {
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
                 List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL),
-                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS)
+                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL, getIcon(IconNames.DateFull)),
+                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS, getIcon(IconNames.DateShort))
                 );
 
                 for (JCommandMenuButton button : buttons) {
@@ -322,8 +322,8 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
-    private JCommandMenuButton getChangeDisplayDateButton(String format, final int mode) {
-        JCommandMenuButton button = new JCommandMenuButton(format, null);
+    private JCommandMenuButton getChangeDisplayDateButton(String format, final int mode, ResizableIcon icon) {
+        JCommandMenuButton button = new JCommandMenuButton(format, icon);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

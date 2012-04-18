@@ -79,9 +79,18 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case Orphan:
                 fileName = "orphan";
                 break;
+            case DateFormat:
+                fileName = "date_format";
+                break;
+            case DateFull:
+                fileName = "date_full";
+                break;
+            case DateShort:
+                fileName = "date_short";
+                break;
             default:
-            System.err.println("Could not find the requested icon: " + name.toString());
-            break;
+                System.err.println("Could not find the requested icon: " + name.toString());
+                break;
         }
 
         return fileName;
