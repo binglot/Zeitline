@@ -6,6 +6,7 @@
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>
       <element id="module-output" name="Zeitline" />
+      <element id="library" level="project" name="GUI" />
     </root>
   </artifact>
 </component>
