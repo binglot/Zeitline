@@ -9,7 +9,7 @@ public class IconRepository implements IIconRepository<ImageIcon> {
     private static final String ICONS_DIR = "icons";
     private static final String ICONS_EXTENSION = ".png";
 
-    private String getFileName(IconNames name){
+    private String getFileName(IconNames name) {
         String fileName = null;
 
         switch (name) {
@@ -88,6 +88,15 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case DateShort:
                 fileName = "date_short";
                 break;
+            case Sort:
+                fileName = "sort_az";
+                break;
+            case SortAsc:
+                fileName = "sort_asc";
+                break;
+            case SortDesc:
+                fileName = "sort_desc";
+                break;
             default:
                 System.err.println("Could not find the requested icon: " + name.toString());
                 break;
@@ -96,7 +105,7 @@ public class IconRepository implements IIconRepository<ImageIcon> {
         return fileName;
     }
 
-    
+
     public ImageIcon getIcon(IconNames name) {
         return getImage(name);
     }

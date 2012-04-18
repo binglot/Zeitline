@@ -21,5 +21,5 @@ public enum IconNames {
     ComplexSmall,
     Unknown,
     Info,
-    Exit, Orphan, DateFormat, DateFull, DateShort,
+    Exit, Orphan, DateFormat, DateFull, DateShort, Sort, SortAsc, SortDesc,
 }
