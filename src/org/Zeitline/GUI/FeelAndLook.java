@@ -6,7 +6,7 @@ public class FeelAndLook {
 
     private String current;
 
-    private final String[] skins = new String[] {
+    private final String[] skins = new String[]{
             // Dark
             "Twilight",
             "Raven",
@@ -18,15 +18,31 @@ public class FeelAndLook {
             "Sahara",
     };
 
-    public void setUI(String name) {
-        try {
+    public void setUI(final String name) {
+        for (String skin : skins) {
             // Only set skins that exist in the list.
-            for(String skin: skins){
-                if (skin.equals(name)){
-                    UIManager.setLookAndFeel("org.pushingpixels.substance.api.skin.Substance" + name + "LookAndFeel");
-                    return;
+            if (skin.equals(name)) {
+                // Only update UI on Dispatch Thread
+                if (SwingUtilities.isEventDispatchThread()) {
+                    setFeelAndLook(name);
+                } else {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            setFeelAndLook("org.pushingpixels.substance.api.skin.Substance" + name + "LookAndFeel");
+                        }
+                    });
                 }
+
+                return;
             }
+        }
+    }
+
+    private void setFeelAndLook(String name) {
+        try {
+
+            UIManager.setLookAndFeel(name);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (InstantiationException e) {
@@ -40,5 +56,9 @@ public class FeelAndLook {
 
     public String[] getSkins() {
         return skins;
+    }
+
+    public void setWindowsUI() {
+        setFeelAndLook("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
     }
 }

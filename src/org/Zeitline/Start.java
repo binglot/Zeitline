@@ -7,8 +7,6 @@ import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Plugin.Input.InputPluginLoader;
 import org.Zeitline.Plugin.PluginLoader;
 
-import javax.swing.*;
-
 import static javax.swing.SwingUtilities.invokeLater;
 
 public final class Start {
@@ -20,12 +18,13 @@ public final class Start {
                 final String inputFiltersDir = "InputFilters";
 
                 FeelAndLook ui = new FeelAndLook();
-                ui.setUI("Twilight");
+                ui.setWindowsUI();
+                //ui.setUI("Twilight");
 
                 FiltersProvider openFileFilters = new FiltersProvider();
                 PluginLoader<InputFilter> pluginLoader = new InputPluginLoader(inputFiltersDir);
                 IconRepository iconRepository = new IconRepository();
-                Zeitline zeitline = new Zeitline(openFileFilters.getFilters(),  pluginLoader.getPlugins(), iconRepository);
+                Zeitline zeitline = new Zeitline(openFileFilters.getFilters(), pluginLoader.getPlugins(), iconRepository);
 
                 zeitline.createAndShowGUI();
             }
