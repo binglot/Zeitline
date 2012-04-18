@@ -5,6 +5,7 @@ import org.Zeitline.GUI.IFormItem;
 import org.Zeitline.Timestamp.ITimestamp;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,8 +57,6 @@ public class L2TEvent
         this.extra = extra;
         this.formGenerator = formGenerator;
 
-        InitializeLabels();
-
         // Inherited bad behaviour from the AtomicEvent and AbstractTimeEvent classes.
         // Will need to fix it!
         startTime = time;
@@ -75,6 +74,7 @@ public class L2TEvent
             String fields[] = labelNames[i].split(": ");
             String name = fields[0];
 
+            //System.out.println("Initialize Labels. On the event thread? : " + EventQueue.isDispatchThread());
             labels[i] = new JLabel(name, JLabel.LEADING);
         }
     }
