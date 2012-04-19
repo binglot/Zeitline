@@ -950,14 +950,16 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
         }
         
-        public JTabbedPane getLeftTrees(){
-            return leftTrees;
-        }
-
-        public JTabbedPane getRightTrees(){
-            return rightTrees;
-        }
     }
 
+    @Override
+    public void updateUI() {
+        super.updateUI();
 
+        // Otherwise the timeline won't update UI.
+        if (timelines != null) {
+            for(EventTree tree: timelines)
+                tree.updateUI();
+        }
+    }
 }
