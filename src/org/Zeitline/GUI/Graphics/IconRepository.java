@@ -100,6 +100,12 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case FileExport:
                 fileName = "file_export";
                 break;
+            case GraphicDesign:
+                fileName = "graphic_design";
+                break;
+            case Appearance:
+                fileName = "appearance";
+                break;
             default:
                 System.err.println("Could not find the requested icon: " + name.toString());
                 break;
