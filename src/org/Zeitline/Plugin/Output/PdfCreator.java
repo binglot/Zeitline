@@ -12,6 +12,8 @@ import org.Zeitline.Zeitline;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import static java.util.Arrays.asList;
+
 public class PdfCreator {
 
     private final Zeitline app;
@@ -50,44 +52,27 @@ public class PdfCreator {
         table.setWidths(tableWidth);
 
         // Setting the header
-        PdfPCell dateCell = new PdfPCell(new Phrase("Date",
-                FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK)));
-        dateCell.setBorderColor(BaseColor.GRAY);
-        dateCell.setBorderWidth(1);
-        dateCell.setPadding(5);
+        java.util.List<PdfPCell> headerCells = asList(
+                getHeaderCell("Date"),
+                getHeaderCell("MACB"),
+                getHeaderCell("Short Description"));
 
-        PdfPCell macbCell = new PdfPCell(new Phrase("MACB",
-                FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK)));
-        macbCell.setBorderColor(BaseColor.GRAY);
-        macbCell.setBorderWidth(1);
-        macbCell.setPadding(5);
-
-        PdfPCell shortDescCell = new PdfPCell(new Phrase("Short Description",
-                FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK)));
-        shortDescCell.setBorderColor(BaseColor.GRAY);
-        shortDescCell.setBorderWidth(1);
-        shortDescCell.setPadding(5);
-
-        table.addCell(dateCell);
-        table.addCell(macbCell);
-        table.addCell(shortDescCell);
+        for(PdfPCell cell: headerCells)
+                table.addCell(cell);
 
         // Setting the body
         int max = parent.countChildren();
         for (int i = 0; i < max; i++) {
             AbstractTimeEvent entry = parent.getEventByIndex(i);
-            table.addCell(new Phrase(entry.getStartTime().toString(),
-                    FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK)));
+            table.addCell(getBodyCell(entry.getStartTime().toString()));
 
             String name = entry.getName();
             if (name != null && name.length() > 5) {
                 String macb = name.substring(0,4);
                 String desc = name.substring(5);
 
-                table.addCell(new Phrase(macb,
-                        FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK)));
-                table.addCell(new Phrase(desc,
-                        FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK)));
+                table.addCell(getBodyCell(macb));
+                table.addCell(getBodyCell(desc));
             }
             else {
                 table.addCell("");
@@ -99,5 +84,19 @@ public class PdfCreator {
         // Closure
         document.close();
         writer.close();
+    }
+
+    private Phrase getBodyCell(String name) {
+        return new Phrase(name,
+                FontFactory.getFont(FontFactory.TIMES, 8, BaseColor.BLACK));
+    }
+
+    private PdfPCell getHeaderCell(String name) {
+        PdfPCell cell = new PdfPCell(new Phrase(name,
+                FontFactory.getFont(FontFactory.TIMES_BOLD, 10, BaseColor.BLACK)));
+        cell.setBorderColor(BaseColor.GRAY);
+        cell.setBorderWidth(1);
+        cell.setPadding(5);
+        return cell;
     }
 }
