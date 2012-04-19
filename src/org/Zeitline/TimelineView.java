@@ -808,7 +808,18 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
         while (true) {
 
+//            TreePath a = currentSelection.getParentPath();
+//            if (a == null)
+//                System.out.println("solution!");
+
             ComplexEvent parent = currentFindPosition.getCurrentEvent();
+            if (parent == null) {
+                //
+                // leads to exception, need to sort it out!
+                //
+                System.out.println("Bart: This exception could have been caught!");
+            }
+
             max = currentFindModel.getChildCount(parent);
 
             current = currentFindPosition.getCurrentIndex() + direction;
@@ -937,6 +948,14 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
             return new TreePath(temp.toArray());
 
+        }
+        
+        public JTabbedPane getLeftTrees(){
+            return leftTrees;
+        }
+
+        public JTabbedPane getRightTrees(){
+            return rightTrees;
         }
     }
 
