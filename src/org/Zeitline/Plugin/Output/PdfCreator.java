@@ -14,6 +14,11 @@ import java.io.IOException;
 
 import static java.util.Arrays.asList;
 
+//
+// The class is just a proof-of-concept and has many limitations:
+// e.g. it stops outputting if comes across a complex event, etc.
+//
+
 public class PdfCreator {
 
     private final Zeitline app;

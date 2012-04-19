@@ -97,6 +97,9 @@ public class IconRepository implements IIconRepository<ImageIcon> {
             case SortDesc:
                 fileName = "sort_desc";
                 break;
+            case FileExport:
+                fileName = "file_export";
+                break;
             default:
                 System.err.println("Could not find the requested icon: " + name.toString());
                 break;

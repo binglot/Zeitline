@@ -81,9 +81,9 @@ public class Zeitline implements TreeSelectionListener {
     private Action aboutAction;
     private Action saveAction;
     private Action loadAction;
+    private Action exportAction;
 
     private Transferable cutBuffer = null;
-    private final PdfCreator pdfCreator = new PdfCreator(this);
 
     public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> iconRepository) {
         this.inputFilters = inputFilters;
@@ -117,6 +117,7 @@ public class Zeitline implements TreeSelectionListener {
         /* 'File' menu actions */
         saveAction = new SaveAction(this, KeyEvent.VK_S);
         loadAction = new LoadAction(this, KeyEvent.VK_L);
+        exportAction = new ExportAction(this);
         exitAction = new ExitAction(KeyEvent.VK_X);
 
         /* 'Edit' menu actions */
@@ -174,23 +175,12 @@ public class Zeitline implements TreeSelectionListener {
         // Ribbon Project
         //
 
-        AbstractAction exportAction = new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    pdfCreator.print("C:\\test\\test.pdf");
-                } catch (IOException | DocumentException e1) {
-                    e1.printStackTrace();
-                }
-            }
-        };
-
         /* 'File' band */
         JRibbonBand fileBand = new JRibbonBand("File", null);
         List<AbstractCommandButton> fileBandButtons = asList(
                 createButton("Save", saveAction, IconNames.FileSave),
                 createButton("Open", loadAction, IconNames.FileOpen),
-                createButton("Export", exportAction, IconNames.Unknown),
+                createButton("Export", exportAction, IconNames.FileExport),
                 createButton("Exit", exitAction, IconNames.Exit)
         );
         addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.LOW);
@@ -425,11 +415,13 @@ public class Zeitline implements TreeSelectionListener {
         //       the second condition
         if ((count == 0) || (tree.isPathSelected(new TreePath(new Object[]{tree.getModel().getRoot()})))) {
             cutAction.setEnabled(false);
+            exportAction.setEnabled(false);
             createFrom.setEnabled(false);
             createTimelineFrom.setEnabled(false);
             removeEvents.setEnabled(false);
         } else {
             cutAction.setEnabled(true);
+            exportAction.setEnabled(true);
             createFrom.setEnabled(true);
             createTimelineFrom.setEnabled(true);
             removeEvents.setEnabled(true);
