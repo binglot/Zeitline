@@ -59,6 +59,7 @@ public class Query {
 
     public boolean matches(AbstractTimeEvent t) {
 
+        // If it's not within the date then ignore it
         if ((intervalStart != null) &&
                 intervalStart.after(t.getStartTime()))
             return false;
@@ -67,26 +68,29 @@ public class Query {
                 intervalEnd.before(t.getStartTime()))
             return false;
 
+        // If it doesn't match the keyword then ignore it
         if (stringQuery != null) {
-            if (t.getName().toLowerCase().matches(stringQuery))
-                return true;
-
-            if (t.getDescription().toLowerCase().matches(stringQuery))
-                return true;
+            if (!stringQuery.equals("")) {
+                if (!t.getName().toLowerCase().matches(stringQuery) &&
+                    !t.getDescription().toLowerCase().matches(stringQuery))
+                    return false;
+            }
         }
 
+        // If it doesn't match the regular expression then ignore it
         if (regexString != null) {
+            if (!regexString.equals(""))
+            {
+                Matcher nameMatch = pattern.matcher(t.getName());
+                Matcher descMatch = pattern.matcher(t.getDescription());
 
-            Matcher nameMatch = pattern.matcher(t.getName());
-            if (nameMatch.matches())
-                return true;
-
-            Matcher descMatch = pattern.matcher(t.getDescription());
-            if (descMatch.matches())
-                return true;
+                if (!nameMatch.matches() && !descMatch.matches()) {
+                    return false;
+                }
+            }
         }
 
-        return false;
+        return true;
     }
 
     public String toString() {
