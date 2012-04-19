@@ -7,6 +7,7 @@ import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.Event.Mask.L2TEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.EventTree.EventTree;
+import org.Zeitline.GUI.FeelAndLook;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
@@ -39,7 +40,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -51,6 +51,7 @@ public class Zeitline implements TreeSelectionListener {
     private ComplexEventMask cem;
     private JSplitPane mainPane;
     private TimelineView timelines;
+    private JPanel maskOverlay;
 
     private JRibbonFrame frame;
 
@@ -236,7 +237,8 @@ public class Zeitline implements TreeSelectionListener {
         JRibbonBand displayBand = new JRibbonBand("Display", null);
         List<AbstractCommandButton> displayBandButtons = asList(
                 createFormatPopupButton(),
-                createOrderPopupButton()
+                createOrderPopupButton(),
+                createStylePopupButton()
         );
         addButtonsToBand(displayBand, displayBandButtons, RibbonElementPriority.TOP);
 
@@ -259,42 +261,43 @@ public class Zeitline implements TreeSelectionListener {
         return tasks;
     }
 
-    private AbstractCommandButton createOrderPopupButton() {
-        JCommandButton orderButton = new JCommandButton("Arrange", getIcon(IconNames.Sort));
+    private AbstractCommandButton createFormatPopupButton() {
+        List<JCommandMenuButton> buttons = asList(
+                getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL, getIcon(IconNames.DateFull, 16, 16)),
+                getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS, getIcon(IconNames.DateShort, 16, 16))
+        );
 
-        orderButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
-        orderButton.setPopupCallback(new PopupPanelCallback() {
-            @Override
-            public JPopupPanel getPopupPanel(JCommandButton commandButton) {
-                JCommandPopupMenu menu = new JCommandPopupMenu();
-                List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL, getSmallIcon(IconNames.SortAsc)),
-                        getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS, getSmallIcon(IconNames.SortDesc))
-                );
-
-                for (JCommandMenuButton button : buttons) {
-                    menu.addMenuButton(button);
-                }
-
-                return menu;
-            }
-        });
-
-        return orderButton;
+        return createPopupButton("Format", IconNames.DateFormat, buttons);
     }
 
-    private AbstractCommandButton createFormatPopupButton() {
-        JCommandButton formatButton = new JCommandButton("Format", getIcon(IconNames.DateFormat));
+    private AbstractCommandButton createOrderPopupButton() {
+        List<JCommandMenuButton> buttons = asList(
+                getChangeDisplayDateButton("Ascending", EventTree.DISPLAY_ALL, getSmallIcon(IconNames.SortAsc)),
+                getChangeDisplayDateButton("Descending", EventTree.DISPLAY_HMS, getSmallIcon(IconNames.SortDesc))
+        );
+
+        return createPopupButton("Arrange", IconNames.Sort, buttons);
+    }
+
+    private AbstractCommandButton createStylePopupButton() {
+        org.Zeitline.GUI.FeelAndLook ui = new FeelAndLook();
+        List<JCommandMenuButton> buttons = new ArrayList<>();
+        
+        for(String skin: ui.getSkins()){
+            buttons.add(getChangeStyleButton(skin, ui, getSmallIcon(IconNames.Appearance)));
+        }
+
+        return createPopupButton("Style", IconNames.GraphicDesign, buttons);
+    }
+
+    private JCommandButton createPopupButton(String name, IconNames icon, final List<JCommandMenuButton> buttons) {
+        JCommandButton formatButton = new JCommandButton(name, getIcon(icon));
 
         formatButton.setCommandButtonKind(JCommandButton.CommandButtonKind.POPUP_ONLY);
         formatButton.setPopupCallback(new PopupPanelCallback() {
             @Override
             public JPopupPanel getPopupPanel(JCommandButton commandButton) {
                 JCommandPopupMenu menu = new JCommandPopupMenu();
-                List<JCommandMenuButton> buttons = asList(
-                        getChangeDisplayDateButton("yyyy-mm-dd hh:mm:ss", EventTree.DISPLAY_ALL, getIcon(IconNames.DateFull, 16, 16)),
-                        getChangeDisplayDateButton("hh:mm:ss", EventTree.DISPLAY_HMS, getIcon(IconNames.DateShort, 16, 16))
-                );
 
                 for (JCommandMenuButton button : buttons) {
                     menu.addMenuButton(button);
@@ -303,7 +306,6 @@ public class Zeitline implements TreeSelectionListener {
                 return menu;
             }
         });
-
         return formatButton;
     }
 
@@ -353,6 +355,41 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
+    private JCommandMenuButton getChangeStyleButton(final String name, final FeelAndLook ui, ResizableIcon icon) {
+        final Zeitline app = this;
+        JCommandMenuButton button = new JCommandMenuButton(name, icon);
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ui.setApp(app);
+                ui.setUI(name);
+            }
+        });
+
+        return button;
+    }
+
+    public void repaintAll(){
+        mainPane.updateUI();
+        timelines.updateUI();
+        cem.updateUI();
+        frame.getRibbon().updateUI();
+        maskOverlay.updateUI();
+
+        if (maskOverlay.getRootPane() != null)
+            maskOverlay.getRootPane().updateUI();
+
+        int taskNo = frame.getRibbon().getTaskCount();
+        for (int i = 0; i < taskNo; i++) {
+            RibbonTask task = frame.getRibbon().getTask(i);
+
+            int bandNo = task.getBandCount();
+            for (int j = 0; j < bandNo; j++) {
+                task.getBand(j).updateUI();
+            }
+        }
+    }
+
     private void setDateFormatDisplay(int mode) {
         EventTree.setDisplayMode(mode);
         this.getTimelines().redraw();
@@ -360,7 +397,7 @@ public class Zeitline implements TreeSelectionListener {
 
     private Component createComponents() {
         // Create panel that contains the Event masks
-        JPanel maskOverlay = new JPanel();
+        maskOverlay = new JPanel();
         OverlayLayout layoutManager = new OverlayLayout(maskOverlay);
         maskOverlay.setLayout(layoutManager);
 
@@ -389,10 +426,9 @@ public class Zeitline implements TreeSelectionListener {
         getMainPane().setResizeWeight(1.0);
 
         JPanel mainCanvas = new JPanel(new BorderLayout());
-
         mainCanvas.add(getMainPane(), BorderLayout.CENTER);
 
-        Date after = new Date();
+        //  Date after = new Date();
         //	System.out.println("Drawing GUI: " + (after.getTime() - afterInsert.getTime()));
 
         return mainCanvas;
@@ -465,5 +501,6 @@ public class Zeitline implements TreeSelectionListener {
     public Action getPasteAction() {
         return pasteAction;
     }
+
 
 }
