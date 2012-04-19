@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Output">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/org/Zeitline/Libraries/itextpdf-5.2.1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

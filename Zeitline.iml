@@ -9,6 +9,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="GUI" level="project" />
     <orderEntry type="library" name="JavaDocs" level="project" />
+    <orderEntry type="library" name="Output" level="project" />
   </component>
 </module>
 
