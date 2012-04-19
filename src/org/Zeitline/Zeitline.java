@@ -1,6 +1,5 @@
 package org.Zeitline;
 
-import com.itextpdf.text.DocumentException;
 import org.Zeitline.Event.AbstractTimeEvent;
 import org.Zeitline.Event.ComplexEvent;
 import org.Zeitline.Event.Mask.AtomicEventMask;
@@ -11,7 +10,6 @@ import org.Zeitline.GUI.EventTree.EventTree;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
 import org.Zeitline.Plugin.Input.InputFilter;
-import org.Zeitline.Plugin.Output.PdfCreator;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandMenuButton;
@@ -39,7 +37,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -177,13 +174,17 @@ public class Zeitline implements TreeSelectionListener {
 
         /* 'File' band */
         JRibbonBand fileBand = new JRibbonBand("File", null);
-        List<AbstractCommandButton> fileBandButtons = asList(
+        List<AbstractCommandButton> fileBandButtons1 = asList(
                 createButton("Save", saveAction, IconNames.FileSave),
                 createButton("Open", loadAction, IconNames.FileOpen),
-                createButton("Export", exportAction, IconNames.FileExport),
+                createButton("Export", exportAction, IconNames.FileExport)
+        );
+        List<AbstractCommandButton> fileBandButtons2 = asList(
                 createButton("Exit", exitAction, IconNames.Exit)
         );
-        addButtonsToBand(fileBand, fileBandButtons, RibbonElementPriority.LOW);
+        addButtonsToBand(fileBand, fileBandButtons1, RibbonElementPriority.MEDIUM);
+        fileBand.startGroup();
+        addButtonsToBand(fileBand, fileBandButtons2, RibbonElementPriority.LOW);
 
         /* 'Edit' band */
         JRibbonBand editBand = new JRibbonBand("Edit", null);
@@ -205,7 +206,7 @@ public class Zeitline implements TreeSelectionListener {
                 createButton("Filter", filterQueryAction, IconNames.Filter)
         );
         addButtonsToBand(eventBand, eventBandButtons1, RibbonElementPriority.TOP);
-        eventBand.startGroup(); // Adds a separator
+        eventBand.startGroup();
         addButtonsToBand(eventBand, eventBandButtons2, RibbonElementPriority.TOP);
 
         /* 'Timeline' band */
@@ -223,10 +224,10 @@ public class Zeitline implements TreeSelectionListener {
                 createButton("Show Removed", toggleOrphan, IconNames.Orphan) // "Toggle Orphan"
         );
         addButtonsToBand(timelineBand, timelineBandButtons1, RibbonElementPriority.MEDIUM);
-        timelineBand.startGroup(); // Adds a separator
+        timelineBand.startGroup();
         addButtonsToBand(timelineBand, timelineBandButtons2, RibbonElementPriority.TOP);
-        timelineBand.startGroup(); // Adds a separator
-        addButtonsToBand(timelineBand, timelineBandButtons3, RibbonElementPriority.MEDIUM);
+        timelineBand.startGroup();
+        addButtonsToBand(timelineBand, timelineBandButtons3, RibbonElementPriority.LOW);
 
         //
         // Ribbon View
@@ -332,7 +333,7 @@ public class Zeitline implements TreeSelectionListener {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("enabled")) {
-                    button.setEnabled((Boolean)evt.getNewValue());
+                    button.setEnabled((Boolean) evt.getNewValue());
                 }
             }
         });
