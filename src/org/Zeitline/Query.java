@@ -71,9 +71,9 @@ public class Query {
         // If it doesn't match the keyword then ignore it
         if (stringQuery != null) {
             if (!stringQuery.equals("")) {
-                if (!t.getName().toLowerCase().matches(stringQuery) &&
-                    !t.getDescription().toLowerCase().matches(stringQuery))
-                    return false;
+                if (t.getName().toLowerCase().matches(stringQuery) ||
+                    t.getDescription().toLowerCase().matches(stringQuery))
+                    return true;
             }
         }
 
@@ -84,13 +84,13 @@ public class Query {
                 Matcher nameMatch = pattern.matcher(t.getName());
                 Matcher descMatch = pattern.matcher(t.getDescription());
 
-                if (!nameMatch.matches() && !descMatch.matches()) {
-                    return false;
+                if (nameMatch.matches() || descMatch.matches()) {
+                    return true;
                 }
             }
         }
 
-        return true;
+        return false;
     }
 
     public String toString() {
