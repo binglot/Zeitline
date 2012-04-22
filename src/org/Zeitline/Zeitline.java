@@ -66,7 +66,7 @@ public class Zeitline implements TreeSelectionListener {
     private Action importAction;
     private Action moveLeft;
     private Action moveRight;
-    private Action exitAction;
+    private Action closeAction;
     private Action removeEvents;
     private Action toggleOrphan;
     private Action clearAction;
@@ -112,11 +112,11 @@ public class Zeitline implements TreeSelectionListener {
     }
 
     private void setActionListeners() {
-        /* 'File' menu actions */
+        /* 'Case' menu actions */
         saveAction = new SaveAction(this, KeyEvent.VK_S);
         loadAction = new LoadAction(this, KeyEvent.VK_L);
+        closeAction = new CloseAction(this, KeyEvent.VK_X);
         exportAction = new ExportAction(this);
-        exitAction = new ExitAction(KeyEvent.VK_X);
 
         /* 'Edit' menu actions */
         cutAction = new CutAction(this, KeyEvent.VK_T);
@@ -174,14 +174,14 @@ public class Zeitline implements TreeSelectionListener {
         //
 
         /* 'File' band */
-        JRibbonBand fileBand = new JRibbonBand("File", null);
+        JRibbonBand fileBand = new JRibbonBand("Case", null);
         List<AbstractCommandButton> fileBandButtons1 = asList(
                 createButton("Save", saveAction, IconNames.FileSave),
                 createButton("Open", loadAction, IconNames.FileOpen),
-                createButton("Export", exportAction, IconNames.FileExport)
+                createButton("Close", closeAction, IconNames.FileClose)
         );
         List<AbstractCommandButton> fileBandButtons2 = asList(
-                createButton("Exit", exitAction, IconNames.Exit)
+                createButton("Export", exportAction, IconNames.FileExport)
         );
         addButtonsToBand(fileBand, fileBandButtons1, RibbonElementPriority.MEDIUM);
         fileBand.startGroup();
@@ -456,12 +456,14 @@ public class Zeitline implements TreeSelectionListener {
             createFrom.setEnabled(false);
             createTimelineFrom.setEnabled(false);
             removeEvents.setEnabled(false);
+            closeAction.setEnabled(false);
         } else {
             cutAction.setEnabled(true);
             exportAction.setEnabled(true);
             createFrom.setEnabled(true);
             createTimelineFrom.setEnabled(true);
             removeEvents.setEnabled(true);
+            closeAction.setEnabled(true);
         }
 
     }

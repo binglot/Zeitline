@@ -597,6 +597,16 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
 
     }
 
+    public void closeAll() {
+        orphanTree = new EventTree(new ComplexEvent());
+        orphanTree.addTreeSelectionListener(app);
+
+        leftTrees.removeAll();
+        rightTrees.removeAll();
+
+        hideSplit();
+    }
+
     // TreeModelListener interface //
 
     public void treeNodesChanged(TreeModelEvent e) {

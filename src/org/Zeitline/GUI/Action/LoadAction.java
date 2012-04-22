@@ -73,7 +73,7 @@ public class LoadAction extends AbstractAction {
             System.err.println("ERROR: ClassNotFoundException while writing ID counter");
         }
 
-        app.getSaveAction().setEnabled(false);
+        app.getSaveAction().setEnabled(true);
     }
 
     private int promptToSaveCurrentProject(ActionEvent event) {

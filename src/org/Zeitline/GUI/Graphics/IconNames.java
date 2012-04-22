@@ -31,5 +31,5 @@ public enum IconNames {
     SortDesc,
     FileExport,
     GraphicDesign,
-    Appearance,
+    Appearance, FileClose,
 }
