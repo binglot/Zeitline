@@ -7,6 +7,7 @@ import org.Zeitline.GUI.EventTree.EventTree;
 import org.Zeitline.Plugin.Input.InputFilter;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -48,14 +49,17 @@ public class ImportAction
         if (input_filter == null)
             return;
 
+        zeitline.getFrame().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         s = input_filter.init(ImportDlg.getFileName(), zeitline.getFrame());
-        if (s == null)
+        if (s == null) {
             return;
+        }
 
         pd = new ProgressDlg(zeitline.getFrame(),
                 "Importing Events",
                 this);
         pd.setVisible(true);
+        zeitline.getFrame().setCursor(Cursor.getDefaultCursor());
     }
 
     public void stop() {
