@@ -3,15 +3,24 @@ package org.Zeitline.GUI;
 import javax.swing.*;
 import java.awt.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class FormGenerator
-        implements IFormGenerator<IFormItem>, Serializable {
+        implements IFormGenerator, Serializable {
 
     public FormGenerator() {}
 
-    @Override
-    public JPanel createForm(List<IFormItem> items) {
+    public JPanel createForm(JLabel[] labels){
+        List<IFormItem> items = new ArrayList<>(labels.length);
+        for (JLabel label: labels){
+            items.add(getFormItem(label.getText(), label));
+        }
+
+        return createForm(items);
+    }
+
+    private JPanel createForm(List<IFormItem> items) {
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();

@@ -2,7 +2,6 @@ package org.Zeitline.InputFilters;
 
 import org.Zeitline.Event.AtomicEvent;
 import org.Zeitline.Event.L2TEvent;
-import org.Zeitline.Event.MACTimeEvent;
 import org.Zeitline.GUI.IFormGenerator;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.Zeitline.Source;
@@ -118,7 +117,7 @@ public class L2TFilter extends InputFilter {
                     fields[10], Integer.decode(fields[11]), fields[12], fields[13], fields[14], fields[15], fields[16],
                     formGenerator);
         } else {
-            return (MACTimeEvent) event_queue.removeFirst();
+            return (AtomicEvent) event_queue.removeFirst();
         }
     }
 

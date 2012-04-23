@@ -33,11 +33,11 @@ public class L2TEvent
     private final String notes;
     private final String format;
     private final String extra;
-    private final IFormGenerator<IFormItem> formGenerator;
+    private final IFormGenerator formGenerator;
 
     public L2TEvent(ITimestamp time, String timezone, String macb, String source, String sourceType, String type, String user,
                     String host, String shortDesc, String desc, int version, String filename, String inode, String notes,
-                    String format, String extra, IFormGenerator<IFormItem> formGenerator){
+                    String format, String extra, IFormGenerator formGenerator){
 
         this.time = time;
         this.timezone = timezone;
@@ -129,12 +129,12 @@ public class L2TEvent
             InitializeLabels();
         }
 
-        List<IFormItem> items = new ArrayList<IFormItem>(labels.length);
-        for (JLabel label: labels){
-            items.add(formGenerator.getFormItem(label.getText(), label));
-        }
+//        List<IFormItem> items = new ArrayList<IFormItem>(labels.length);
+//        for (JLabel label: labels){
+//            items.add(formGenerator.getFormItem(label.getText(), label));
+//        }
 
-        panel = formGenerator.createForm(items);
+        panel = formGenerator.createForm(labels);
     }
 
     public void setPanelValues() {
