@@ -11,7 +11,7 @@ import java.util.List;
 abstract class AbstractPluginLoader<T> extends ClassLoader {
 
     // 14 Apr 2012: Dirty solution just for now
-    boolean IS_JAR_FILE = false;
+    static final Boolean IS_JAR_FILE = false;
     // =
 
     protected final String PLUGIN_FILE_EXTENSION = ".class";

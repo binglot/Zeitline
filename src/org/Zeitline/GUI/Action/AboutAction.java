@@ -22,15 +22,15 @@ public class AboutAction extends AbstractAction {
 
     private String getMessage() {
         final String application = Zeitline.APPLICATION_NAME + " " + Zeitline.APPLICATION_VERSION;
-        final String description = "An attempt to resurrect a long time discontinued project Zeitline by\n";
+        final String description = "An attempt to resurrect a long time discontinued project by\n  ";
         final String authors = "Florian Buchholz and Courtney Falk (2004-2006)";
         final String newAuthor = "Bartosz Inglot (2012)";
         final String copyright = "the authors, Purdue University (2004-2006)";
         final String newCopyright = "University of Derby (2012)";
 
         final String message = application + "\n\n" + description + authors +
-                ".\n\nThe code is hosted on GitHub and currently maintained by\n" + newAuthor +
-                ".\n\n" + "Copyright " + copyright + " and\n " + newCopyright + ".";
+                ".\n\nThe code is hosted on GitHub and currently maintained by\n  " + newAuthor +
+                ".\n\n" + "Copyright " + copyright + " and\n  " + newCopyright + ".";
 
         return message;
     }
