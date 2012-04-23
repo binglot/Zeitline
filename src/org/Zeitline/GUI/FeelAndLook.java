@@ -4,8 +4,7 @@ import org.Zeitline.Zeitline;
 
 import javax.swing.*;
 
-public class FeelAndLook {
-    private Zeitline app;
+public class FeelAndLook implements IFeelAndLook {
     private String current;
 
     private final String[] skins = new String[]{
@@ -20,7 +19,8 @@ public class FeelAndLook {
             "Sahara",
     };
 
-    public void setUI(final String name) {
+    @Override
+    public void setUI(final String name, final Zeitline app) {
         for (String skin : skins) {
             // Only set skins that exist in the list.
             if (skin.equals(name)) {
@@ -28,12 +28,12 @@ public class FeelAndLook {
 
                 // Only update UI on Dispatch Thread
                 if (SwingUtilities.isEventDispatchThread()) {
-                    setFeelAndLook(fullName);
+                    setFeelAndLook(fullName, app);
                 } else {
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
                         public void run() {
-                            setFeelAndLook(fullName);
+                            setFeelAndLook(fullName, app);
                         }
                     });
                 }
@@ -43,7 +43,9 @@ public class FeelAndLook {
         }
     }
 
-    private void setFeelAndLook(String name) {
+
+
+    private void setFeelAndLook(String name, Zeitline app) {
         try {
             UIManager.setLookAndFeel(name);
             if (app != null)
@@ -53,15 +55,12 @@ public class FeelAndLook {
         }
     }
 
+    @Override
     public String[] getSkins() {
         return skins;
     }
 
     public void setWindowsUI() {
-        setFeelAndLook("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
-    }
-
-    public void setApp(Zeitline app) {
-        this.app = app;
+        setFeelAndLook("com.sun.java.swing.plaf.windows.WindowsLookAndFeel", null);
     }
 }

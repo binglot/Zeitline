@@ -7,9 +7,9 @@ import org.Zeitline.Event.Mask.ComplexEventMask;
 import org.Zeitline.Event.Mask.L2TEventMask;
 import org.Zeitline.GUI.Action.*;
 import org.Zeitline.GUI.EventTree.EventTree;
-import org.Zeitline.GUI.FeelAndLook;
 import org.Zeitline.GUI.Graphics.IIconRepository;
 import org.Zeitline.GUI.Graphics.IconNames;
+import org.Zeitline.GUI.IFeelAndLook;
 import org.Zeitline.Plugin.Input.InputFilter;
 import org.pushingpixels.flamingo.api.common.AbstractCommandButton;
 import org.pushingpixels.flamingo.api.common.JCommandButton;
@@ -60,6 +60,7 @@ public class Zeitline implements TreeSelectionListener {
     private final JFileChooser fileChooser;
     private final List<InputFilter> inputFilters;
     private final IIconRepository<ImageIcon> iconRepository;
+    private final IFeelAndLook feelAndLook;
 
     private Action createFrom;
     private Action createTimelineFrom;
@@ -83,9 +84,11 @@ public class Zeitline implements TreeSelectionListener {
 
     private Transferable cutBuffer = null;
 
-    public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters, IIconRepository<ImageIcon> iconRepository) {
+    public Zeitline(List<FileFilter> openFileFilters, List<InputFilter> inputFilters,
+                    IIconRepository<ImageIcon> iconRepository, IFeelAndLook feelAndLook) {
         this.inputFilters = inputFilters;
         this.iconRepository = iconRepository;
+        this.feelAndLook = feelAndLook;
 
         fileChooser = createOpenFileDialog(openFileFilters);
         setActionListeners();
@@ -280,11 +283,10 @@ public class Zeitline implements TreeSelectionListener {
     }
 
     private AbstractCommandButton createStylePopupButton() {
-        org.Zeitline.GUI.FeelAndLook ui = new FeelAndLook();
         List<JCommandMenuButton> buttons = new ArrayList<>();
         
-        for(String skin: ui.getSkins()){
-            buttons.add(getChangeStyleButton(skin, ui, getSmallIcon(IconNames.Appearance)));
+        for(String skin: feelAndLook.getSkins()){
+            buttons.add(getChangeStyleButton(skin, feelAndLook, getSmallIcon(IconNames.Appearance)));
         }
 
         return createPopupButton("Style", IconNames.GraphicDesign, buttons);
@@ -355,14 +357,13 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
-    private JCommandMenuButton getChangeStyleButton(final String name, final FeelAndLook ui, ResizableIcon icon) {
+    private JCommandMenuButton getChangeStyleButton(final String name, final IFeelAndLook ui, ResizableIcon icon) {
         final Zeitline app = this;
         JCommandMenuButton button = new JCommandMenuButton(name, icon);
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ui.setApp(app);
-                ui.setUI(name);
+                ui.setUI(name, app);
             }
         });
 
