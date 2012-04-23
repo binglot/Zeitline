@@ -370,27 +370,6 @@ public class Zeitline implements TreeSelectionListener {
         return button;
     }
 
-    public void repaintAll(){
-        mainPane.updateUI();
-        timelines.updateUI();
-        cem.updateUI();
-        frame.getRibbon().updateUI();
-        maskOverlay.updateUI();
-
-        if (maskOverlay.getRootPane() != null)
-            maskOverlay.getRootPane().updateUI();
-
-        int taskNo = frame.getRibbon().getTaskCount();
-        for (int i = 0; i < taskNo; i++) {
-            RibbonTask task = frame.getRibbon().getTask(i);
-
-            int bandNo = task.getBandCount();
-            for (int j = 0; j < bandNo; j++) {
-                task.getBand(j).updateUI();
-            }
-        }
-    }
-
     private void setDateFormatDisplay(int mode) {
         EventTree.setDisplayMode(mode);
         this.getTimelines().redraw();

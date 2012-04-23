@@ -48,8 +48,9 @@ public class FeelAndLook implements IFeelAndLook {
     private void setFeelAndLook(String name, Zeitline app) {
         try {
             UIManager.setLookAndFeel(name);
-            if (app != null)
-                app.repaintAll();
+            if (app != null) {
+                SwingUtilities.updateComponentTreeUI(app.getFrame());
+            }
         } catch (ClassNotFoundException | IllegalAccessException | UnsupportedLookAndFeelException | InstantiationException e) {
             e.printStackTrace();
         }

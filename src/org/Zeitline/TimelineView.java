@@ -961,15 +961,4 @@ public class TimelineView extends JPanel implements TreeSelectionListener,
         }
         
     }
-
-    @Override
-    public void updateUI() {
-        super.updateUI();
-
-        // Otherwise the timeline won't update UI.
-        if (timelines != null) {
-            for(EventTree tree: timelines)
-                tree.updateUI();
-        }
-    }
 }
