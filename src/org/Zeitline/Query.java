@@ -26,10 +26,14 @@ public class Query {
         intervalEnd = end;
 
         if (key != null && (key.matches("\\A\\s*\\Z")))
-            key = null;
+            actualString = null;
+        else
+            actualString = key;
 
-        actualString = key;
-        regexString = regex;
+        if (regex != null && (regex.matches("\\A\\s*\\Z")))
+            regexString = null;
+        else
+            regexString = regex;
 
         if (key == null)
             stringQuery = null;
@@ -95,7 +99,7 @@ public class Query {
 
     public String toString() {
 
-        StringBuilder ret = new StringBuilder();
+        StringBuilder ret = new StringBuilder(" ");
 
         if (actualString != null)
             ret.append("Keyword: \"" + actualString + "\" ");
