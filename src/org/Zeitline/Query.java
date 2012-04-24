@@ -25,12 +25,12 @@ public class Query {
         intervalStart = start;
         intervalEnd = end;
 
-        if (key != null && (key.matches("\\A\\s*\\Z")))
+        if (IsNullOrEmpty(key))
             actualString = null;
         else
             actualString = key;
 
-        if (regex != null && (regex.matches("\\A\\s*\\Z")))
+        if (IsNullOrEmpty(regex))
             regexString = null;
         else
             regexString = regex;
@@ -45,6 +45,10 @@ public class Query {
             pattern = Pattern.compile(regexString);
     }
 
+    private static boolean IsNullOrEmpty(String s) {
+        return (s == null || s.matches("\\A\\s*\\Z"));
+    } 
+    
     public Timestamp getIntervalStart() {
         return intervalStart;
     }
