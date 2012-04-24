@@ -129,11 +129,6 @@ public class L2TEvent
             InitializeLabels();
         }
 
-//        List<IFormItem> items = new ArrayList<IFormItem>(labels.length);
-//        for (JLabel label: labels){
-//            items.add(formGenerator.getFormItem(label.getText(), label));
-//        }
-
         panel = formGenerator.createForm(labels);
     }
 
