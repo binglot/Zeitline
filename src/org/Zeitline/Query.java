@@ -26,23 +26,18 @@ public class Query {
         intervalEnd = end;
 
         if (IsNullOrEmpty(key))
-            actualString = null;
-        else
+            stringQuery = null;
+        else {
             actualString = key;
+            stringQuery = "(?s).*" + key.toLowerCase() + ".*"; // The (?s) sets the DOTALL mode (otherwise \n isn't matched)
+        }
 
         if (IsNullOrEmpty(regex))
             regexString = null;
-        else
+        else {
             regexString = regex;
-
-        if (key == null)
-            stringQuery = null;
-        else
-            // The (?s) sets the DOTALL mode (otherwise \n isn't matched)
-            stringQuery = "(?s).*" + key.toLowerCase() + ".*";
-
-        if (regexString != null)
             pattern = Pattern.compile(regexString);
+        }
     }
 
     private static boolean IsNullOrEmpty(String s) {
